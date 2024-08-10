@@ -1,5 +1,6 @@
 :root {
   --no-of-sqs: 10;
+  --sq-row-break: 10;
   --sq-size: 30px;
   --sq-margin: 1px;
 }
@@ -14,9 +15,16 @@ body {
   background-color: #222222;
   color: whitesmoke;
   display: flex;
+  flex-direction: column;
   height: 100vh;
   justify-content: center;
   align-items: center;
+}
+
+#square-frame {
+  display: grid;
+  grid-template-columns: repeat(var(--sq-row-break), var(--sq-size));
+  gap: var(--sq-margin);
 }
 
 #square-frame > *[class|=sq] {
@@ -29,6 +37,4 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  margin: var(--sq-margin, 1px);
 }
