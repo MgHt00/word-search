@@ -1,3 +1,9 @@
+:root {
+  --no-of-sqs: 10;
+  --sq-size: 30px;
+  --sq-margin: 1px;
+}
+
 * {
   margin: 0px;
   padding: 0px;
@@ -11,4 +17,18 @@ body {
   height: 100vh;
   justify-content: center;
   align-items: center;
+}
+
+#square-frame > *[class|=sq] {
+  background-color: aliceblue;
+  color: black;
+  font-size: 8px;
+  width: var(--sq-size, 30px);
+  height: var(--sq-size, 30px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: var(--sq-margin, 1px);
 }
