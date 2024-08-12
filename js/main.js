@@ -6,24 +6,24 @@ const noOfSqs = parseInt(rootStyles.getPropertyValue('--no-of-sqs'));
 
 const squareFrame = document.querySelector("#square-frame");
 
-/*function generateSqs(sqs) {
-  for (let r = 1,c = 1; r <= sqs; r++, c++) {
-    const square = document.createElement("div");
-    square.className = `sq-${r}-${c}`;
-    square.textContent = `${r}-${c}`;
-    squareFrame.appendChild(square);
-  }
-}*/
-
 function generateSqs(sqs) {
+  //let sqNum = 1;
   for (let r = 1; r <= sqs; r++) {
     for (let c = 1; c <= sqs; c++) {
       const square = document.createElement("div");
+      square.id = `sq-${r}-${c}`;
       square.className = `sq-${r}-${c}`;
-      square.textContent = `${r},${c}`; // Optional: Display the row and column on the square
+      square.textContent = `${r},${c}`; 
+      //square.className = `sq-${sqNum}`;
+      //square.textContent = sqNum;
       squareFrame.appendChild(square);
     }
+    //sqNum++;
   }
+}
+
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 generateSqs(noOfSqs);
