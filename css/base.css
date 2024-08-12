@@ -30,7 +30,7 @@ body {
 #square-frame > *[class|=sq] {
   background-color: aliceblue;
   color: black;
-  font-size: 8px;
+  font-size: 11px;
   width: var(--sq-size, 30px);
   height: var(--sq-size, 30px);
 
