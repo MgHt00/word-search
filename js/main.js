@@ -7,7 +7,6 @@ const noOfSqs = parseInt(rootStyles.getPropertyValue('--no-of-sqs'));
 const squareFrame = document.querySelector("#square-frame");
 
 function generateSqs(sqs) {
-  //let sqNum = 1;
   for (let r = 1; r <= sqs; r++) {
     for (let c = 1; c <= sqs; c++) {
       const square = document.createElement("div");
@@ -18,7 +17,6 @@ function generateSqs(sqs) {
       //square.textContent = sqNum;
       squareFrame.appendChild(square);
     }
-    //sqNum++;
   }
 }
 
