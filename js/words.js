@@ -3,7 +3,6 @@ let filledWords = {};
 
 let currentWord = words[random(0, words.length-1)];
 let wordSpread = [...currentWord];
-//numOfChar = wordSpread.length;
 console.log(`no. of character: ${wordSpread.length}`);
 
 // finding starting positon
@@ -12,7 +11,7 @@ let startingRow = random(1, noOfSqs);
 let startingCol = random(1, noOfSqs);
 console.log("Starting row-col: ", startingRow,"-", startingCol);
 
-direction = 1;
+direction = 5;
 // 1 = north, 2 = north east, 3 = east, 4 = south east, 
 // 5 = south, 6 = south west, 7 = west, 8 = north west
 
@@ -27,7 +26,10 @@ if (direction === 1) {
 }
 
 else if (direction === 2) {console.log(`direction: ${direction} - north east;`);}
-else if (direction === 3) {console.log(`direction: ${direction} - east;`);}
+else if (direction === 3) {
+  
+
+}
 else if (direction === 4) {console.log(`direction: ${direction} - south east;`);}
 else if (direction === 5) {
   if (enoughSq(direction)) {
@@ -43,43 +45,35 @@ else if (direction === 7) {console.log(`direction: ${direction} - west;`);}
 else if (direction === 7) {console.log(`direction: ${direction} - north west;`);}
 else {console.log(`No direction found`);}
 
-// function to calculate whether there is enough square in the calcuated direction
+// FUNCTION to calculate whether there is enough square in the calcuated direction
 function enoughSq(direction) {
+  let topRowReach = startingRow - wordSpread.length - 1;
+  let bottomRowReach = startingRow + wordSpread.length - 1;
+  let leftColReach = startingCol - wordSpread.length - 1;
+  let rightColReach = startingCol - wordSpread.length + 1;
+  console.log("topRowReach:", topRowReach, ", bottomRowReach:", bottomRowReach, ",leftColReach:", leftColReach, ",rightColReach:", rightColReach);
+
   if (direction === 1) {
     console.log(`direction: ${direction} - north`);
-    // ရောက်သွားနိုင်တဲ့ row number ကို တွက်ပါတယ်။
-    let rowReach = startingRow - wordSpread.length - 1;
-    console.log("rowReach: ", rowReach);
+    // ရောက်သွားနိုင်တဲ့ top row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် နည်းနေပြီဆိုရင် return false
+    console.log("enoughSq: ",topRowReach < 0 ? false : true);
+    return topRowReach < 0 ? false : true;
+  }
 
-    // ရောက်သွားနိုင်တဲ့ row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် နည်းနေပြီဆိုရင်
-    if (rowReach < 0) {
-      console.log("no of sqs is not enough");
-      return false;
-    } else {
-      console.log("good to go");
-      return true;
-    }
+  else if (direction === 3) {
+    
   }
 
   else if (direction === 5) {
     console.log(`direction: ${direction} - south;`);
-    let rowReach = startingRow + wordSpread.length-1;
-    console.log("rowReach: ", rowReach);
-
-    // ရောက်သွားနိုင်တဲ့ row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် များနေပြီဆိုရင်
-    if(rowReach > noOfSqs) {
-      console.log("no of sqs is not enough");
-      return false;
-    } else {
-      console.log("good to go");
-      return true;
-    }
+    // ရောက်သွားနိုင်တဲ့ bottom row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် များနေပြီဆိုရင် return false
+    console.log("enoughSq: ",bottomRowReach > noOfSqs ? false : true);
+    return bottomRowReach > noOfSqs ? false : true;
   }
 }
 
 // to fill the square with a character
 function charFill(row, col, fillChar) {
-  //console.log("Function 'charFill()' is called.");
   let currentSq = document.querySelector(`#sq-${row}-${col}`);
   currentSq.textContent = fillChar;
 
