@@ -12,9 +12,7 @@ function generateSqs(sqs) {
       const square = document.createElement("div");
       square.id = `sq-${r}-${c}`;
       square.className = `sq-${r}-${c}`;
-      square.textContent = `${r},${c}`; 
-      //square.className = `sq-${sqNum}`;
-      //square.textContent = sqNum;
+      //square.textContent = `${r},${c}`; 
       squareFrame.appendChild(square);
     }
   }

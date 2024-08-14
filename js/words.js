@@ -1,8 +1,8 @@
 let words = ["words", "search", "untracked", "nothing", "present"];
 let filledWords = {};
 
-//let currentWord = words[random(0, words.length-1)];
-let currentWord = ["w","o","r","d","s"];
+let currentWord = words[random(0, words.length-1)];
+//let currentWord = ["w","o","r","d","s"];
 let wordSpread = [...currentWord];
 console.log(`no. of character: ${wordSpread.length}`);
 
@@ -13,11 +13,11 @@ let startingCol = random(1, noOfSqs);
 console.log("Starting row-col: ", startingRow,"-", startingCol);
 
 // temp - direction will be random in final.
-direction = 8;
+direction = random(1, 8);
 // 1 = north, 2 = north east, 3 = east, 4 = south east, 
 // 5 = south, 6 = south west, 7 = west, 8 = north west
 if (direction === 1) {
-  console.log(`direction: ${direction} - `);
+  console.log(`direction: ${direction} - north`);
   if (enoughSq(direction)) {
     let currentRow = startingRow;
     for (i = 0; i < wordSpread.length; i++) {
@@ -127,13 +127,13 @@ function enoughSq(direction) {
     // ရောက်သွားနိုင်တဲ့ top row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် နည်းနေပြီဆိုရင် return false
     console.log("Inside enoughSq(1)");
     console.log("enoughSq: ",topRowReach < 0 ? false : true);
-    return topRowReach <= 0 ? false : true;
+    return topRowReach < 0 ? false : true;
   }
 
   //2 = north east
   else if (direction === 2) {
     // ရောက်သွားနိုင်တဲ့ top row number နဲ့ right col no. ကိုတွက်
-    if (topRowReach >= 0) {
+    if (topRowReach > 0) {
       if (rightColReach <= noOfSqs) {
         console.log("enoughSq: true");
         return true;
@@ -146,7 +146,7 @@ function enoughSq(direction) {
   // 3 = east
   else if (direction === 3) {
     // ရောက်သွားနိုင်တဲ့ right column number က ရှိတဲ့ အကွက် အရေအတွက်ထက် များနေပြီဆိုရင် return false
-    console.log("enoughSq: ",rightColReach > noOfSqs ? false : true);
+    console.log("enoughSq: ",rightColReach >= noOfSqs ? false : true);
     return rightColReach >= noOfSqs ? false : true;
   }
 
@@ -173,7 +173,7 @@ function enoughSq(direction) {
   // 6 = south west
   else if (direction === 6) {
     if (bottomRowReach <= noOfSqs) {
-      if (leftColReach >= 0) {
+      if (leftColReach > 0) {
         console.log("enoughSq: true");
         return true;
       }
@@ -190,8 +190,8 @@ function enoughSq(direction) {
 
   //8 = north west
   else if (direction === 8) {
-    if (topRowReach >= 0) {
-      if (leftColReach >= 0) {
+    if (topRowReach > 0) {
+      if (leftColReach > 0) {
         console.log("enoughSq: true");
         return true;
       }
