@@ -12,107 +12,131 @@ let startingRow = random(1, noOfSqs);
 let startingCol = random(1, noOfSqs);
 console.log("Starting row-col: ", startingRow,"-", startingCol);
 
-// temp - direction will be random in final.
-direction = random(1, 8);
-// 1 = north, 2 = north east, 3 = east, 4 = south east, 
-// 5 = south, 6 = south west, 7 = west, 8 = north west
-if (direction === 1) {
-  console.log(`direction: ${direction} - north`);
-  if (enoughSq(direction)) {
-    let currentRow = startingRow;
-    for (i = 0; i < wordSpread.length; i++) {
-      charFill(currentRow, startingCol, wordSpread[i]);
-      currentRow--;
+//fillEverything(random(1, 8));
+console.log("Success: ", fillEverything(random(1, 8)));
+
+function fillEverything(direction) {
+  let success = 0;
+  // 1 = north, 2 = north east, 3 = east, 4 = south east, 
+  // 5 = south, 6 = south west, 7 = west, 8 = north west
+  if (direction === 1) {
+    console.log(`direction: ${direction} - north`);
+    if (enoughSq(direction)) {
+      let currentRow = startingRow;
+      for (i = 0; i < wordSpread.length; i++) {
+        charFill(currentRow, startingCol, wordSpread[i]);
+        currentRow--;
+      }
+      success = 1;
+      return success;
     }
   }
-}
-// north east
-else if (direction === 2) {
-  console.log(`direction: ${direction} - north east;`);
-  if (enoughSq(direction)) {
-    let currentRow = startingRow;
-    let currentCol = startingCol;
-    for (i = 0; i < wordSpread.length; i++) {
-      charFill(currentRow, currentCol, wordSpread[i]);
-      currentRow--;
-      currentCol++;
+  // north east
+  else if (direction === 2) {
+    console.log(`direction: ${direction} - north east;`);
+    if (enoughSq(direction)) {
+      let currentRow = startingRow;
+      let currentCol = startingCol;
+      for (i = 0; i < wordSpread.length; i++) {
+        charFill(currentRow, currentCol, wordSpread[i]);
+        currentRow--;
+        currentCol++;
+      }
+      success = 1;
+      return success;
     }
   }
-}
-// east
-else if (direction === 3) {
-  console.log(`direction: ${direction} - east;`);
-  if (enoughSq(direction)) {
-    let currentCol = startingCol;
-    for (i = 0; i < wordSpread.length; i++) {
-      charFill(startingRow, currentCol, wordSpread[i]);
-      currentCol++;
+  // east
+  else if (direction === 3) {
+    console.log(`direction: ${direction} - east;`);
+    if (enoughSq(direction)) {
+      let currentCol = startingCol;
+      for (i = 0; i < wordSpread.length; i++) {
+        charFill(startingRow, currentCol, wordSpread[i]);
+        currentCol++;
+      }
+      success = 1;
+      return success;
     }
   }
-}
-// south east
-else if (direction === 4) {
-  console.log(`direction: ${direction} - south east;`);
-  if (enoughSq(direction)) {
-    let currentRow = startingRow;
-    let currentCol = startingCol;
-    for (i = 0; i < wordSpread.length; i++) {
-      charFill(currentRow, currentCol, wordSpread[i]);
-      currentRow++;
-      currentCol++;
+  // south east
+  else if (direction === 4) {
+    console.log(`direction: ${direction} - south east;`);
+    if (enoughSq(direction)) {
+      let currentRow = startingRow;
+      let currentCol = startingCol;
+      for (i = 0; i < wordSpread.length; i++) {
+        charFill(currentRow, currentCol, wordSpread[i]);
+        currentRow++;
+        currentCol++;
+      }
+      success = 1;
+      return success;
+    }
+
+  }
+  // south
+  else if (direction === 5) {
+    console.log(`direction: ${direction} - south;`);
+    if (enoughSq(direction)) {
+      let currentRow = startingRow;
+      for (i = 0; i < wordSpread.length; i++) {
+        charFill(currentRow, startingCol, wordSpread[i]);
+        currentRow++;
+      }
+      success = 1;
+      return success;
     }
   }
-  
-}
-// south
-else if (direction === 5) {
-  console.log(`direction: ${direction} - south;`);
-  if (enoughSq(direction)) {
-    let currentRow = startingRow;
-    for (i = 0; i < wordSpread.length; i++) {
-      charFill(currentRow, startingCol, wordSpread[i]);
-      currentRow++;
+  // south west
+  else if (direction === 6) {
+    console.log(`direction: ${direction} - south west;`);
+    if (enoughSq(direction)) {
+      let currentRow = startingRow;
+      let currentCol = startingCol;
+      for (i = 0; i < wordSpread.length; i++) {
+        charFill(currentRow, currentCol, wordSpread[i]);
+        currentRow++;
+        currentCol--;
+      }
+      success = 1;
+      return success;
     }
   }
-}
-// south west
-else if (direction === 6) {
-  console.log(`direction: ${direction} - south west;`);
-  if (enoughSq(direction)) {
-    let currentRow = startingRow;
-    let currentCol = startingCol;
-    for (i = 0; i < wordSpread.length; i++) {
-      charFill(currentRow, currentCol, wordSpread[i]);
-      currentRow++;
-      currentCol--;
+  // west
+  else if (direction === 7) {
+    console.log(`direction: ${direction} - west;`);
+    if (enoughSq(direction)) {
+      let currentCol = startingCol;
+      for (i = 0; i < wordSpread.length; i++) {
+        charFill(startingRow, currentCol, wordSpread[i]);
+        currentCol--;
+      }
+      success = 1;
+      return success;
     }
   }
-}
-// west
-else if (direction === 7) {
-  console.log(`direction: ${direction} - west;`);
-  if (enoughSq(direction)) {
-    let currentCol = startingCol;
-    for (i = 0; i < wordSpread.length; i++) {
-      charFill(startingRow, currentCol, wordSpread[i]);
-      currentCol--;
+  // north west
+  else if (direction === 8) {
+    console.log(`direction: ${direction} - north west;`);
+    if (enoughSq(direction)) {
+      let currentRow = startingRow;
+      let currentCol = startingCol;
+      for (i = 0; i < wordSpread.length; i++) {
+        charFill(currentRow, currentCol, wordSpread[i]);
+        currentRow--;
+        currentCol--;
+      }
+      success = 1;
+      return success;
     }
   }
-}
-// north west
-else if (direction === 8) {
-  console.log(`direction: ${direction} - north west;`);
-  if (enoughSq(direction)) {
-    let currentRow = startingRow;
-    let currentCol = startingCol;
-    for (i = 0; i < wordSpread.length; i++) {
-      charFill(currentRow, currentCol, wordSpread[i]);
-      currentRow--;
-      currentCol--;
-    }
+  else {
+    console.log(`No direction found`);
   }
+  return success;
 }
-else {console.log(`No direction found`);}
+
 
 // FUNCTION to calculate whether there is enough square in the calcuated direction
 function enoughSq(direction) {
@@ -126,8 +150,8 @@ function enoughSq(direction) {
   if (direction === 1) {
     // ရောက်သွားနိုင်တဲ့ top row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် နည်းနေပြီဆိုရင် return false
     console.log("Inside enoughSq(1)");
-    console.log("enoughSq: ",topRowReach < 0 ? false : true);
-    return topRowReach < 0 ? false : true;
+    console.log("enoughSq: ",topRowReach <= 0 ? false : true);
+    return topRowReach <= 0 ? false : true;
   }
 
   //2 = north east
@@ -146,8 +170,8 @@ function enoughSq(direction) {
   // 3 = east
   else if (direction === 3) {
     // ရောက်သွားနိုင်တဲ့ right column number က ရှိတဲ့ အကွက် အရေအတွက်ထက် များနေပြီဆိုရင် return false
-    console.log("enoughSq: ",rightColReach >= noOfSqs ? false : true);
-    return rightColReach >= noOfSqs ? false : true;
+    console.log("enoughSq: ",rightColReach > noOfSqs ? false : true);
+    return rightColReach > noOfSqs ? false : true;
   }
 
   // 4 = south east
@@ -167,7 +191,7 @@ function enoughSq(direction) {
   else if (direction === 5) {
     // ရောက်သွားနိုင်တဲ့ bottom row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် များနေပြီဆိုရင် return false
     console.log("enoughSq: ",bottomRowReach > noOfSqs ? false : true);
-    return bottomRowReach >= noOfSqs ? false : true;
+    return bottomRowReach > noOfSqs ? false : true;
   }
 
   // 6 = south west
@@ -184,8 +208,8 @@ function enoughSq(direction) {
   
   // 7 = west
   else if (direction === 7) {
-    console.log("enoughSq: ",leftColReach < 0 ? false : true);
-    return leftColReach < 0 ? false : true;
+    console.log("enoughSq: ",leftColReach <= 0 ? false : true);
+    return leftColReach <= 0 ? false : true;
   }
 
   //8 = north west
