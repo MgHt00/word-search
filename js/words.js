@@ -12,11 +12,24 @@ let startingRow = random(1, noOfSqs);
 let startingCol = random(1, noOfSqs);
 console.log("Starting row-col: ", startingRow,"-", startingCol);
 
-//fillEverything(random(1, 8));
-console.log("Success: ", fillEverything(random(1, 8)));
+FindAndFill();
 
-function fillEverything(direction) {
-  let success = 0;
+function FindAndFill() {
+  while (true) {
+    // creates an infinite loop, which means the code inside the loop will keep running 
+    // over and over again until something inside the loop causes it to stop.
+    let direction = random(1, 8);
+    if (fillAWord(direction)) {
+      console.log("Success");
+      break; // Exit loop on success
+    } else {
+      console.log("Failed, retrying...");
+    }
+  }
+}
+
+function fillAWord(direction) {
+  let success = false;
   // 1 = north, 2 = north east, 3 = east, 4 = south east, 
   // 5 = south, 6 = south west, 7 = west, 8 = north west
   if (direction === 1) {
@@ -27,8 +40,7 @@ function fillEverything(direction) {
         charFill(currentRow, startingCol, wordSpread[i]);
         currentRow--;
       }
-      success = 1;
-      return success;
+      return success = true;
     }
   }
   // north east
@@ -42,8 +54,7 @@ function fillEverything(direction) {
         currentRow--;
         currentCol++;
       }
-      success = 1;
-      return success;
+      return success = true;
     }
   }
   // east
@@ -55,8 +66,7 @@ function fillEverything(direction) {
         charFill(startingRow, currentCol, wordSpread[i]);
         currentCol++;
       }
-      success = 1;
-      return success;
+      return success = true;
     }
   }
   // south east
@@ -70,8 +80,7 @@ function fillEverything(direction) {
         currentRow++;
         currentCol++;
       }
-      success = 1;
-      return success;
+      return success = true;
     }
 
   }
@@ -84,8 +93,7 @@ function fillEverything(direction) {
         charFill(currentRow, startingCol, wordSpread[i]);
         currentRow++;
       }
-      success = 1;
-      return success;
+      return success = true;
     }
   }
   // south west
@@ -99,8 +107,7 @@ function fillEverything(direction) {
         currentRow++;
         currentCol--;
       }
-      success = 1;
-      return success;
+      return success = true;
     }
   }
   // west
@@ -112,8 +119,7 @@ function fillEverything(direction) {
         charFill(startingRow, currentCol, wordSpread[i]);
         currentCol--;
       }
-      success = 1;
-      return success;
+      return success = true;
     }
   }
   // north west
@@ -127,8 +133,7 @@ function fillEverything(direction) {
         currentRow--;
         currentCol--;
       }
-      success = 1;
-      return success;
+      return success = true;
     }
   }
   else {
