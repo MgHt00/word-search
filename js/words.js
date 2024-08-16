@@ -13,14 +13,14 @@ function start()
   }
   */
   //TEMP1. currentWord = words[random(0, words.length-1)];
-  currentWord = ["w","o","r","d","s"];
+  currentWord = ["a","b","c"];
   wordSpread = [...currentWord];
   console.log(`no. of character: ${wordSpread.length}`);
 
   // finding starting positon
   // noOfSqs is fetched from 'main.js'
   //TEMP2. startingRow = random(1, noOfSqs);
-  startingRow = 6;
+  startingRow = 2;
   //TEMP3. startingCol = random(1, noOfSqs);
   startingCol = 3
   console.log("Starting row-col: ", startingRow,"-", startingCol);
@@ -34,7 +34,7 @@ function FindAndFill() {
     // creates an infinite loop, which means the code inside the loop will keep running 
     // over and over again until something inside the loop causes it to stop.
     //TEMP4 let direction = random(1, 8);
-    direction = 3;
+    direction = 1;
     if (fillAWord(direction)) {
       console.log("Success");
       break; // Exit loop on success
@@ -78,11 +78,27 @@ function fillAWord(direction) {
     console.log(`direction: ${direction} - east;`);
     if (enoughSq(direction)) {
       let currentCol = startingCol;
+      let tempHolder = [];
+      let status = false;
+
       for (i = 0; i < wordSpread.length; i++) {
-        charFill(startingRow, currentCol, wordSpread[i]);
-        currentCol++;
+        if(exitingCharCheck(startingRow, currentCol, wordSpread[i])) {
+          tempHolder[i] = wordSpread[i];
+          !status;
+          console.log("status: ", status);
+        }
       }
-      return success = true;
+      if (status) {
+        //charFill(startingRow, currentCol, wordSpread[i]);
+        //charFill(startingRow, currentCol, tempHolder);
+        //currentCol++;
+        console.log("status: ", status);
+        return success = true;
+      }
+      else {
+        console.log("success");
+        return success;
+      }
     }
   }
   // south east
@@ -247,18 +263,37 @@ function enoughSq(direction) {
 }
 
 // to fill the square with a character
+
 function charFill(row, col, fillChar) {
   let currentSq = `sq-${row}-${col}`;
   let currentDOM = document.querySelector(`#${currentSq}`);
 
+
+  /*
   if (exitingCharCheck(currentSq, fillChar)) {
     currentDOM.textContent = fillChar;
     filledWords[currentSq] = fillChar;
     console.log("filledWords: ", filledWords);
   }
+  */
 }
+
+
+/*
+function charFill(row, col, tempHolder) {
+  let currentSq = `sq-${row}-${col}`;
+  let currentDOM = document.querySelector(`#${currentSq}`);
+
+  for (let i = 0; i < tempHolder.length; i++) {
+    currentDOM.textContent = tempHolder[i];
+    filledWords[currentSq] = tempHolder[i];
+    console.log("filledWords: ", filledWords[currentSq]);
+  }
+}
+*/
  
-function exitingCharCheck(currentSq, fillChar) {
+function exitingCharCheck(row, col, fillChar) {
+  let currentSq = `sq-${row}-${col}`;
   if (!filledWords[currentSq]) {
     console.log("No char in the sq. Good to go!");
     return true;
