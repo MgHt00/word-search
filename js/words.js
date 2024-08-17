@@ -1,14 +1,30 @@
+/*
+  Functions
+  -------
+  findAndFill() - direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
+    |- enoughSq(), existingCharCheck(), fillAWord()
+  fillAWord() - ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
+    |- enoughSq(), charFill()
+  enoughSq() - ရလာတဲ့ direction မှာ sq လောက်သလားစစ်မယ်
+  charFill() - sq တစ်ကွက်ချင်းကို char တစ်လုံးချင်း ဖြည့်မယ်
+  existingCharCheck() - လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်မယ်
+    |- oneByOneCheck()
+  oneByOneCheck() - sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်မယ်
+*/
+
 let words = ["words", "search", "untracked", "nothing", "present"];
 let filledWords = {};
 let currentWord, wordSpread, startingRow, startingCol;
 let tempHolder = [];
 
-let TEMPsq0 = document.querySelector("#sq-6-4");
-let TEMPsq1 = document.querySelector("#sq-6-6");
-filledWords["sq-6-4"] = "o"
-filledWords["sq-6-6"] = "d";
-TEMPsq0.textContent = filledWords["sq-6-4"];
-TEMPsq1.textContent = filledWords["sq-6-6"];
+/* DEBUGGING
+let TEMPsq0 = document.querySelector("#sq-6-10");
+let TEMPsq1 = document.querySelector("#sq-3-7");
+filledWords["sq-6-10"] = "w"
+filledWords["sq-3-7"] = "d";
+TEMPsq0.textContent = filledWords["sq-6-10"];
+TEMPsq1.textContent = filledWords["sq-3-7"];
+*/
 
 function start()
 {
@@ -21,16 +37,16 @@ function start()
   //TEMP2. startingRow = random(1, noOfSqs);
   startingRow = 6;
   //TEMP3. startingCol = random(1, noOfSqs);
-  startingCol = 3
+  startingCol = 10;
   console.log("Starting row-col: ", startingRow,"-", startingCol);
 
-  FindAndFill();
+  findAndFill();
 }
 
-
-function FindAndFill() {
+// () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
+function findAndFill() {
     //TEMP4 let direction = random(1, 8);
-    direction = 3;
+    direction = 8;
 
     while (true) {
       // creates an infinite loop, which means the code inside the loop will keep running 
@@ -39,17 +55,23 @@ function FindAndFill() {
       // let sqStatus = null;
 
       if (enoughSq(direction)) {
+        // direction ကိုသိရလို့ sq လုံလောက်ရင်
         console.log ("Successfully found a spot");
-        console.log("FindAndFill: ", existingCharCheck(direction, wordSpread));
-        console.log("Ready to call charFill: ", tempHolder);
+        // sq လုံလောက်သော်လည်း sq တွေမှာ char ရှိနေလား ၊ ရှိတဲ့ char က သုံးလို့ရလား
+        if (existingCharCheck(direction, wordSpread)) {
+          // ရတယ် ဆိုရင် fill မယ်။
+          fillAWord(direction, tempHolder);
+        }
         break; 
       } else {
         console.log("Failed, retrying...");
+        // ဒီမှာ နောက်တစ်နေရာ ရှာဖို့ start() ကို ပြန်ခေါ်ဖို့များ လို မလား ???  
       } 
     }
 }
 
-function fillAWord(direction) {
+// () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
+function fillAWord(direction, tempHolder) {
   let success = false;
   // 1 = north, 2 = north east, 3 = east, 4 = south east, 
   // 5 = south, 6 = south west, 7 = west, 8 = north west
@@ -57,8 +79,8 @@ function fillAWord(direction) {
     console.log(`direction: ${direction} - north`);
     if (enoughSq(direction)) {
       let currentRow = startingRow;
-      for (i = 0; i < wordSpread.length; i++) {
-        charFill(currentRow, startingCol, wordSpread[i]);
+      for (i = 0; i < tempHolder.length; i++) {
+        charFill(currentRow, startingCol, tempHolder[i]);
         currentRow--;
       }
       return success = true;
@@ -70,8 +92,8 @@ function fillAWord(direction) {
     if (enoughSq(direction)) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
-        charFill(currentRow, currentCol, wordSpread[i]);
+      for (i = 0; i < tempHolder.length; i++) {
+        charFill(currentRow, currentCol, tempHolder[i]);
         currentRow--;
         currentCol++;
       }
@@ -85,26 +107,12 @@ function fillAWord(direction) {
 
     if (enoughSq(direction)) {
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
-        charFill(startingRow, currentCol, wordSpread[i]);
+      for (i = 0; i < tempHolder.length; i++) {
+        charFill(startingRow, currentCol, tempHolder[i]);
         currentCol++;
       }
       return success = true;
     }
-
-    //let sqStatus = enoughSq(direction);
-    //let wordStatus = existingWordCheck(direction, startingRow, currentCol, wordSpread);
-    
-    /*
-    if (sqStatus && wordStatus) {
-      for (i = 0; i < wordSpread.length; i++) {
-        charFill(startingRow, currentCol, wordSpread[i]);
-        currentCol++;
-      }
-      return success = true;
-    }
-    */
-    
   }
   // south east
   else if (direction === 4) {
@@ -112,8 +120,8 @@ function fillAWord(direction) {
     if (enoughSq(direction)) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
-        charFill(currentRow, currentCol, wordSpread[i]);
+      for (i = 0; i < tempHolder.length; i++) {
+        charFill(currentRow, currentCol, tempHolder[i]);
         currentRow++;
         currentCol++;
       }
@@ -126,8 +134,8 @@ function fillAWord(direction) {
     console.log(`direction: ${direction} - south;`);
     if (enoughSq(direction)) {
       let currentRow = startingRow;
-      for (i = 0; i < wordSpread.length; i++) {
-        charFill(currentRow, startingCol, wordSpread[i]);
+      for (i = 0; i < tempHolder.length; i++) {
+        charFill(currentRow, startingCol, tempHolder[i]);
         currentRow++;
       }
       return success = true;
@@ -139,8 +147,8 @@ function fillAWord(direction) {
     if (enoughSq(direction)) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
-        charFill(currentRow, currentCol, wordSpread[i]);
+      for (i = 0; i < tempHolder.length; i++) {
+        charFill(currentRow, currentCol, tempHolder[i]);
         currentRow++;
         currentCol--;
       }
@@ -152,8 +160,8 @@ function fillAWord(direction) {
     console.log(`direction: ${direction} - west;`);
     if (enoughSq(direction)) {
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
-        charFill(startingRow, currentCol, wordSpread[i]);
+      for (i = 0; i < tempHolder.length; i++) {
+        charFill(startingRow, currentCol, tempHolder[i]);
         currentCol--;
       }
       return success = true;
@@ -165,8 +173,8 @@ function fillAWord(direction) {
     if (enoughSq(direction)) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
-        charFill(currentRow, currentCol, wordSpread[i]);
+      for (i = 0; i < tempHolder.length; i++) {
+        charFill(currentRow, currentCol, tempHolder[i]);
         currentRow--;
         currentCol--;
       }
@@ -180,7 +188,7 @@ function fillAWord(direction) {
 }
 
 
-// FUNCTION to calculate whether there is enough square in the calcuated direction
+// () to check whether there is enough square in the calcuated direction
 function enoughSq(direction) {
   let topRowReach = startingRow - (wordSpread.length - 1);
   let bottomRowReach = startingRow + (wordSpread.length - 1);
@@ -267,7 +275,7 @@ function enoughSq(direction) {
   }
 }
 
-// to fill the square with a character
+// () to fill the square with "a" character
 function charFill(row, col, fillChar) {
   let currentSq = `sq-${row}-${col}`;
   let currentDOM = document.querySelector(`#${currentSq}`);
@@ -277,37 +285,138 @@ function charFill(row, col, fillChar) {
     console.log("filledWords: ", filledWords);
 }
 
+// () လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်
 function existingCharCheck(direction, wordSpread) {
-  if (direction === 3) {
+  tempHolder = [];
+  // 1 = north
+  if (direction === 1) {
+    let currentRow = startingRow;
+    for (i = 0; i < wordSpread.length; i++) {
+      let currentSq = `sq-${currentRow}-${startingCol}`;
+      if(oneByOneCheck(currentSq, wordSpread[i])) {
+        currentRow--;
+      }
+      else return false;
+    }
+    return true; 
+  }
+  // 2 = north east
+  else if (direction === 2) {
+    let currentRow = startingRow;
     let currentCol = startingCol;
-    tempHolder = [];
+    for (i = 0; i < wordSpread.length; i++) {
+      let currentSq = `sq-${currentRow}-${currentCol}`;
+      if(oneByOneCheck(currentSq, wordSpread[i])) {
+        currentRow--;
+        currentCol++;
+      }
+      else return false;
+    }
+    return true;
+  }
+  // 3 = east
+  else if (direction === 3) {
+    let currentCol = startingCol;
     for (i = 0; i < wordSpread.length; i++) {
       let currentSq = `sq-${startingRow}-${currentCol}`;
-      
-      if (!filledWords[currentSq]) {
-        console.log("filledWords[currentSq]: ", filledWords[currentSq]);
-        console.log("wordSpread[i]: ", wordSpread[i]);
-        console.log("No char in the sq. Good to go!");
-        tempHolder[i] =  wordSpread[i];
-        console.log("tempHolder[i]: ", tempHolder[i]);
+      if(oneByOneCheck(currentSq, wordSpread[i])) {
+        currentCol++;
       }
-      else if (filledWords[currentSq] === wordSpread[i]) {
-        console.log("filledWords[currentSq]: ", filledWords[currentSq]);
-        console.log("wordSpread[i]: ", wordSpread[i]);
-        console.log("Existing char in sq is same as incoming. Good to go!");
-        tempHolder[i] =  wordSpread[i];
-        console.log("tempHolder[i]: ", tempHolder[i]);
-      } 
-      else {
-        console.log("filledWords[currentSq]: ", filledWords[currentSq]);
-        console.log("wordSpread[i]: ", wordSpread[i]);
-        console.log("Existing char in sq is NOT same as incoming. FAIL.");
-        return false;
-      }
-      currentCol++;
+      else return false;
     }
-    //return tempHolder;
     return true;
+  }
+  // 4 = south east
+  else if (direction === 4) {
+    let currentRow = startingRow;
+    let currentCol = startingCol;
+    for (i = 0; i < wordSpread.length; i++) {
+      let currentSq = `sq-${currentRow}-${currentCol}`;
+      if(oneByOneCheck(currentSq, wordSpread[i])) {
+        currentRow++;
+        currentCol++;
+      }
+      else return false;
+    }
+    return true;
+  }
+  // south
+  else if (direction === 5) {
+    let currentRow = startingRow;
+    for (i = 0; i < wordSpread.length; i++) {
+      let currentSq = `sq-${currentRow}-${startingCol}`;
+      if (oneByOneCheck(currentSq, wordSpread[i])) {
+        currentRow++;
+      }
+      else return false;
+    } 
+    return true;
+  }
+  // south west
+  else if (direction === 6) {
+    let currentRow = startingRow;
+    let currentCol = startingCol;
+    for (i = 0; i < wordSpread.length; i++) {
+      let currentSq = `sq-${currentRow}-${currentCol}`;
+      if (oneByOneCheck(currentSq, wordSpread[i])) {
+        currentRow++;
+        currentCol--;
+      }
+      else return false;
+    }
+    return true;
+  }
+  // west
+  else if (direction === 7) {
+    let currentCol = startingCol;
+    for (i = 0; i < wordSpread.length; i++) {
+      let currentSq = `sq-${startingRow}-${currentCol}`;
+      if (oneByOneCheck(currentSq, wordSpread[i])) {
+        currentCol--;
+      }
+      else return false;
+    }
+    return true;
+  }
+  // north west
+  else if (direction === 8) {
+    let currentRow = startingRow;
+    let currentCol = startingCol;
+    for (i = 0; i < wordSpread.length; i++) {
+      let currentSq = `sq-${currentRow}-${currentCol}`;
+      if (oneByOneCheck(currentSq, wordSpread[i])) {
+        currentRow--;
+        currentCol--;       
+      }
+      else return false;
+    }
+    return true; // just for debugging
+  }
+}
+
+// () sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်
+function oneByOneCheck(currentSq, char) {
+  if (!filledWords[currentSq]) {
+    console.log("filledWords[currentSq]: ", filledWords[currentSq]);
+    console.log("wordSpread[i]: ", char);
+    console.log("No char in the sq. Good to go!");
+    tempHolder[i] =  char;
+    console.log("tempHolder[i]: ", tempHolder[i]);
+    return true;
+  }
+  else if (filledWords[currentSq] === char) {
+    console.log("filledWords[currentSq]: ", filledWords[currentSq]);
+    console.log("wordSpread[i]: ", char);
+    console.log("Existing char in sq is same as incoming. Good to go!");
+    tempHolder[i] =  char;
+    console.log("tempHolder[i]: ", tempHolder[i]);
+    return true;
+  } 
+  else {
+    console.log("filledWords[currentSq]: ", filledWords[currentSq]);
+    console.log("wordSpread[i]: ", char);
+    console.log("Existing char in sq is NOT same as incoming. FAIL.");
+    return false;
   }
 }
 
