@@ -32,42 +32,47 @@ function start()
   wordSpread = [...currentWord];
   console.log(`no. of character: ${wordSpread.length}`);
 
-  // finding starting positon
-  // noOfSqs is fetched from 'main.js'
-  //TEMP2. startingRow = random(1, noOfSqs);
-  startingRow = 6;
-  //TEMP3. startingCol = random(1, noOfSqs);
-  startingCol = 6;
-  console.log("Starting row-col: ", startingRow,"-", startingCol);
+  // finding starting positon -- noOfSqs is fetched from 'main.js'
+  startingRow = random(1, noOfSqs);
+  //TEMP2. startingRow = 6;
+  startingCol = random(1, noOfSqs);
+  //TEMP3. startingCol = 6;
+  console.log("Starting row-col: ", startingRow, "-", startingCol);
 
   findAndFill();
 }
 
 // () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
 function findAndFill() {
-    //TEMP4 let direction = random(1, 8);
-    direction = 8;
+  
 
-    while (true) {
-      // creates an infinite loop, which means the code inside the loop will keep running 
-      // over and over again until something inside the loop causes it to stop.
-      
-      // let sqStatus = null;
+  //TEMP4 let direction = random(1, 8);
+  direction = 8;
 
-      if (enoughSq(direction)) {
-        // direction ကိုသိရလို့ sq လုံလောက်ရင်
-        console.log ("Successfully found a spot");
-        // sq လုံလောက်သော်လည်း sq တွေမှာ char ရှိနေလား ၊ ရှိတဲ့ char က သုံးလို့ရလား
-        if (existingCharCheck(direction, wordSpread)) {
-          // ရတယ် ဆိုရင် fill မယ်။
-          fillAWord(direction, tempHolder);
-        }
-        break; 
-      } else {
-        console.log("Failed, retrying...");
-        // ဒီမှာ နောက်တစ်နေရာ ရှာဖို့ start() ကို ပြန်ခေါ်ဖို့များ လို မလား ???  
-      } 
+  while (true) {
+    // creates an infinite loop, which means the code inside the loop will keep running 
+    // over and over again until something inside the loop causes it to stop.
+
+    // let sqStatus = null;
+
+    if (enoughSq(direction)) {
+      // direction ကိုသိရလို့ sq လုံလောက်ရင်
+      console.log("Successfully found a spot");
+      // sq လုံလောက်သော်လည်း sq တွေမှာ char ရှိနေလား ၊ ရှိတဲ့ char က သုံးလို့ရလား
+      if (existingCharCheck(direction, wordSpread)) {
+        // ရတယ် ဆိုရင် fill မယ်။
+        fillAWord(direction, tempHolder);
+      }
+      break;
+    } else {
+      // sq မလောက်တဲ့အခါ row-col အသစ် ပြန် random လုပ်ပြီး ပြန် loop
+      console.log("Failed, retrying with another randon row-col ...");
+      startingRow = random(1, noOfSqs);
+      startingCol = random(1, noOfSqs);
+      startingCol = 6;
+      console.log("Starting row-col: ", startingRow, "-", startingCol);
     }
+  }
 }
 
 // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
