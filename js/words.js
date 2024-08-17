@@ -37,7 +37,7 @@ function start()
   //TEMP2. startingRow = random(1, noOfSqs);
   startingRow = 6;
   //TEMP3. startingCol = random(1, noOfSqs);
-  startingCol = 10;
+  startingCol = 6;
   console.log("Starting row-col: ", startingRow,"-", startingCol);
 
   findAndFill();
@@ -77,109 +77,90 @@ function fillAWord(direction, tempHolder) {
   // 5 = south, 6 = south west, 7 = west, 8 = north west
   if (direction === 1) {
     console.log(`direction: ${direction} - north`);
-    if (enoughSq(direction)) {
-      let currentRow = startingRow;
-      for (i = 0; i < tempHolder.length; i++) {
-        charFill(currentRow, startingCol, tempHolder[i]);
-        currentRow--;
-      }
-      return success = true;
+    let currentRow = startingRow;
+    for (i = 0; i < tempHolder.length; i++) {
+      charFill(currentRow, startingCol, tempHolder[i]);
+      currentRow--;
     }
+    return success = true;
   }
   // north east
   else if (direction === 2) {
     console.log(`direction: ${direction} - north east;`);
-    if (enoughSq(direction)) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
-        charFill(currentRow, currentCol, tempHolder[i]);
-        currentRow--;
-        currentCol++;
-      }
-      return success = true;
+    let currentRow = startingRow;
+    let currentCol = startingCol;
+    for (i = 0; i < tempHolder.length; i++) {
+      charFill(currentRow, currentCol, tempHolder[i]);
+      currentRow--;
+      currentCol++;
     }
+    return success = true;
   }
   // east
   else if (direction === 3) {
     console.log(`direction: ${direction} - east;`);
     let currentCol = startingCol;
-
-    if (enoughSq(direction)) {
-      let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
-        charFill(startingRow, currentCol, tempHolder[i]);
-        currentCol++;
-      }
-      return success = true;
+    for (i = 0; i < tempHolder.length; i++) {
+      charFill(startingRow, currentCol, tempHolder[i]);
+      currentCol++;
     }
+    return success = true;
   }
   // south east
   else if (direction === 4) {
     console.log(`direction: ${direction} - south east;`);
-    if (enoughSq(direction)) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
-        charFill(currentRow, currentCol, tempHolder[i]);
-        currentRow++;
-        currentCol++;
-      }
-      return success = true;
+    let currentRow = startingRow;
+    let currentCol = startingCol;
+    for (i = 0; i < tempHolder.length; i++) {
+      charFill(currentRow, currentCol, tempHolder[i]);
+      currentRow++;
+      currentCol++;
     }
-
+    return success = true;
   }
   // south
   else if (direction === 5) {
     console.log(`direction: ${direction} - south;`);
-    if (enoughSq(direction)) {
-      let currentRow = startingRow;
-      for (i = 0; i < tempHolder.length; i++) {
-        charFill(currentRow, startingCol, tempHolder[i]);
-        currentRow++;
-      }
-      return success = true;
+    let currentRow = startingRow;
+    for (i = 0; i < tempHolder.length; i++) {
+      charFill(currentRow, startingCol, tempHolder[i]);
+      currentRow++;
     }
+    return success = true;
   }
   // south west
   else if (direction === 6) {
     console.log(`direction: ${direction} - south west;`);
-    if (enoughSq(direction)) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
-        charFill(currentRow, currentCol, tempHolder[i]);
-        currentRow++;
-        currentCol--;
-      }
-      return success = true;
+    let currentRow = startingRow;
+    let currentCol = startingCol;
+    for (i = 0; i < tempHolder.length; i++) {
+      charFill(currentRow, currentCol, tempHolder[i]);
+      currentRow++;
+      currentCol--;
     }
+    return success = true;
   }
   // west
   else if (direction === 7) {
     console.log(`direction: ${direction} - west;`);
-    if (enoughSq(direction)) {
-      let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
-        charFill(startingRow, currentCol, tempHolder[i]);
-        currentCol--;
-      }
-      return success = true;
+    let currentCol = startingCol;
+    for (i = 0; i < tempHolder.length; i++) {
+      charFill(startingRow, currentCol, tempHolder[i]);
+      currentCol--;
     }
+    return success = true;
   }
   // north west
   else if (direction === 8) {
     console.log(`direction: ${direction} - north west;`);
-    if (enoughSq(direction)) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
-        charFill(currentRow, currentCol, tempHolder[i]);
-        currentRow--;
-        currentCol--;
-      }
-      return success = true;
+    let currentRow = startingRow;
+    let currentCol = startingCol;
+    for (i = 0; i < tempHolder.length; i++) {
+      charFill(currentRow, currentCol, tempHolder[i]);
+      currentRow--;
+      currentCol--;
     }
+    return success = true;
   }
   else {
     console.log(`No direction found`);
