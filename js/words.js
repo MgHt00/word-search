@@ -17,32 +17,19 @@ let filledWords = {};
 let currentWord, wordSpread, startingRow, startingCol;
 let tempHolder = [];
 
-/* DEBUGGING
-let TEMPsq0 = document.querySelector("#sq-6-10");
-let TEMPsq1 = document.querySelector("#sq-3-7");
-filledWords["sq-6-10"] = "w"
-filledWords["sq-3-7"] = "d";
-TEMPsq0.textContent = filledWords["sq-6-10"];
-TEMPsq1.textContent = filledWords["sq-3-7"];
-*/
-
 function start()
 {
   for (let i = 0; i < words.length; i++) {
-    //currentWord = words[random(0, words.length-1)];
     currentWord = words[i];
     console.log("____________");
     console.log("start no. ", i);
     console.log("currentWord: ", currentWord);
-    //currentWord = ["a","p","p","l","e"];
     wordSpread = [...currentWord];
     console.log(`no. of character: ${wordSpread.length}`);
 
     // finding starting positon -- noOfSqs is fetched from 'main.js'
     startingRow = random(1, noOfSqs);
-    //TEMP2. startingRow = 6;
     startingCol = random(1, noOfSqs);
-    //TEMP3. startingCol = 6;
     console.log("Starting row-col: ", startingRow, "-", startingCol);
     
     findAndFill();
@@ -52,32 +39,31 @@ function start()
 // () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
 function findAndFill() {
   let direction = random(1, 8);
-  //TEMP4 direction = 8;
 
   while (true) {
     // creates an infinite loop, which means the code inside the loop will keep running 
     // over and over again until something inside the loop causes it to stop.
+
+    // direction သိရရင် sq လောက်လားစစ်မယ် 
     if (enoughSq(direction)) {
-      // direction ကိုသိရလို့ sq လုံလောက်ရင်
       console.log("Successfully found a spot");
-      // sq လုံလောက်သော်လည်း sq တွေမှာ char ရှိနေလား ၊ ရှိတဲ့ char က သုံးလို့ရလား
+      // sq လုံလောက်သော်လည်း sq တွေမှာ char ရှိနေလား ၊ ရှိတဲ့ char က သုံးလို့ရလား (Check if the characters in the squares are compatible with the word)
       if (existingCharCheck(direction, wordSpread)) {
-        // ရတယ် ဆိုရင် fill မယ်။
         fillAWord(direction, tempHolder);
+        break;
+      } else {
+        // existingCharCheck() စစ်လို့ ရှိပြီးသား char နဲ့ မတူရင် row, col အသစ်ပြန်ထုတ်ပြီး ပြန် loop (If not, re-randomize the starting row and column, and try again)
+        console.log("Existing char check failed, retrying with another random row-col ...");
+        startingRow = random(1, noOfSqs);
+        startingCol = random(1, noOfSqs);
+        console.log("New row-col: ", startingRow, "-", startingCol);
       }
-      break;
     } else {
-      // sq မလောက်တဲ့အခါ row-col အသစ် ပြန် random လုပ်ပြီး ပြန် loop
+      // sq မလောက်တဲ့အခါ row-col အသစ် ပြန် random လုပ်ပြီး ပြန် loop (If not enough squares in the current direction, re-randomize the starting row and column, and try again)
       console.log("Failed, retrying with another randon row-col ...");
       startingRow = random(1, noOfSqs);
       startingCol = random(1, noOfSqs);
       console.log("New row-col: ", startingRow, "-", startingCol);
-      /*
-      console.log("FAILED. Not enough sqs. BREAK from loop.");
-      //console.log("currentWord: ", currentWord);
-      //console.log("_________");
-      break;
-      */
     }
   }
 }
@@ -85,8 +71,7 @@ function findAndFill() {
 // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
 function fillAWord(direction, tempHolder) {
   let success = false;
-  // 1 = north, 2 = north east, 3 = east, 4 = south east, 
-  // 5 = south, 6 = south west, 7 = west, 8 = north west
+  // north
   if (direction === 1) {
     console.log(`direction: ${direction} - north`);
     let currentRow = startingRow;
@@ -180,7 +165,6 @@ function fillAWord(direction, tempHolder) {
   return success;
 }
 
-
 // () to check whether there is enough square in the calcuated direction
 function enoughSq(direction) {
   let topRowReach = startingRow - (wordSpread.length - 1);
@@ -192,7 +176,6 @@ function enoughSq(direction) {
   // 1 = north,
   if (direction === 1) {
     // ရောက်သွားနိုင်တဲ့ top row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် နည်းနေပြီဆိုရင် return false
-    console.log("Inside enoughSq(1)");
     console.log("enoughSq: ",topRowReach <= 0 ? false : true);
     return topRowReach <= 0 ? false : true;
   }
@@ -272,10 +255,9 @@ function enoughSq(direction) {
 function charFill(row, col, fillChar) {
   let currentSq = `sq-${row}-${col}`;
   let currentDOM = document.querySelector(`#${currentSq}`);
-
-    currentDOM.textContent = fillChar;
-    filledWords[currentSq] = fillChar;
-    //console.log("filledWords: ", filledWords);
+    
+    currentDOM.textContent = fillChar; // display on screen
+    filledWords[currentSq] = fillChar; // input -> object
 }
 
 // () လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်
@@ -383,31 +365,23 @@ function existingCharCheck(direction, wordSpread) {
       }
       else return false;
     }
-    return true; // just for debugging
+    return true; 
   }
 }
 
 // () sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်
 function oneByOneCheck(currentSq, char) {
   if (!filledWords[currentSq]) {
-    //console.log("filledWords[currentSq]: ", filledWords[currentSq]);
-    //console.log("wordSpread[i]: ", char);
     console.log("No char in the sq. Good to go!");
     tempHolder[i] =  char;
-    //console.log("tempHolder[i]: ", tempHolder[i]);
     return true;
   }
   else if (filledWords[currentSq] === char) {
-    //console.log("filledWords[currentSq]: ", filledWords[currentSq]);
-    //console.log("wordSpread[i]: ", char);
     console.log("Existing char in sq is same as incoming. Good to go!");
     tempHolder[i] =  char;
-    //console.log("tempHolder[i]: ", tempHolder[i]);
     return true;
   } 
   else {
-    //console.log("filledWords[currentSq]: ", filledWords[currentSq]);
-    //console.log("wordSpread[i]: ", char);
     console.log("Existing char in sq is NOT same as incoming. FAIL.");
     return false;
   }
