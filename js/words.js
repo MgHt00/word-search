@@ -12,7 +12,7 @@
   oneByOneCheck() - sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်မယ်
 */
 
-let words = ["words", "search", "untracked", "nothing", "present"];
+let words = ["delete", "suppress", "untracked", "nothing", "present", "branch", "insensitive", "background"];
 let filledWords = {};
 let currentWord, wordSpread, startingRow, startingCol;
 let tempHolder = [];
