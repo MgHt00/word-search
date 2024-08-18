@@ -28,33 +28,35 @@ TEMPsq1.textContent = filledWords["sq-3-7"];
 
 function start()
 {
-  currentWord = ["w","o","r","d","s"];
-  wordSpread = [...currentWord];
-  console.log(`no. of character: ${wordSpread.length}`);
+  for (let i = 0; i < words.length; i++) {
+    //currentWord = words[random(0, words.length-1)];
+    currentWord = words[i];
+    console.log("____________");
+    console.log("start no. ", i);
+    console.log("currentWord: ", currentWord);
+    //currentWord = ["a","p","p","l","e"];
+    wordSpread = [...currentWord];
+    console.log(`no. of character: ${wordSpread.length}`);
 
-  // finding starting positon -- noOfSqs is fetched from 'main.js'
-  startingRow = random(1, noOfSqs);
-  //TEMP2. startingRow = 6;
-  startingCol = random(1, noOfSqs);
-  //TEMP3. startingCol = 6;
-  console.log("Starting row-col: ", startingRow, "-", startingCol);
-
-  findAndFill();
+    // finding starting positon -- noOfSqs is fetched from 'main.js'
+    startingRow = random(1, noOfSqs);
+    //TEMP2. startingRow = 6;
+    startingCol = random(1, noOfSqs);
+    //TEMP3. startingCol = 6;
+    console.log("Starting row-col: ", startingRow, "-", startingCol);
+    
+    findAndFill();
+  }
 }
 
 // () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
 function findAndFill() {
-  
-
-  //TEMP4 let direction = random(1, 8);
-  direction = 8;
+  let direction = random(1, 8);
+  //TEMP4 direction = 8;
 
   while (true) {
     // creates an infinite loop, which means the code inside the loop will keep running 
     // over and over again until something inside the loop causes it to stop.
-
-    // let sqStatus = null;
-
     if (enoughSq(direction)) {
       // direction ကိုသိရလို့ sq လုံလောက်ရင်
       console.log("Successfully found a spot");
@@ -69,8 +71,13 @@ function findAndFill() {
       console.log("Failed, retrying with another randon row-col ...");
       startingRow = random(1, noOfSqs);
       startingCol = random(1, noOfSqs);
-      startingCol = 6;
-      console.log("Starting row-col: ", startingRow, "-", startingCol);
+      console.log("New row-col: ", startingRow, "-", startingCol);
+      /*
+      console.log("FAILED. Not enough sqs. BREAK from loop.");
+      //console.log("currentWord: ", currentWord);
+      //console.log("_________");
+      break;
+      */
     }
   }
 }
@@ -268,7 +275,7 @@ function charFill(row, col, fillChar) {
 
     currentDOM.textContent = fillChar;
     filledWords[currentSq] = fillChar;
-    console.log("filledWords: ", filledWords);
+    //console.log("filledWords: ", filledWords);
 }
 
 // () လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်
@@ -383,24 +390,24 @@ function existingCharCheck(direction, wordSpread) {
 // () sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်
 function oneByOneCheck(currentSq, char) {
   if (!filledWords[currentSq]) {
-    console.log("filledWords[currentSq]: ", filledWords[currentSq]);
-    console.log("wordSpread[i]: ", char);
+    //console.log("filledWords[currentSq]: ", filledWords[currentSq]);
+    //console.log("wordSpread[i]: ", char);
     console.log("No char in the sq. Good to go!");
     tempHolder[i] =  char;
-    console.log("tempHolder[i]: ", tempHolder[i]);
+    //console.log("tempHolder[i]: ", tempHolder[i]);
     return true;
   }
   else if (filledWords[currentSq] === char) {
-    console.log("filledWords[currentSq]: ", filledWords[currentSq]);
-    console.log("wordSpread[i]: ", char);
+    //console.log("filledWords[currentSq]: ", filledWords[currentSq]);
+    //console.log("wordSpread[i]: ", char);
     console.log("Existing char in sq is same as incoming. Good to go!");
     tempHolder[i] =  char;
-    console.log("tempHolder[i]: ", tempHolder[i]);
+    //console.log("tempHolder[i]: ", tempHolder[i]);
     return true;
   } 
   else {
-    console.log("filledWords[currentSq]: ", filledWords[currentSq]);
-    console.log("wordSpread[i]: ", char);
+    //console.log("filledWords[currentSq]: ", filledWords[currentSq]);
+    //console.log("wordSpread[i]: ", char);
     console.log("Existing char in sq is NOT same as incoming. FAIL.");
     return false;
   }
