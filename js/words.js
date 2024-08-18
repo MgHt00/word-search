@@ -2,7 +2,7 @@
   Functions
   -------
   findAndFill() - direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
-    |- enoughSq(), existingCharCheck(), fillAWord()
+    |- enoughSq(), existingCharCheck(), fillAWord(), listAWord()
   fillAWord() - ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
     |- enoughSq(), charFill()
   enoughSq() - ရလာတဲ့ direction မှာ sq လောက်သလားစစ်မယ်
@@ -10,12 +10,15 @@
   existingCharCheck() - လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်မယ်
     |- oneByOneCheck()
   oneByOneCheck() - sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်မယ်
+  listAWord() - HTML မှာ word တွေ list လုပ်ဖို့ 
 */
 
-let words = ["delete", "suppress", "untracked", "nothing", "present", "branch", "insensitive", "background"];
+let words = ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched"];
 let filledWords = {};
 let currentWord, wordSpread, startingRow, startingCol;
 let tempHolder = [];
+
+let sectionWordList = document.querySelector("#section-word-list");
 
 function start()
 {
@@ -33,14 +36,19 @@ function start()
     console.log("Starting row-col: ", startingRow, "-", startingCol);
     
     findAndFill();
+    listAWord(currentWord);
   }
+  console.log("ALL WORDS COMPLELTED!");
 }
 
 // () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
 function findAndFill() {
   let direction = random(1, 8);
+  let attempts = 0;
+  let maxAttempts = 10;
 
-  while (true) {
+  while (attempts < maxAttempts) {
+    attempts++;
     // creates an infinite loop, which means the code inside the loop will keep running 
     // over and over again until something inside the loop causes it to stop.
 
@@ -65,6 +73,10 @@ function findAndFill() {
       startingCol = random(1, noOfSqs);
       console.log("New row-col: ", startingRow, "-", startingCol);
     }
+  }
+
+  if (attempts === maxAttempts) {
+
   }
 }
 
@@ -385,6 +397,16 @@ function oneByOneCheck(currentSq, char) {
     console.log("Existing char in sq is NOT same as incoming. FAIL.");
     return false;
   }
+}
+
+// function to list the words underneath the square frame
+function listAWord(incoming) {
+  let ulElement = document.createElement("ul");
+  let liElement = document.createElement("li");
+  
+  liElement.textContent = incoming;
+  ulElement.appendChild(liElement);
+  sectionWordList.appendChild(ulElement);
 }
 
 start();
