@@ -13,7 +13,7 @@
   listAWord() - HTML မှာ word တွေ list လုပ်ဖို့ 
 */
 
-let words = ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched"];
+let words = ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"];
 let filledWords = {};
 let startingRow, startingCol;
 let tempHolder = [];
@@ -44,7 +44,7 @@ function findAndFill(currentWord) {
   //console.log(`no. of character: ${wordSpread.length}`);
   let direction = random(1, 8);
   let attempts = 0;
-  let maxAttempts = 10;
+  let maxAttempts = 30;
 
   while (attempts < maxAttempts) {
     attempts++;
