@@ -13,17 +13,22 @@
   listAWord() - HTML မှာ word တွေ list လုပ်ဖို့ 
 */
 
-let words = ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"];
+let wordList = ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"];
+let wordListCopy = [...wordList];
+let wordsToDisplay = 10;
+
 let filledWords = {};
 let startingRow, startingCol;
 let tempHolder = [];
 
 let sectionWordList = document.querySelector("#section-word-list");
 
-function start()
+function start(wordListCopy)
 {
-  for (let i = 0; i < words.length; i++) {
-    let currentWord = words[i];
+  for (let i = 0; i < wordsToDisplay; i++) {
+    console.log("START LOOP NO. :", i);
+    let arrayIndex = random(0, (wordListCopy.length-1));
+    let currentWord = wordListCopy[arrayIndex];
     console.log("____________");
     console.log("start no. ", i);
     console.log("currentWord: ", currentWord);
@@ -34,8 +39,11 @@ function start()
     //console.log("Starting row-col: ", startingRow, "-", startingCol);
     
     findAndFill(currentWord);
+
+    wordListCopy.splice(arrayIndex, 1);
+    console.log(wordListCopy);
   }
-  console.log("ALL WORDS COMPLELTED!");
+  console.log("START() COMPLELTED!");
 }
 
 // () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
@@ -409,4 +417,4 @@ function listAWord(incoming) {
   sectionWordList.appendChild(ulElement);
 }
 
-start();
+start(wordListCopy);
