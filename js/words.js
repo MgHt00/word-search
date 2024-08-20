@@ -26,11 +26,10 @@ let sectionWordList = document.querySelector("#section-word-list");
 function start(wordListCopy)
 {
   for (let i = 0; i < wordsToDisplay; i++) {
-    console.log("START LOOP NO. :", i);
     let arrayIndex = random(0, (wordListCopy.length-1));
     let currentWord = wordListCopy[arrayIndex];
     console.log("____________");
-    console.log("start no. ", i);
+    console.log("START LOOP NO. :", i);
     console.log("currentWord: ", currentWord);
 
     // finding starting positon -- noOfSqs is fetched from 'main.js'
@@ -38,10 +37,11 @@ function start(wordListCopy)
     startingCol = random(1, noOfSqs);
     //console.log("Starting row-col: ", startingRow, "-", startingCol);
     
-    findAndFill(currentWord);
-
-    wordListCopy.splice(arrayIndex, 1);
-    console.log(wordListCopy);
+    if (findAndFill(currentWord)) {
+      // findAndFill အောင်မြင်ခဲ့ရင် စာလုံးကို array ထဲကနေ ဖျက်ထုတ်မယ်။ 
+      wordListCopy.splice(arrayIndex, 1);
+      console.log("findAndFill() success: ",wordListCopy);
+    }    
   }
   console.log("START() COMPLELTED!");
 }
@@ -53,6 +53,7 @@ function findAndFill(currentWord) {
   let direction = random(1, 8);
   let attempts = 0;
   let maxAttempts = 30;
+  let status = 0; // 0 = fail, 1 = success
 
   while (attempts < maxAttempts) {
     attempts++;
@@ -66,6 +67,7 @@ function findAndFill(currentWord) {
       if (existingCharCheck(direction, wordSpread)) {
         fillAWord(direction, tempHolder);
         listAWord(currentWord);
+        status = 1;
         break;
       } else {
         // existingCharCheck() စစ်လို့ ရှိပြီးသား char နဲ့ မတူရင် row, col အသစ်ပြန်ထုတ်ပြီး ပြန် loop (If not, re-randomize the starting row and column, and try again)
@@ -86,6 +88,8 @@ function findAndFill(currentWord) {
   if (attempts === maxAttempts) {
     console.log("!!! maxAttempt reached !!!");
   }
+
+  return status;
 }
 
 // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
