@@ -76,7 +76,7 @@ function findAndFill(currentWord) {
   }
 
   if (attempts === maxAttempts) {
-    console.log("!!! maxAttempt reched !!!");
+    console.log("!!! maxAttempt reached !!!");
   }
 }
 
