@@ -15,7 +15,7 @@
 
 let wordList = ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"];
 let wordListCopy = [...wordList];
-let wordsToDisplay = 10;
+let noOfWordsToDisplay = 10;
 
 let filledWords = {};
 let startingRow, startingCol;
@@ -23,9 +23,11 @@ let tempHolder = [];
 
 let sectionWordList = document.querySelector("#section-word-list");
 
-function start(wordListCopy)
+function start(wordListCopy, noOfWordsToDisplay)
 {
-  for (let i = 0; i < wordsToDisplay; i++) {
+  let leftToDisplay = noOfWordsToDisplay;
+  console.log("No of times to loop in total: ", noOfWordsToDisplay);
+  for (let i = 0; i < noOfWordsToDisplay; i++) {
     let arrayIndex = random(0, (wordListCopy.length-1));
     let currentWord = wordListCopy[arrayIndex];
     console.log("____________");
@@ -40,9 +42,24 @@ function start(wordListCopy)
     if (findAndFill(currentWord)) {
       // findAndFill အောင်မြင်ခဲ့ရင် စာလုံးကို array ထဲကနေ ဖျက်ထုတ်မယ်။ 
       wordListCopy.splice(arrayIndex, 1);
+      leftToDisplay--;
       console.log("findAndFill() success: ",wordListCopy);
+      console.log("wordListCopy.length: ", wordListCopy.length);
     }    
   }
+  
+  // grid (sq) ထဲရောက်နေတဲ့ စာလုံးအရေအတွက်က ပြချင်တဲ့ အရေအတွက် `noOfWordsToDisplay` ကို မရောက်သေးရင် start() ကိုပြန် run မယ်။
+  if (leftToDisplay > 0) {
+    //console.log("____________");
+    //console.log("leftToDisplay: ", leftToDisplay);
+    //console.log("wordListCopy.length: ", wordListCopy.length);
+    //console.log("EXECUTED: start(wordListCopy, leftToDisplay);");
+
+    setTimeout(() => { // check sn1.MD for studying purpose
+        start(wordListCopy, leftToDisplay);
+    }, 0);
+  }
+  
   console.log("START() COMPLELTED!");
 }
 
@@ -71,14 +88,14 @@ function findAndFill(currentWord) {
         break;
       } else {
         // existingCharCheck() စစ်လို့ ရှိပြီးသား char နဲ့ မတူရင် row, col အသစ်ပြန်ထုတ်ပြီး ပြန် loop (If not, re-randomize the starting row and column, and try again)
-        console.log("Existing char check failed, retrying with another random row-col ...");
+        //console.log("Existing char check failed, retrying with another random row-col ...");
         startingRow = random(1, noOfSqs);
         startingCol = random(1, noOfSqs);
         //console.log("New row-col: ", startingRow, "-", startingCol);
       }
     } else {
       // sq မလောက်တဲ့အခါ row-col အသစ် ပြန် random လုပ်ပြီး ပြန် loop (If not enough squares in the current direction, re-randomize the starting row and column, and try again)
-      console.log("Failed, retrying with another randon row-col ...");
+      //console.log("Failed, retrying with another randon row-col ...");
       startingRow = random(1, noOfSqs);
       startingCol = random(1, noOfSqs);
       //console.log("New row-col: ", startingRow, "-", startingCol);
@@ -396,17 +413,17 @@ function existingCharCheck(direction, wordSpread) {
 // () sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်
 function oneByOneCheck(currentSq, char) {
   if (!filledWords[currentSq]) {
-    console.log("No char in the sq. Good to go!");
+    //console.log("No char in the sq. Good to go!");
     tempHolder[i] =  char;
     return true;
   }
   else if (filledWords[currentSq] === char) {
-    console.log("Existing char in sq is same as incoming. Good to go!");
+    //console.log("Existing char in sq is same as incoming. Good to go!");
     tempHolder[i] =  char;
     return true;
   } 
   else {
-    console.log("Existing char in sq is NOT same as incoming. FAIL.");
+    //console.log("Existing char in sq is NOT same as incoming. FAIL.");
     return false;
   }
 }
@@ -421,4 +438,4 @@ function listAWord(incoming) {
   sectionWordList.appendChild(ulElement);
 }
 
-start(wordListCopy);
+start(wordListCopy, noOfWordsToDisplay);
