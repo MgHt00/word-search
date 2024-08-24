@@ -73,8 +73,7 @@ function findAndFill(currentWord) {
 
   let wordSpread = [...currentWord];
   //console.log(`no. of character: ${wordSpread.length}`);
-  //TEMP let direction = random(1, 8);
-  let direction = random(1, 4);
+  let direction = random(1, 8);
   let attempts = 0;
   let maxAttempts = 30;
   let status = 0; // 0 = fail, 1 = success
@@ -120,15 +119,12 @@ function fillAWord(direction, tempHolder) {
 // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
 
   let success = false;
-  let saveIt = false;
   // north
   if (direction === 1) {
     //console.log(`direction: ${direction} - north`);
     let currentRow = startingRow;
     for (i = 0; i < tempHolder.length; i++) {
-      saveIt = (i === 0 || i === tempHolder.length -1); // check sn2.MD for explanation saveIt = (i === 0 || i === tempHolder.length - 1) ? true : false;
-      charFill(currentRow, startingCol, tempHolder[i], saveIt);
-      saveIt = false;
+      processChar(currentRow, startingCol, tempHolder[i], i);
       currentRow--;
     }
     return success = true;
@@ -139,9 +135,7 @@ function fillAWord(direction, tempHolder) {
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
-      saveIt = (i === 0 || i === tempHolder.length -1); 
-      charFill(currentRow, currentCol, tempHolder[i], saveIt);
-      saveIt = false;
+      processChar(currentRow, currentCol, tempHolder[i], i);
       currentRow--;
       currentCol++;
     }
@@ -152,9 +146,7 @@ function fillAWord(direction, tempHolder) {
     //console.log(`direction: ${direction} - east;`);
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
-      saveIt = (i === 0 || i === tempHolder.length -1); 
-      charFill(startingRow, currentCol, tempHolder[i], saveIt);
-      saveIt = false;
+      processChar(startingRow, currentCol, tempHolder[i], i);
       currentCol++;
     }
     return success = true;
@@ -165,9 +157,7 @@ function fillAWord(direction, tempHolder) {
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
-      saveIt = (i === 0 || i === tempHolder.length -1); 
-      charFill(currentRow, currentCol, tempHolder[i], saveIt);
-      saveIt = false;
+      processChar(currentRow, currentCol, tempHolder[i], i);
       currentRow++;
       currentCol++;
     }
@@ -178,7 +168,7 @@ function fillAWord(direction, tempHolder) {
     //console.log(`direction: ${direction} - south;`);
     let currentRow = startingRow;
     for (i = 0; i < tempHolder.length; i++) {
-      charFill(currentRow, startingCol, tempHolder[i]);
+      processChar(currentRow, startingCol, tempHolder[i], i);
       currentRow++;
     }
     return success = true;
@@ -189,7 +179,7 @@ function fillAWord(direction, tempHolder) {
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
-      charFill(currentRow, currentCol, tempHolder[i]);
+      processChar(currentRow, currentCol, tempHolder[i], i);
       currentRow++;
       currentCol--;
     }
@@ -200,7 +190,7 @@ function fillAWord(direction, tempHolder) {
     //console.log(`direction: ${direction} - west;`);
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
-      charFill(startingRow, currentCol, tempHolder[i]);
+      processChar(startingRow, currentCol, tempHolder[i], i);
       currentCol--;
     }
     return success = true;
@@ -211,7 +201,7 @@ function fillAWord(direction, tempHolder) {
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
-      charFill(currentRow, currentCol, tempHolder[i]);
+      processChar(currentRow, currentCol, tempHolder[i], i);
       currentRow--;
       currentCol--;
     }
@@ -333,7 +323,7 @@ function charFill(row, col, fillChar, saveIt) {
       startAndEndIndex++;
     }
     //console.log("startAndEndIndex: ", startAndEndIndex);
-    console.log("startAndEnd[]: ", startAndEnd);
+    //console.log("startAndEnd[]: ", startAndEnd);
   }
 }
 
@@ -477,10 +467,12 @@ function listAWord(incoming) {
   sectionWordList.appendChild(ulElement);
 }
 
-function processChar(row, col, char, index, position) {
-  let saveIt = (i === 0 || i === tempHolder.length -1); 
-  charFill(startingRow, currentCol, tempHolder[i], saveIt);
-  saveIt = false;
+function processChar(row, col, char, index) {
+  // check starting and ending index, set saveIt, and calls charFill(),
+
+  let saveIt = (index === 0 || index === tempHolder.length -1); // check sn2.MD ( saveIt = (i === 0 || i === tempHolder.length - 1) ? true : false;)
+  charFill(row, col, char, saveIt);
+  return saveIt;
 }
 
 start(wordListCopy, noOfWordsToDisplay);
