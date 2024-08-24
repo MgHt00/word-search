@@ -6,18 +6,23 @@
   fillAWord() - ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
     |- enoughSq(), charFill()
   enoughSq() - ရလာတဲ့ direction မှာ sq လောက်သလားစစ်မယ်
-  charFill() - sq တစ်ကွက်ချင်းကို char တစ်လုံးချင်း ဖြည့်မယ်
+  charFill() - sq တစ်ကွက်ချင်းကို char တစ်လုံးချင်း ဖြည့်မယ် ၊ staring sq နဲ့ ending sq နာမည်တွေကို startAndEnd[] ထဲ သိမ်းမယ်။
   existingCharCheck() - လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်မယ်
     |- oneByOneCheck()
   oneByOneCheck() - sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်မယ်
   listAWord() - HTML မှာ word တွေ list လုပ်ဖို့ 
+  processChar() - saveIT သတ်မှတ်မယ်။ charFill() ကို ပြန်ခေါ်မယ်
+     |- charFill()
 */
 
 let wordList = ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"];
 let wordListCopy = [...wordList];
 let noOfWordsToDisplay = 10;
 
-let filledWords = {};
+let filledWords = {}; // ဖြည့်ထားတဲ့ words တွေရဲ့ char တစ်လုံးချင်းစီနဲ့ အကွက် no. နဲ့ တွဲသိမ်းဖို့ 
+let startAndEnd = []; // word တစ်ခုချင်းရဲ့ အစ ၊ အဆုံး sq နံပါတ်တွေ မှတ်ဖို့
+let startAndEndIndex = 0;
+let startOrEnd = "start";
 let startingRow, startingCol;
 let tempHolder = [];
 
@@ -30,9 +35,9 @@ function start(wordListCopy, noOfWordsToDisplay)
   for (let i = 0; i < noOfWordsToDisplay; i++) {
     let arrayIndex = random(0, (wordListCopy.length-1));
     let currentWord = wordListCopy[arrayIndex];
-    console.log("____________");
-    console.log("START LOOP NO. :", i);
-    console.log("currentWord: ", currentWord);
+    console.log("______start() starts______");
+    //console.log("START LOOP NO. :", i);
+    //console.log("currentWord: ", currentWord);
 
     // finding starting positon -- noOfSqs is fetched from 'main.js'
     startingRow = random(1, noOfSqs);
@@ -43,8 +48,8 @@ function start(wordListCopy, noOfWordsToDisplay)
       // findAndFill အောင်မြင်ခဲ့ရင် စာလုံးကို array ထဲကနေ ဖျက်ထုတ်မယ်။ 
       wordListCopy.splice(arrayIndex, 1);
       leftToDisplay--;
-      console.log("findAndFill() success: ",wordListCopy);
-      console.log("wordListCopy.length: ", wordListCopy.length);
+      //console.log("findAndFill() success: ",wordListCopy);
+      //console.log("FindAndFill() success; wordListCopy.length: ", wordListCopy.length);
     }    
   }
   
@@ -63,11 +68,13 @@ function start(wordListCopy, noOfWordsToDisplay)
   console.log("START() COMPLELTED!");
 }
 
-// () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
 function findAndFill(currentWord) {
+  // () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
+
   let wordSpread = [...currentWord];
   //console.log(`no. of character: ${wordSpread.length}`);
-  let direction = random(1, 8);
+  //TEMP let direction = random(1, 8);
+  let direction = random(1, 4);
   let attempts = 0;
   let maxAttempts = 30;
   let status = 0; // 0 = fail, 1 = success
@@ -79,7 +86,7 @@ function findAndFill(currentWord) {
 
     // direction သိရရင် sq လောက်လားစစ်မယ် 
     if (enoughSq(direction, wordSpread)) {
-      console.log("Successfully found a spot");
+      //console.log("Successfully found a spot");
       // sq လုံလောက်သော်လည်း sq တွေမှာ char ရှိနေလား ၊ ရှိတဲ့ char က သုံးလို့ရလား (Check if the characters in the squares are compatible with the word)
       if (existingCharCheck(direction, wordSpread)) {
         fillAWord(direction, tempHolder);
@@ -109,15 +116,19 @@ function findAndFill(currentWord) {
   return status;
 }
 
-// () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
 function fillAWord(direction, tempHolder) {
+// () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
+
   let success = false;
+  let saveIt = false;
   // north
   if (direction === 1) {
     //console.log(`direction: ${direction} - north`);
     let currentRow = startingRow;
     for (i = 0; i < tempHolder.length; i++) {
-      charFill(currentRow, startingCol, tempHolder[i]);
+      saveIt = (i === 0 || i === tempHolder.length -1); // check sn2.MD for explanation saveIt = (i === 0 || i === tempHolder.length - 1) ? true : false;
+      charFill(currentRow, startingCol, tempHolder[i], saveIt);
+      saveIt = false;
       currentRow--;
     }
     return success = true;
@@ -128,7 +139,9 @@ function fillAWord(direction, tempHolder) {
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
-      charFill(currentRow, currentCol, tempHolder[i]);
+      saveIt = (i === 0 || i === tempHolder.length -1); 
+      charFill(currentRow, currentCol, tempHolder[i], saveIt);
+      saveIt = false;
       currentRow--;
       currentCol++;
     }
@@ -139,7 +152,9 @@ function fillAWord(direction, tempHolder) {
     //console.log(`direction: ${direction} - east;`);
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
-      charFill(startingRow, currentCol, tempHolder[i]);
+      saveIt = (i === 0 || i === tempHolder.length -1); 
+      charFill(startingRow, currentCol, tempHolder[i], saveIt);
+      saveIt = false;
       currentCol++;
     }
     return success = true;
@@ -150,7 +165,9 @@ function fillAWord(direction, tempHolder) {
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
-      charFill(currentRow, currentCol, tempHolder[i]);
+      saveIt = (i === 0 || i === tempHolder.length -1); 
+      charFill(currentRow, currentCol, tempHolder[i], saveIt);
+      saveIt = false;
       currentRow++;
       currentCol++;
     }
@@ -206,8 +223,9 @@ function fillAWord(direction, tempHolder) {
   return success;
 }
 
-// () to check whether there is enough square in the calcuated direction
 function enoughSq(direction, wordSpread) {
+  // () to check whether there is enough square in the calcuated direction
+
   let topRowReach = startingRow - (wordSpread.length - 1);
   let bottomRowReach = startingRow + (wordSpread.length - 1);
   let leftColReach = startingCol - (wordSpread.length - 1);
@@ -292,17 +310,36 @@ function enoughSq(direction, wordSpread) {
   }
 }
 
-// () to fill the square with "a" character
-function charFill(row, col, fillChar) {
+function charFill(row, col, fillChar, saveIt) {
+  // () to fill the square with incoming character
+
   let currentSq = `sq-${row}-${col}`;
   let currentDOM = document.querySelector(`#${currentSq}`);
+  //console.log("currentSq", currentSq);
     
-    currentDOM.textContent = fillChar; // display on screen
-    filledWords[currentSq] = fillChar; // input -> object
+  currentDOM.textContent = fillChar; // display on screen
+  filledWords[currentSq] = fillChar; // input -> object
+
+  if (saveIt) {
+    if (startOrEnd === "start") {
+      // Initialize the object if it's the start of a new entry
+      startAndEnd[startAndEndIndex] = {};
+      startAndEnd[startAndEndIndex]["start"] = currentSq;
+      startOrEnd = "end";
+    }
+    else if(startOrEnd === "end") {
+      startAndEnd[startAndEndIndex]["end"] = currentSq;
+      startOrEnd = "start";
+      startAndEndIndex++;
+    }
+    //console.log("startAndEndIndex: ", startAndEndIndex);
+    console.log("startAndEnd[]: ", startAndEnd);
+  }
 }
 
-// () လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်
 function existingCharCheck(direction, wordSpread) {
+  // () လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်
+
   tempHolder = [];
   // 1 = north
   if (direction === 1) {
@@ -410,8 +447,9 @@ function existingCharCheck(direction, wordSpread) {
   }
 }
 
-// () sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်
 function oneByOneCheck(currentSq, char) {
+  // () sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်
+
   if (!filledWords[currentSq]) {
     //console.log("No char in the sq. Good to go!");
     tempHolder[i] =  char;
@@ -428,14 +466,21 @@ function oneByOneCheck(currentSq, char) {
   }
 }
 
-// function to list the words underneath the square frame
 function listAWord(incoming) {
+  // function to list the words underneath the square frame
+
   let ulElement = document.createElement("ul");
   let liElement = document.createElement("li");
   
   liElement.textContent = incoming;
   ulElement.appendChild(liElement);
   sectionWordList.appendChild(ulElement);
+}
+
+function processChar(row, col, char, index, position) {
+  let saveIt = (i === 0 || i === tempHolder.length -1); 
+  charFill(startingRow, currentCol, tempHolder[i], saveIt);
+  saveIt = false;
 }
 
 start(wordListCopy, noOfWordsToDisplay);
