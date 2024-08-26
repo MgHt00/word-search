@@ -1,35 +1,4 @@
-/*
-  Functions
-  -------
-  start()
-    |- findAndFill()
-
-  findAndFill() ->  direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
-    |- enoughSq(), existingCharCheck(), fillAWord(), listAWord()
-
-  fillAWord() ->  ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
-    |- enoughSq(), charFill()
-
-  enoughSq() ->  ရလာတဲ့ direction မှာ sq လောက်သလားစစ်မယ်
-    |-checkRight(), checkLeft(), checkTop(), checkBelow()
-
-  charFill() ->  sq တစ်ကွက်ချင်းကို char တစ်လုံးချင်း ဖြည့်မယ် ၊ staring sq နဲ့ ending sq နာမည်တွေကို startAndEnd[] ထဲ သိမ်းမယ်။
-  
-  existingCharCheck() ->  လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်မယ်
-    |- oneByOneCheck()
-  
-  oneByOneCheck() ->  sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်မယ်
-  
-  listAWord() ->  HTML မှာ word တွေ list လုပ်ဖို့ 
-  
-  processChar() ->  saveIT သတ်မှတ်မယ်။ charFill() ကို ပြန်ခေါ်မယ်
-    |- charFill()
-  
-    checkRight(), checkLeft(), checkTop(), checkBelow() ->  row, col တွက်ပြီး isWithinBounds() ကို call
-    |- isWithinBounds()
-  
-    isWithinBounds() -> row, col လောက် မလောက်စစ် 
-*/
+/* check le1.MD for functions and structures */
 
 let wordList = ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"];
 let wordListCopy = [...wordList];
@@ -383,7 +352,7 @@ function processChar(row, col, char, index) {
 }
 
 function checkRight(word, row, col) {
-  // check le1.MD for the logic behind the adjustments
+  // check le2.MD for the logic behind the adjustments
   if (!isWithinBounds(row, col + (word.length - 1))) return false;
   return true;  // Explicitly return true if the word fits within the boundary
 }
