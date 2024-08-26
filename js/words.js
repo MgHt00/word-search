@@ -28,7 +28,6 @@ let startOrEnd = "start";
 let startingRow, startingCol;
 let maxRow = noOfSqs;
 let maxCol = noOfSqs;
-console.log("maxRow: ", maxRow, "| maxCol: ", maxCol);
 let tempHolder = [];
 
 let sectionWordList = document.querySelector("#section-word-list");
@@ -41,43 +40,30 @@ function start(wordListCopy, noOfWordsToDisplay)
     let arrayIndex = random(0, (wordListCopy.length-1));
     let currentWord = wordListCopy[arrayIndex];
     console.log("______start() starts______");
-    //console.log("START LOOP NO. :", i);
-    //console.log("currentWord: ", currentWord);
 
     // finding starting positon -- noOfSqs is fetched from 'main.js'
     startingRow = random(1, noOfSqs);
     startingCol = random(1, noOfSqs);
-    //console.log("Starting row-col: ", startingRow, "-", startingCol);
 
     if (findAndFill(currentWord)) {
       // findAndFill အောင်မြင်ခဲ့ရင် စာလုံးကို array ထဲကနေ ဖျက်ထုတ်မယ်။ 
       wordListCopy.splice(arrayIndex, 1);
       leftToDisplay--;
-      //console.log("findAndFill() success: ",wordListCopy);
-      //console.log("FindAndFill() success; wordListCopy.length: ", wordListCopy.length);
     }    
   }
   
   // grid (sq) ထဲရောက်နေတဲ့ စာလုံးအရေအတွက်က ပြချင်တဲ့ အရေအတွက် `noOfWordsToDisplay` ကို မရောက်သေးရင် start() ကိုပြန် run မယ်။
   if (leftToDisplay > 0) {
-    //console.log("____________");
-    //console.log("leftToDisplay: ", leftToDisplay);
-    //console.log("wordListCopy.length: ", wordListCopy.length);
-    //console.log("EXECUTED: start(wordListCopy, leftToDisplay);");
-
     setTimeout(() => { // check sn1.MD for studying purpose
         start(wordListCopy, leftToDisplay);
     }, 0);
   }
-  
-  console.log("START() COMPLELTED!");
 }
 
 function findAndFill(currentWord) {
   // () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
 
   let wordSpread = [...currentWord];
-  //console.log(`no. of character: ${wordSpread.length}`);
   let direction = random(1, 8);
   let attempts = 0;
   let maxAttempts = 30;
@@ -90,7 +76,6 @@ function findAndFill(currentWord) {
 
     // direction သိရရင် sq လောက်လားစစ်မယ် 
     if (enoughSq(direction, wordSpread)) {
-      //console.log("Successfully found a spot");
       // sq လုံလောက်သော်လည်း sq တွေမှာ char ရှိနေလား ၊ ရှိတဲ့ char က သုံးလို့ရလား (Check if the characters in the squares are compatible with the word)
       if (existingCharCheck(direction, wordSpread)) {
         fillAWord(direction, tempHolder);
@@ -99,17 +84,13 @@ function findAndFill(currentWord) {
         break;
       } else {
         // existingCharCheck() စစ်လို့ ရှိပြီးသား char နဲ့ မတူရင် row, col အသစ်ပြန်ထုတ်ပြီး ပြန် loop (If not, re-randomize the starting row and column, and try again)
-        //console.log("Existing char check failed, retrying with another random row-col ...");
         startingRow = random(1, noOfSqs);
         startingCol = random(1, noOfSqs);
-        //console.log("New row-col: ", startingRow, "-", startingCol);
       }
     } else {
       // sq မလောက်တဲ့အခါ row-col အသစ် ပြန် random လုပ်ပြီး ပြန် loop (If not enough squares in the current direction, re-randomize the starting row and column, and try again)
-      //console.log("Failed, retrying with another randon row-col ...");
       startingRow = random(1, noOfSqs);
       startingCol = random(1, noOfSqs);
-      //console.log("New row-col: ", startingRow, "-", startingCol);
     }
   }
 
@@ -126,7 +107,6 @@ function fillAWord(direction, tempHolder) {
   let success = false;
   // north
   if (direction === 1) {
-    //console.log(`direction: ${direction} - north`);
     let currentRow = startingRow;
     for (i = 0; i < tempHolder.length; i++) {
       processChar(currentRow, startingCol, tempHolder[i], i);
@@ -136,7 +116,6 @@ function fillAWord(direction, tempHolder) {
   }
   // north east
   else if (direction === 2) {
-    //console.log(`direction: ${direction} - north east;`);
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
@@ -148,7 +127,6 @@ function fillAWord(direction, tempHolder) {
   }
   // east
   else if (direction === 3) {
-    //console.log(`direction: ${direction} - east;`);
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
       processChar(startingRow, currentCol, tempHolder[i], i);
@@ -158,7 +136,6 @@ function fillAWord(direction, tempHolder) {
   }
   // south east
   else if (direction === 4) {
-    //console.log(`direction: ${direction} - south east;`);
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
@@ -170,7 +147,6 @@ function fillAWord(direction, tempHolder) {
   }
   // south
   else if (direction === 5) {
-    //console.log(`direction: ${direction} - south;`);
     let currentRow = startingRow;
     for (i = 0; i < tempHolder.length; i++) {
       processChar(currentRow, startingCol, tempHolder[i], i);
@@ -180,7 +156,6 @@ function fillAWord(direction, tempHolder) {
   }
   // south west
   else if (direction === 6) {
-    //console.log(`direction: ${direction} - south west;`);
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
@@ -192,7 +167,6 @@ function fillAWord(direction, tempHolder) {
   }
   // west
   else if (direction === 7) {
-    //console.log(`direction: ${direction} - west;`);
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
       processChar(startingRow, currentCol, tempHolder[i], i);
@@ -202,7 +176,6 @@ function fillAWord(direction, tempHolder) {
   }
   // north west
   else if (direction === 8) {
-    //console.log(`direction: ${direction} - north west;`);
     let currentRow = startingRow;
     let currentCol = startingCol;
     for (i = 0; i < tempHolder.length; i++) {
@@ -220,97 +193,19 @@ function fillAWord(direction, tempHolder) {
 
 function enoughSq(direction, wordSpread) {
   // () to check whether there is enough square in the calcuated direction
-
-  let topRowReach = startingRow - (wordSpread.length - 1);
-  let bottomRowReach = startingRow + (wordSpread.length - 1);
-  let leftColReach = startingCol - (wordSpread.length - 1);
-  let rightColReach = startingCol + (wordSpread.length - 1);
-  //console.log("topRowReach:", topRowReach, ", bottomRowReach:", bottomRowReach, ",leftColReach:", leftColReach, ",rightColReach:", rightColReach);
-
   let rightStatus = checkRight(wordSpread, startingRow, startingCol);
   let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
   let topStatus = checkTop(wordSpread, startingRow, startingCol);
   let belowStatus = checkBelow(wordSpread, startingRow, startingCol);
-
-  console.log("right: ", rightStatus, "| left: ", leftStatus, "| top: ", topStatus, "| below: ", belowStatus);
-
-
-  // 1 = north,
-  if (direction === 1) {
-    // ရောက်သွားနိုင်တဲ့ top row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် နည်းနေပြီဆိုရင် return false
-    //console.log("enoughSq: ",topRowReach <= 0 ? false : true);
-    return topRowReach <= 0 ? false : true;
-  }
-
-  //2 = north east
-  else if (direction === 2) {
-    // ရောက်သွားနိုင်တဲ့ top row number နဲ့ right col no. ကိုတွက်
-    if (topRowReach > 0) {
-      if (rightColReach <= noOfSqs) {
-        //console.log("enoughSq: true");
-        return true;
-      }
-    }
-    //console.log("enoughSq: false");
-    return false;
-  }
-
-  // 3 = east
-  else if (direction === 3) {
-    // ရောက်သွားနိုင်တဲ့ right column number က ရှိတဲ့ အကွက် အရေအတွက်ထက် များနေပြီဆိုရင် return false
-    //console.log("enoughSq: ",rightColReach > noOfSqs ? false : true);
-    return rightColReach > noOfSqs ? false : true;
-  }
-
-  // 4 = south east
-  else if (direction === 4) {
-    // ရောက်သွားနိုင်တဲ့ bottom row number နဲ့ right col no. ကိုတွက်
-    if (bottomRowReach <= noOfSqs) {
-      if (rightColReach <= noOfSqs) {
-        //console.log("enoughSq: true");
-        return true;
-      }
-    }
-    //console.log("enoughSq: false");
-    return false;
-  }
-
-  // 5 = south
-  else if (direction === 5) {
-    // ရောက်သွားနိုင်တဲ့ bottom row number က ရှိတဲ့ အကွက် အရေအတွက်ထက် များနေပြီဆိုရင် return false
-    //console.log("enoughSq: ",bottomRowReach > noOfSqs ? false : true);
-    return bottomRowReach > noOfSqs ? false : true;
-  }
-
-  // 6 = south west
-  else if (direction === 6) {
-    if (bottomRowReach <= noOfSqs) {
-      if (leftColReach > 0) {
-        //console.log("enoughSq: true");
-        return true;
-      }
-    }
-    console.log("enoughSq: false");
-    return false;
-  }
   
-  // 7 = west
-  else if (direction === 7) {
-    //console.log("enoughSq: ",leftColReach <= 0 ? false : true);
-    return leftColReach <= 0 ? false : true;
-  }
-
-  //8 = north west
-  else if (direction === 8) {
-    if (topRowReach > 0) {
-      if (leftColReach > 0) {
-        //console.log("enoughSq: true");
-        return true;
-      }
-    }
-    //console.log("enoughSq: false");
-    return false;
-  }
+  if (direction === 1) return topStatus; // 1 = north, ရောက်သွားနိုင်တဲ့ top row number ကိုစစ်
+  else if (direction === 2) return (topStatus && rightStatus); //2 = north east
+  else if (direction === 3) return rightStatus; // 3 = east
+  else if (direction === 4) return (belowStatus && rightStatus); // 4 = south east
+  else if (direction === 5) return belowStatus; // 5 = south
+  else if (direction === 6) return (belowStatus && leftStatus); // 6 = south west
+  else if (direction === 7) return leftStatus; // 7 = west
+  else if (direction === 8) return (topStatus && leftStatus); //8 = north west
 }
 
 function charFill(row, col, fillChar, saveIt) {
@@ -511,7 +406,7 @@ function checkBelow(word, row, col) {
 
 function isWithinBounds(row, col) {
   // Boundary check function
-  return row >= 0 && row <= maxRow && col >=0 && col <= maxCol;
+  return row > 0 && row <= maxRow && col >0 && col <= maxCol;
 }
 
 start(wordListCopy, noOfWordsToDisplay);
