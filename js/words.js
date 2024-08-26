@@ -1,6 +1,8 @@
 /*
   Functions
   -------
+  start()
+    |- findAndFill()
   findAndFill() - direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
     |- enoughSq(), existingCharCheck(), fillAWord(), listAWord()
   fillAWord() - ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
@@ -24,6 +26,9 @@ let startAndEnd = []; // word တစ်ခုချင်းရဲ့ အစ ၊
 let startAndEndIndex = 0;
 let startOrEnd = "start";
 let startingRow, startingCol;
+let maxRow = noOfSqs;
+let maxCol = noOfSqs;
+console.log("maxRow: ", maxRow, "| maxCol: ", maxCol);
 let tempHolder = [];
 
 let sectionWordList = document.querySelector("#section-word-list");
@@ -43,7 +48,7 @@ function start(wordListCopy, noOfWordsToDisplay)
     startingRow = random(1, noOfSqs);
     startingCol = random(1, noOfSqs);
     //console.log("Starting row-col: ", startingRow, "-", startingCol);
-    
+
     if (findAndFill(currentWord)) {
       // findAndFill အောင်မြင်ခဲ့ရင် စာလုံးကို array ထဲကနေ ဖျက်ထုတ်မယ်။ 
       wordListCopy.splice(arrayIndex, 1);
@@ -221,6 +226,14 @@ function enoughSq(direction, wordSpread) {
   let leftColReach = startingCol - (wordSpread.length - 1);
   let rightColReach = startingCol + (wordSpread.length - 1);
   //console.log("topRowReach:", topRowReach, ", bottomRowReach:", bottomRowReach, ",leftColReach:", leftColReach, ",rightColReach:", rightColReach);
+
+  let rightStatus = checkRight(wordSpread, startingRow, startingCol);
+  let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
+  let topStatus = checkTop(wordSpread, startingRow, startingCol);
+  let belowStatus = checkBelow(wordSpread, startingRow, startingCol);
+
+  console.log("right: ", rightStatus, "| left: ", leftStatus, "| top: ", topStatus, "| below: ", belowStatus);
+
 
   // 1 = north,
   if (direction === 1) {
@@ -473,6 +486,32 @@ function processChar(row, col, char, index) {
   let saveIt = (index === 0 || index === tempHolder.length -1); // check sn2.MD ( saveIt = (i === 0 || i === tempHolder.length - 1) ? true : false;)
   charFill(row, col, char, saveIt);
   return saveIt;
+}
+
+function checkRight(word, row, col) {
+  // check le1.MD for the logic behind the adjustments
+  if (!isWithinBounds(row, col + (word.length - 1))) return false;
+  return true;  // Explicitly return true if the word fits within the boundary
+}
+
+function checkLeft(word, row, col) {
+  if (!isWithinBounds(row, col - (word.length - 1))) return false;
+  return true;
+}
+
+function checkTop(word, row, col) {
+  if (!(isWithinBounds(row - (word.length - 1), col))) return false;
+  return true;
+}
+
+function checkBelow(word, row, col) {
+  if (!(isWithinBounds(row + word.length - 1, col))) return false;
+  return true;
+}
+
+function isWithinBounds(row, col) {
+  // Boundary check function
+  return row >= 0 && row <= maxRow && col >=0 && col <= maxCol;
 }
 
 start(wordListCopy, noOfWordsToDisplay);
