@@ -3,18 +3,32 @@
   -------
   start()
     |- findAndFill()
-  findAndFill() - direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
+
+  findAndFill() ->  direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
     |- enoughSq(), existingCharCheck(), fillAWord(), listAWord()
-  fillAWord() - ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
+
+  fillAWord() ->  ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
     |- enoughSq(), charFill()
-  enoughSq() - ရလာတဲ့ direction မှာ sq လောက်သလားစစ်မယ်
-  charFill() - sq တစ်ကွက်ချင်းကို char တစ်လုံးချင်း ဖြည့်မယ် ၊ staring sq နဲ့ ending sq နာမည်တွေကို startAndEnd[] ထဲ သိမ်းမယ်။
-  existingCharCheck() - လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်မယ်
+
+  enoughSq() ->  ရလာတဲ့ direction မှာ sq လောက်သလားစစ်မယ်
+    |-checkRight(), checkLeft(), checkTop(), checkBelow()
+
+  charFill() ->  sq တစ်ကွက်ချင်းကို char တစ်လုံးချင်း ဖြည့်မယ် ၊ staring sq နဲ့ ending sq နာမည်တွေကို startAndEnd[] ထဲ သိမ်းမယ်။
+  
+  existingCharCheck() ->  လက်ရှိအကွက်မှာ char ရှိနေရင် သုံးလို့ ရ ၊ မရ စစ်မယ်
     |- oneByOneCheck()
-  oneByOneCheck() - sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်မယ်
-  listAWord() - HTML မှာ word တွေ list လုပ်ဖို့ 
-  processChar() - saveIT သတ်မှတ်မယ်။ charFill() ကို ပြန်ခေါ်မယ်
-     |- charFill()
+  
+  oneByOneCheck() ->  sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်မယ်
+  
+  listAWord() ->  HTML မှာ word တွေ list လုပ်ဖို့ 
+  
+  processChar() ->  saveIT သတ်မှတ်မယ်။ charFill() ကို ပြန်ခေါ်မယ်
+    |- charFill()
+  
+    checkRight(), checkLeft(), checkTop(), checkBelow() ->  row, col တွက်ပြီး isWithinBounds() ကို call
+    |- isWithinBounds()
+  
+    isWithinBounds() -> row, col လောက် မလောက်စစ် 
 */
 
 let wordList = ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"];
@@ -64,40 +78,24 @@ function findAndFill(currentWord) {
   // () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
 
   let wordSpread = [...currentWord];
-  let direction = random(1, 8);
   let attempts = 0;
   let maxAttempts = 30;
   let status = 0; // 0 = fail, 1 = success
 
   while (attempts < maxAttempts) {
     attempts++;
-    // creates an infinite loop, which means the code inside the loop will keep running 
-    // over and over again until something inside the loop causes it to stop.
+    let direction = getRandomDirection();
 
-    // direction သိရရင် sq လောက်လားစစ်မယ် 
-    if (enoughSq(direction, wordSpread)) {
-      // sq လုံလောက်သော်လည်း sq တွေမှာ char ရှိနေလား ၊ ရှိတဲ့ char က သုံးလို့ရလား (Check if the characters in the squares are compatible with the word)
-      if (existingCharCheck(direction, wordSpread)) {
-        fillAWord(direction, tempHolder);
-        listAWord(currentWord);
-        status = 1;
-        break;
-      } else {
-        // existingCharCheck() စစ်လို့ ရှိပြီးသား char နဲ့ မတူရင် row, col အသစ်ပြန်ထုတ်ပြီး ပြန် loop (If not, re-randomize the starting row and column, and try again)
-        startingRow = random(1, noOfSqs);
-        startingCol = random(1, noOfSqs);
-      }
+    if(attemptPlacement(direction, wordSpread)) {
+      listAWord(currentWord);
+      status = 1;
+      break;
     } else {
-      // sq မလောက်တဲ့အခါ row-col အသစ် ပြန် random လုပ်ပြီး ပြန် loop (If not enough squares in the current direction, re-randomize the starting row and column, and try again)
-      startingRow = random(1, noOfSqs);
-      startingCol = random(1, noOfSqs);
+      // existingCharCheck() စစ်လို့ ရှိပြီးသား char နဲ့ မတူရင် row, col အသစ်ပြန်ထုတ်ပြီး ပြန် loop (If not, re-randomize the starting row and column, and try again)
+      chooseNewPosition()
     }
   }
-
-  if (attempts === maxAttempts) {
-    console.log("!!! maxAttempt reached !!!");
-  }
-
+  handleMaxAttempts(attempts, maxAttempts);
   return status;
 }
 
@@ -193,6 +191,7 @@ function fillAWord(direction, tempHolder) {
 
 function enoughSq(direction, wordSpread) {
   // () to check whether there is enough square in the calcuated direction
+
   let rightStatus = checkRight(wordSpread, startingRow, startingCol);
   let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
   let topStatus = checkTop(wordSpread, startingRow, startingCol);
@@ -407,6 +406,30 @@ function checkBelow(word, row, col) {
 function isWithinBounds(row, col) {
   // Boundary check function
   return row > 0 && row <= maxRow && col >0 && col <= maxCol;
+}
+
+function getRandomDirection() {
+  return random(1, 8);
+}
+
+function attemptPlacement(direction, wordSpread) {
+  if(enoughSq(direction, wordSpread) && existingCharCheck(direction, wordSpread)) {
+    // sq လုံလောက်သော်လည်း sq တွေမှာ char ရှိနေလား ၊ ရှိတဲ့ char က သုံးလို့ရလား (Check if the characters in the squares are compatible with the word)
+    fillAWord(direction, tempHolder);
+    return true; // Placement successful
+  }
+  return false;
+}
+
+function chooseNewPosition() {
+  startingRow = random(1, noOfSqs);
+  startingCol = random(1, noOfSqs);
+}
+
+function handleMaxAttempts(attempts, maxAttempts) {
+  if (attempts === maxAttempts) {
+    console.log("!!! maxAttempt reached !!!");
+  }
 }
 
 start(wordListCopy, noOfWordsToDisplay);
