@@ -1,4 +1,4 @@
-export function layout(globals) {
+export function layoutManager(globals) {
 
   const { selectors } = globals;
   const { squareFrame } = selectors;
