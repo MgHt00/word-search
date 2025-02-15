@@ -82,7 +82,7 @@ export function dataManager(globals, utilsManager) {
     // north
     if (direction === 1) {
       let currentRow = startingRow;
-      for (i = 0; i < tempHolder.length; i++) {
+      for (let i = 0; i < tempHolder.length; i++) {
         processChar(currentRow, startingCol, tempHolder[i], i);
         currentRow--;
       }
@@ -92,7 +92,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 2) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
+      for (let i = 0; i < tempHolder.length; i++) {
         processChar(currentRow, currentCol, tempHolder[i], i);
         currentRow--;
         currentCol++;
@@ -102,7 +102,7 @@ export function dataManager(globals, utilsManager) {
     // east
     else if (direction === 3) {
       let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
+      for (let i = 0; i < tempHolder.length; i++) {
         processChar(startingRow, currentCol, tempHolder[i], i);
         currentCol++;
       }
@@ -112,7 +112,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 4) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
+      for (let i = 0; i < tempHolder.length; i++) {
         processChar(currentRow, currentCol, tempHolder[i], i);
         currentRow++;
         currentCol++;
@@ -122,7 +122,7 @@ export function dataManager(globals, utilsManager) {
     // south
     else if (direction === 5) {
       let currentRow = startingRow;
-      for (i = 0; i < tempHolder.length; i++) {
+      for (let i = 0; i < tempHolder.length; i++) {
         processChar(currentRow, startingCol, tempHolder[i], i);
         currentRow++;
       }
@@ -142,7 +142,7 @@ export function dataManager(globals, utilsManager) {
     // west
     else if (direction === 7) {
       let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
+      for (let i = 0; i < tempHolder.length; i++) {
         processChar(startingRow, currentCol, tempHolder[i], i);
         currentCol--;
       }
@@ -152,7 +152,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 8) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
+      for (let i = 0; i < tempHolder.length; i++) {
         processChar(currentRow, currentCol, tempHolder[i], i);
         currentRow--;
         currentCol--;
@@ -217,9 +217,9 @@ export function dataManager(globals, utilsManager) {
     // 1 = north
     if (direction === 1) {
       let currentRow = startingRow;
-      for (i = 0; i < wordSpread.length; i++) {
+      for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${currentRow}-${startingCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i])) {
+        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
           currentRow--;
         }
         else return false;
@@ -230,9 +230,9 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 2) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
+      for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${currentRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i])) {
+        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
           currentRow--;
           currentCol++;
         }
@@ -245,7 +245,7 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${startingRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i])) {
+        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
           currentCol++;
         }
         else return false;
@@ -256,9 +256,9 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 4) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
+      for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${currentRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i])) {
+        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
           currentRow++;
           currentCol++;
         }
@@ -271,7 +271,7 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${currentRow}-${startingCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i])) {
+        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
           currentRow++;
         }
         else return false;
@@ -282,9 +282,9 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 6) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
+      for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${currentRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i])) {
+        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
           currentRow++;
           currentCol--;
         }
@@ -297,7 +297,7 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${startingRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i])) {
+        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
           currentCol--;
         }
         else return false;
@@ -308,9 +308,9 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 8) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
+      for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${currentRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i])) {
+        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
           currentRow--;
           currentCol--;
         }
@@ -320,17 +320,17 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  function oneByOneCheck(currentSq, char) {
+  function oneByOneCheck(currentSq, char, index) {
     // () sq အကွက်မှာဖြည့်မယ့် char နဲ့ object ထဲထည့်ထားပြီးတဲ့ char တူလား တစ်လုံးချင်းစစ်
 
     if (!filledWords[currentSq]) {
       //console.log("No char in the sq. Good to go!");
-      tempHolder[i] = char;
+      tempHolder[index] = char;
       return true;
     }
     else if (filledWords[currentSq] === char) {
       //console.log("Existing char in sq is same as incoming. Good to go!");
-      tempHolder[i] = char;
+      tempHolder[index] = char;
       return true;
     }
     else {
