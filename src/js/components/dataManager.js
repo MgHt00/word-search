@@ -1,20 +1,27 @@
 export function dataManager(globals, utilsManager) {
   const { appData, currentStatus, selectors } =  globals;
   const { wordList, noOfWordsToDisplay, noOfSquares } = appData;
-  const { 
+/*  let { 
     filledWords,
     startAndEnd,
     startAndEndIndex,
     startOrEnd,
-    startingRow,
-    startingCol,
     maxRow,
     maxCol,
-    tempHolder } = currentStatus;
+    tempHolder } = currentStatus;*/
 
   const { squareFrame, sectionWordList } =  selectors;
 
   const { helpers } = utilsManager;
+
+  let filledWords = {}; // ဖြည့်ထားတဲ့ words တွေရဲ့ char တစ်လုံးချင်းစီနဲ့ အကွက် no. နဲ့ တွဲသိမ်းဖို့ 
+  let startAndEnd = []; // word တစ်ခုချင်းရဲ့ အစ ၊ အဆုံး sq နံပါတ်တွေ မှတ်ဖို့
+  let startAndEndIndex = 0;
+  let startOrEnd = "start";
+  let startingRow, startingCol;
+  let maxRow = noOfSquares;
+  let maxCol = noOfSquares;
+  let tempHolder = [];
 
   function fillWords(wordListCopy, noOfWordsToDisplay) {
     let leftToDisplay = noOfWordsToDisplay;
@@ -24,9 +31,9 @@ export function dataManager(globals, utilsManager) {
       let currentWord = wordListCopy[arrayIndex];
       console.log("______start() starts______");
 
-      // finding starting positon -- noOfSqs is fetched from 'main.js'
-      startingRow = helpers.random(1, noOfSqs);
-      startingCol = helpers.random(1, noOfSqs);
+      // finding starting positon -- noOfSquares is fetched from 'main.js'
+      startingRow = helpers.random(1, noOfSquares);
+      startingCol = helpers.random(1, noOfSquares);
 
       if (findAndFill(currentWord)) {
         // findAndFill အောင်မြင်ခဲ့ရင် စာလုံးကို array ထဲကနေ ဖျက်ထုတ်မယ်။ 
@@ -35,10 +42,10 @@ export function dataManager(globals, utilsManager) {
       }
     }
 
-    // grid (sq) ထဲရောက်နေတဲ့ စာလုံးအရေအတွက်က ပြချင်တဲ့ အရေအတွက် `noOfWordsToDisplay` ကို မရောက်သေးရင် start() ကိုပြန် run မယ်။
+    // grid (sq) ထဲရောက်နေတဲ့ စာလုံးအရေအတွက်က ပြချင်တဲ့ အရေအတွက် `noOfWordsToDisplay` ကို မရောက်သေးရင် fillWords() ကိုပြန် run မယ်။
     if (leftToDisplay > 0) {
       setTimeout(() => { // check sn1.MD for studying purpose
-        start(wordListCopy, leftToDisplay);
+        fillWords(wordListCopy, leftToDisplay);
       }, 0);
     }
   }
@@ -236,7 +243,7 @@ export function dataManager(globals, utilsManager) {
     // 3 = east
     else if (direction === 3) {
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
+      for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${startingRow}-${currentCol}`;
         if (oneByOneCheck(currentSq, wordSpread[i])) {
           currentCol++;
@@ -262,7 +269,7 @@ export function dataManager(globals, utilsManager) {
     // south
     else if (direction === 5) {
       let currentRow = startingRow;
-      for (i = 0; i < wordSpread.length; i++) {
+      for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${currentRow}-${startingCol}`;
         if (oneByOneCheck(currentSq, wordSpread[i])) {
           currentRow++;
@@ -288,7 +295,7 @@ export function dataManager(globals, utilsManager) {
     // west
     else if (direction === 7) {
       let currentCol = startingCol;
-      for (i = 0; i < wordSpread.length; i++) {
+      for (let i = 0; i < wordSpread.length; i++) {
         let currentSq = `sq-${startingRow}-${currentCol}`;
         if (oneByOneCheck(currentSq, wordSpread[i])) {
           currentCol--;
@@ -391,8 +398,8 @@ export function dataManager(globals, utilsManager) {
   }
 
   function chooseNewPosition() {
-    startingRow = helpers.random(1, noOfSqs);
-    startingCol = helpers.random(1, noOfSqs);
+    startingRow = helpers.random(1, noOfSquares);
+    startingCol = helpers.random(1, noOfSquares);
   }
 
   function handleMaxAttempts(attempts, maxAttempts) {

@@ -10,6 +10,7 @@ const layoutMgr = layoutManager(globals);
 const dataMgr = dataManager(globals, utilsManager);
 
 const wordListCopy = [...globals.appData.wordList];
+//console.info(wordListCopy);
 
 (function initialize() {
   layoutMgr.generateSqs(appData.noOfSquares);
