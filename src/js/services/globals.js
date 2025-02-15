@@ -15,8 +15,9 @@ let sectionWordList = document.querySelector("#section-word-list");*/
 
 const appData = {
   wordList : ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"],
-  wordListCopy : [...wordList],
+  //wordListCopy : [...wordList],
   noOfWordsToDisplay : 10,
+  noOfSquares: 14,
 }
 
 const currentStatus = {
@@ -26,12 +27,13 @@ const currentStatus = {
   startOrEnd : "start",
   startingRow: null,
   startingCol: null,
-  maxRow : noOfSqs,
-  maxCol : noOfSqs,
+  maxRow : appData.noOfSqs,
+  maxCol : appData.noOfSqs,
   tempHolder : [],
 }
 
 const selectors = {
+  squareFrame : document.querySelector("#square-frame"),
   sectionWordList : document.querySelector("#section-word-list"),
 }
 
