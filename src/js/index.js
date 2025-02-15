@@ -1,0 +1,1 @@
+import { globals } from "./services/globals.js";
