@@ -3,6 +3,8 @@
   --sq-row-break: 14;
   --sq-size: 30px;
   --sq-margin: 1px;
+  --sq-bg-color: aliceblue;
+  /*--sq-bg-color: #8b8b8b;*/
 }
 
 * {
@@ -32,7 +34,7 @@ body {
 }
 
 #square-frame > *[class|=sq] {
-  background-color: aliceblue;
+  background-color: var(--sq-bg-color);
   color: black;
   font-size: 11px;
   width: var(--sq-size, 30px);
