@@ -132,7 +132,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 6) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (i = 0; i < tempHolder.length; i++) {
+      for (let i = 0; i < tempHolder.length; i++) {
         processChar(currentRow, currentCol, tempHolder[i], i);
         currentRow++;
         currentCol--;
