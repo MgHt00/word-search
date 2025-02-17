@@ -9,10 +9,7 @@ import { utilsManager } from "./utils/utilsManager.js";
 const layoutMgr = layoutManager(globals);
 const dataMgr = dataManager(globals, utilsManager);
 
-const wordListCopy = [...globals.appData.wordList];
-//console.info(wordListCopy);
-
 (function initialize() {
   layoutMgr.generateSqs();
-  dataMgr.fillWords(wordListCopy, appData.noOfWordsToDisplay);
+  dataMgr.fillWords([...globals.appData.wordList], appData.noOfWordsToDisplay);
 })();

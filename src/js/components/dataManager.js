@@ -21,22 +21,30 @@ export function dataManager(globals, utilsManager) {
     console.info("No of times to loop in total: ", noOfWordsToDisplay);
 
     for (let i = 0; i < noOfWordsToDisplay; i++) {
-      // fetch a random word
-      let arrayIndex = helpers.random(0, (wordListCopy.length - 1));
-      let currentWord = wordListCopy[arrayIndex];
+      let { arrayIndex, currentWord } = getRandomWord(); // fetch a random word
+      
+      let attempts = 0;
+      let maxAttempts = 30;
+      let status = 0; // 0 = fail, 1 = success
 
-      // get starting positons
-      startingRow = helpers.random(1, noOfSquares);
-      startingCol = helpers.random(1, noOfSquares);
+      while ( attempts < maxAttempts ) {
+        attempts++;
+        let { direction, isEnoughSq, isExistingCharOK } = generateFillData(currentWord);
 
-      if (findAndFill(currentWord)) {
-        // delete filled words from array if `findAndFill` succeed.
-        wordListCopy.splice(arrayIndex, 1);
-        wordsRemaining--;
+        if( direction && isEnoughSq && isExistingCharOK ) {
+          fillAWord(direction)
+          listAWord(currentWord);
+          status = 1;
+          wordListCopy.splice(arrayIndex, 1);   // delete filled words from array 
+          wordsRemaining--;
+          break;
+        } else {
+          generateNewRowAndCol();
+        }
       }
     }
 
-    // grid (sq) ထဲရောက်နေတဲ့ စာလုံးအရေအတွက်က ပြချင်တဲ့ အရေအတွက် `noOfWordsToDisplay` ကို မရောက်သေးရင် fillWords() ကိုပြန် run မယ်။
+    // if there are still words left to be displayed, recall the root function. 
     if (wordsRemaining > 0) {
       setTimeout(() => { // check sn1.MD for studying purpose
         fillWords(wordListCopy, wordsRemaining);
@@ -44,6 +52,39 @@ export function dataManager(globals, utilsManager) {
     }
 
     console.groupEnd();
+
+    // helper functions
+    function getRandomWord() {
+      console.groupCollapsed("getRandomWord()"); 
+      
+      let arrayIndex = helpers.random(0, (wordListCopy.length - 1));
+      let currentWord = wordListCopy[arrayIndex];
+
+      console.info("getRandomWord:", { arrayIndex, currentWord });
+      console.groupEnd();
+
+      return { arrayIndex, currentWord };
+    }
+
+    function generateFillData(currentWord) {
+      console.groupCollapsed("generateFillData()");
+
+      let wordSpread = [...currentWord];
+      let direction = getRandomDirection();
+      let isEnoughSq = enoughSq(direction, wordSpread);
+      let isExistingCharOK = existingCharCheck(direction, wordSpread);
+
+      console.info("generateFillData",{ direction, isEnoughSq, isExistingCharOK });
+      console.groupEnd();
+
+      return { direction, isEnoughSq, isExistingCharOK };
+    }
+
+    // get starting positons
+    function generateNewRowAndCol() {
+      startingRow = helpers.random(1, noOfSquares);
+      startingCol = helpers.random(1, noOfSquares);
+    }
   }
 
   // To check whether there is enough squares, and find a place until it is found.
@@ -253,7 +294,7 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  function fillAWord(direction, tempHolder) {
+  function fillAWord(direction) {
     // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
 
     let success = false;
