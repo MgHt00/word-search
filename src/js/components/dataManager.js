@@ -9,7 +9,7 @@ export function dataManager(globals, utilsManager) {
   let startAndEnd = []; // to store each word's start and end sq no. 
   let startAndEndIndex = 0;
   let startOrEnd = "start";
-  let direction, startingRow, startingCol;
+  //let direction, startingRow, startingCol;
   let maxRow = noOfSquares;
   let maxCol = noOfSquares;
   let tempHolder = [];
@@ -22,6 +22,7 @@ export function dataManager(globals, utilsManager) {
 
     for (let i = 0; i < noOfWordsToDisplay; i++) {
       let { arrayIndex, currentWord } = selectRandomWord(); 
+      let { direction, startingRow, startingCol } = generateRandomCoordinates();
       
       let attempts = 0;
       let maxAttempts = 30;
@@ -29,10 +30,10 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let { isEnoughSq, isExistingCharOK } = getPlacementData(currentWord);
+        let { isEnoughSq, isExistingCharOK } = getPlacementData(direction, currentWord, startingRow, startingCol);
 
         if( isEnoughSq && isExistingCharOK ) {
-          fillAWord(direction)
+          fillAWord(direction, startingRow, startingCol)
           listAWord(currentWord);
 
           status = 1;
@@ -63,10 +64,10 @@ export function dataManager(globals, utilsManager) {
       return { arrayIndex, currentWord };
     }
 
-    function getPlacementData(currentWord) {
+    function getPlacementData(direction, currentWord, startingRow, startingCol) {
       let wordSpread = [...currentWord];
-      let isEnoughSq = enoughSq(wordSpread);
-      let isExistingCharOK = existingCharCheck(wordSpread);
+      let isEnoughSq = enoughSq(direction, wordSpread, startingRow, startingCol);
+      let isExistingCharOK = existingCharCheck(direction, wordSpread, startingRow, startingCol);
 
       return { isEnoughSq, isExistingCharOK };
     }
@@ -77,15 +78,17 @@ export function dataManager(globals, utilsManager) {
 
     // generate new starting positons
     function generateRandomCoordinates() {
-      direction = getRandomDirection();
-      startingRow = helpers.random(1, noOfSquares);
-      startingCol = helpers.random(1, noOfSquares);
+      let direction = getRandomDirection();
+      let startingRow = helpers.random(1, noOfSquares);
+      let startingCol = helpers.random(1, noOfSquares);
+
+      return { direction, startingRow, startingCol } ;
     }
   }
 
 
   // To check whether there is enough square in the calcuated direction
-  function enoughSq(wordSpread) {
+  function enoughSq(direction, wordSpread, startingRow, startingCol) {
     
     let rightStatus = checkRight(wordSpread, startingRow, startingCol);
     let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
@@ -130,7 +133,7 @@ export function dataManager(globals, utilsManager) {
   }
 
   // Check whether existing character which is already filled is compatible with the new word
-  function existingCharCheck(wordSpread) {
+  function existingCharCheck(direction, wordSpread, startingRow, startingCol) {
     tempHolder = []; // resetting the array.
     // 1 = north
     if (direction === 1) {
@@ -256,7 +259,7 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  function fillAWord(direction) {
+  function fillAWord(direction, startingRow, startingCol) {
     // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
 
     let success = false;
