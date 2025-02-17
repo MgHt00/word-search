@@ -87,40 +87,6 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  // To check whether there is enough squares, and find a place until it is found.
-  function findAndFill(currentWord) {
-    // () direction ကို random ထုတ် ၊ sq လောက်သလား စစ်ပြီး ၊ နေရာ မတွေ့မချင်း ရှာဖြည့်မယ်
-
-    let wordSpread = [...currentWord];
-    let attempts = 0;
-    let maxAttempts = 30;
-    let status = 0; // 0 = fail, 1 = success
-
-    while (attempts < maxAttempts) {
-      attempts++;
-      let direction = getRandomDirection();
-
-      if (attemptPlacement(direction, wordSpread)) {
-        listAWord(currentWord);
-        status = 1;
-        break;
-      } else {
-        // existingCharCheck() စစ်လို့ ရှိပြီးသား char နဲ့ မတူရင် row, col အသစ်ပြန်ထုတ်ပြီး ပြန် loop (If not, re-randomize the starting row and column, and try again)
-        chooseNewPosition()
-      }
-    }
-    handleMaxAttempts(attempts, maxAttempts);
-    return status;
-  }
-
-  function attemptPlacement(direction, wordSpread) {
-    //  are there enough square to fill && Check if the characters in the squares are compatible with the word
-    if (enoughSq(direction, wordSpread) && existingCharCheck(direction, wordSpread)) {
-      fillAWord(direction, tempHolder);
-      return true; // Placement successful
-    }
-    return false;
-  }
 
   // To check whether there is enough square in the calcuated direction
   function enoughSq(direction, wordSpread) {
