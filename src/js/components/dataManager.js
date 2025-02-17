@@ -9,7 +9,7 @@ export function dataManager(globals, utilsManager) {
   let startAndEnd = []; // to store each word's start and end sq no. 
   let startAndEndIndex = 0;
   let startOrEnd = "start";
-  let startingRow, startingCol;
+  let direction, startingRow, startingCol;
   let maxRow = noOfSquares;
   let maxCol = noOfSquares;
   let tempHolder = [];
@@ -29,9 +29,9 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let { direction, isEnoughSq, isExistingCharOK } = getPlacementData(currentWord);
+        let { isEnoughSq, isExistingCharOK } = getPlacementData(currentWord);
 
-        if( direction && isEnoughSq && isExistingCharOK ) {
+        if( isEnoughSq && isExistingCharOK ) {
           fillAWord(direction)
           listAWord(currentWord);
 
@@ -65,11 +65,10 @@ export function dataManager(globals, utilsManager) {
 
     function getPlacementData(currentWord) {
       let wordSpread = [...currentWord];
-      let direction = getRandomDirection();
-      let isEnoughSq = enoughSq(direction, wordSpread);
-      let isExistingCharOK = existingCharCheck(direction, wordSpread);
+      let isEnoughSq = enoughSq(wordSpread);
+      let isExistingCharOK = existingCharCheck(wordSpread);
 
-      return { direction, isEnoughSq, isExistingCharOK };
+      return { isEnoughSq, isExistingCharOK };
     }
 
     function getRandomDirection() {
@@ -78,6 +77,7 @@ export function dataManager(globals, utilsManager) {
 
     // generate new starting positons
     function generateRandomCoordinates() {
+      direction = getRandomDirection();
       startingRow = helpers.random(1, noOfSquares);
       startingCol = helpers.random(1, noOfSquares);
     }
@@ -85,7 +85,7 @@ export function dataManager(globals, utilsManager) {
 
 
   // To check whether there is enough square in the calcuated direction
-  function enoughSq(direction, wordSpread) {
+  function enoughSq(wordSpread) {
     
     let rightStatus = checkRight(wordSpread, startingRow, startingCol);
     let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
@@ -130,8 +130,8 @@ export function dataManager(globals, utilsManager) {
   }
 
   // Check whether existing character which is already filled is compatible with the new word
-  function existingCharCheck(direction, wordSpread) {
-    tempHolder = [];
+  function existingCharCheck(wordSpread) {
+    tempHolder = []; // resetting the array.
     // 1 = north
     if (direction === 1) {
       let currentRow = startingRow;
