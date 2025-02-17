@@ -3,12 +3,11 @@ export function layoutManager(globals) {
   const { selectors } = globals;
   const { squareFrame } = selectors;
 
-  function generateSqs(sqs) {
+  function generateSqs(sqs = 14) {
     console.groupCollapsed("generateSqs()");
 
     if (!sqs) {
       console.warn("Missing paramter.",sqs);
-      return;
     }
 
     for (let r = 1; r <= sqs; r++) {

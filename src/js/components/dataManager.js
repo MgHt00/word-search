@@ -1,16 +1,7 @@
 export function dataManager(globals, utilsManager) {
-  const { appData, currentStatus, selectors } =  globals;
-  const { wordList, noOfWordsToDisplay, noOfSquares } = appData;
-/*  let { 
-    filledWords,
-    startAndEnd,
-    startAndEndIndex,
-    startOrEnd,
-    maxRow,
-    maxCol,
-    tempHolder } = currentStatus;*/
-
-  const { squareFrame, sectionWordList } =  selectors;
+  const { appData, selectors } =  globals;
+  const { noOfSquares } = appData;
+  const { sectionWordList } =  selectors;
 
   const { helpers } = utilsManager;
 

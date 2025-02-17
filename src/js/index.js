@@ -13,6 +13,6 @@ const wordListCopy = [...globals.appData.wordList];
 //console.info(wordListCopy);
 
 (function initialize() {
-  layoutMgr.generateSqs(appData.noOfSquares);
+  layoutMgr.generateSqs();
   dataMgr.fillWords(wordListCopy, appData.noOfWordsToDisplay);
 })();
