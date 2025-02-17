@@ -11,5 +11,5 @@ const dataMgr = dataManager(globals, utilsManager);
 
 (function initialize() {
   layoutMgr.generateSqs();
-  dataMgr.fillWords([...globals.appData.wordList], appData.noOfWordsToDisplay);
+  dataMgr.fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
 })();

@@ -14,14 +14,14 @@ export function dataManager(globals, utilsManager) {
   let maxCol = noOfSquares;
   let tempHolder = [];
 
-  function fillWords(wordListCopy, noOfWordsToDisplay) {
-    console.groupCollapsed("fillWords()");
+  function fill(wordListCopy, noOfWordsToDisplay) {
+    console.groupCollapsed("fill()");
 
     let wordsRemaining = noOfWordsToDisplay;
-    console.info("No of times to loop in total: ", noOfWordsToDisplay);
+    console.info("Remaining word(s) to fill in:", noOfWordsToDisplay);
 
     for (let i = 0; i < noOfWordsToDisplay; i++) {
-      let { arrayIndex, currentWord } = getRandomWord(); // fetch a random word
+      let { arrayIndex, currentWord } = selectRandomWord(); 
       
       let attempts = 0;
       let maxAttempts = 30;
@@ -29,17 +29,19 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let { direction, isEnoughSq, isExistingCharOK } = generateFillData(currentWord);
+        let { direction, isEnoughSq, isExistingCharOK } = getPlacementData(currentWord);
 
         if( direction && isEnoughSq && isExistingCharOK ) {
           fillAWord(direction)
           listAWord(currentWord);
+
           status = 1;
           wordListCopy.splice(arrayIndex, 1);   // delete filled words from array 
           wordsRemaining--;
+          
           break;
         } else {
-          generateNewRowAndCol();
+          generateRandomCoordinates();
         }
       }
     }
@@ -47,41 +49,35 @@ export function dataManager(globals, utilsManager) {
     // if there are still words left to be displayed, recall the root function. 
     if (wordsRemaining > 0) {
       setTimeout(() => { // check sn1.MD for studying purpose
-        fillWords(wordListCopy, wordsRemaining);
+        fill(wordListCopy, wordsRemaining);
       }, 0);
     }
 
     console.groupEnd();
 
     // helper functions
-    function getRandomWord() {
-      console.groupCollapsed("getRandomWord()"); 
-      
+    function selectRandomWord() {
       let arrayIndex = helpers.random(0, (wordListCopy.length - 1));
       let currentWord = wordListCopy[arrayIndex];
-
-      console.info("getRandomWord:", { arrayIndex, currentWord });
-      console.groupEnd();
 
       return { arrayIndex, currentWord };
     }
 
-    function generateFillData(currentWord) {
-      console.groupCollapsed("generateFillData()");
-
+    function getPlacementData(currentWord) {
       let wordSpread = [...currentWord];
       let direction = getRandomDirection();
       let isEnoughSq = enoughSq(direction, wordSpread);
       let isExistingCharOK = existingCharCheck(direction, wordSpread);
 
-      console.info("generateFillData",{ direction, isEnoughSq, isExistingCharOK });
-      console.groupEnd();
-
       return { direction, isEnoughSq, isExistingCharOK };
     }
 
-    // get starting positons
-    function generateNewRowAndCol() {
+    function getRandomDirection() {
+      return helpers.random(1, 8);
+    }
+
+    // generate new starting positons
+    function generateRandomCoordinates() {
       startingRow = helpers.random(1, noOfSquares);
       startingCol = helpers.random(1, noOfSquares);
     }
@@ -350,8 +346,6 @@ export function dataManager(globals, utilsManager) {
     return success;
   }
 
-  
-
   function charFill(row, col, fillChar, saveIt) {
     // () to fill the square with incoming character
 
@@ -398,16 +392,6 @@ export function dataManager(globals, utilsManager) {
     return saveIt;
   }
 
-  function getRandomDirection() {
-    return helpers.random(1, 8);
-  }
-
-
-  function chooseNewPosition() {
-    startingRow = helpers.random(1, noOfSquares);
-    startingCol = helpers.random(1, noOfSquares);
-  }
-
   function handleMaxAttempts(attempts, maxAttempts) {
     if (attempts === maxAttempts) {
       console.log("!!! maxAttempt reached !!!");
@@ -415,6 +399,6 @@ export function dataManager(globals, utilsManager) {
   }
 
   return {
-    fillWords,
+    fill,
   }
 }
