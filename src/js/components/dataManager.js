@@ -54,13 +54,12 @@ export function dataManager(globals, utilsManager) {
           generateRandomCoordinates();
         }
       }
-      console.info("wordPlacementData",wordPlacementData.wordCoordinates);
     }
 
     // if there are still words left to be displayed, recall the root function. 
     if (wordsRemaining > 0) {
       retries++;
-      setTimeout(() => { // check sn1.MD for studying purpose
+      setTimeout(() => { //[sn1]
         fill(wordListCopy, wordsRemaining);
       }, 0);
     }
@@ -370,37 +369,26 @@ export function dataManager(globals, utilsManager) {
 
 
   function printCharOnScreen(char, row, col) {
-    console.groupCollapsed("printCharOnScreen()");
-
     let currentSq = `sq-${row}-${col}`;
     let currentDOM = document.querySelector(`#${currentSq}`);
-    console.info("Printing:",char);
     currentDOM.textContent = char; 
-    
-    console.groupEnd();
     return currentSq;
   }
 
   function storeCharCoordinates(currentSq) {
-    console.groupCollapsed("storeCharCoordinates()");
-
     let { wordCoordinates, isStart } = wordPlacementData; // copy wordCoordinates by reference, isStart is a primitive
     
     let currentIndex = wordCoordinates.length;
-    console.info("currentIndex", currentIndex, isStart);
 
     if (isStart) {
       wordCoordinates.push({ start: currentSq });         // Append a new object
       wordPlacementData.wordCoordinates[currentIndex]["start"] = currentSq;
-      console.info("storing start:", wordCoordinates[currentIndex]["start"]);
       wordPlacementData.isStart = false;
     }
     else {
       wordPlacementData.wordCoordinates[currentIndex - 1]["end"] = currentSq; // modify the last object
-      console.info("storing end:", wordCoordinates[currentIndex - 1]["end"]);
       wordPlacementData.isStart = true;
     }
-    console.groupEnd();
   }
 
   function listAWord(incoming) {
