@@ -5,7 +5,6 @@ export function dataManager(globals, utilsManager) {
 
   const { helpers } = utilsManager;
 
-  let filledWords = {}; // to store filled word's { char: sq no.} 
   let startAndEnd = []; // to store each word's start and end sq no. 
   let startAndEndIndex = 0;
   let startOrEnd = "start";
@@ -243,15 +242,20 @@ export function dataManager(globals, utilsManager) {
 
   // Check whether alredy filled character is compatible with the character-to-be-filled.
   function oneByOneCheck(currentSq, char, index) {
-    if (!filledWords[currentSq]) {
-      //console.log("No char in the sq. Good to go!");
+    console.groupCollapsed("oneByOneCheck()");
+
+    const currentChar = dataBank.getFilledWords(currentSq)  
+    console.info(currentChar);
+
+    if (!currentChar) {
+      console.log("No char in the sq. Good to go!");
       tempHolder[index] = char;
       return true;
     }
-    else if (filledWords[currentSq] === char) {
-      //console.log("Existing char in sq is same as incoming. Good to go!");
+    else if (currentChar === char) {
+      console.log("Existing char in sq is same as incoming. Good to go!");
       tempHolder[index] = char;
-      return true;
+      return trues;
     }
     else {
       //console.log("Existing char in sq is NOT same as incoming. FAIL.");
@@ -399,6 +403,18 @@ export function dataManager(globals, utilsManager) {
     if (attempts === maxAttempts) {
       console.log("!!! maxAttempt reached !!!");
     }
+  }
+
+  let dataBank = {
+    filledWords: {}, // to store filled word's in { char: sq no.} format
+
+    getFilledWords( key) {
+      return this.filledWords[key];
+    },
+
+    setFilledWords( key, value ) {
+      return this.filledWords[key] = value;
+    },
   }
 
   return {
