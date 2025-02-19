@@ -6,13 +6,14 @@ export function dataManager(globals, utilsManager) {
   const { helpers } = utilsManager;
 
   let filledWords = {}; // to store filled word's { char: sq no.} 
-  let startAndEnd = []; // to store each word's start and end sq no. 
-  let startAndEndIndex = 0;
-  let startOrEnd = "start";
-  //let direction, startingRow, startingCol;
   let maxRow = noOfSquares;
   let maxCol = noOfSquares;
   let tempHolder = [];
+
+  let wordPlacementData = {
+    wordCoordinates: [],
+    isStart: true,
+  }
 
   function fill(wordListCopy, noOfWordsToDisplay) {
     console.groupCollapsed("fill()");
@@ -45,6 +46,8 @@ export function dataManager(globals, utilsManager) {
           generateRandomCoordinates();
         }
       }
+
+      console.info(wordPlacementData);
     }
 
     // if there are still words left to be displayed, recall the root function. 
@@ -349,31 +352,48 @@ export function dataManager(globals, utilsManager) {
     return success;
   }
 
-  function charFill(row, col, fillChar, saveIt) {
-    // () to fill the square with incoming character
+  function processChar(row, col, char, index) {
+    // check starting and ending index, set saveIt, and calls charFill(),
 
+    let saveIt = (index === 0 || index === tempHolder.length - 1); // check sn2.MD ( saveIt = (i === 0 || i === tempHolder.length - 1) ? true : false;)
+    let currentSq = printCharOnScreen(char, row, col);        // display on screen and get currentSq
+    storeCharCoordinates(saveIt, currentSq)
+    //charFill(char, saveIt, currentSq);
+    return saveIt;
+  }
+
+
+  function printCharOnScreen(char, row, col) {
     let currentSq = `sq-${row}-${col}`;
     let currentDOM = document.querySelector(`#${currentSq}`);
-    //console.log("currentSq", currentSq);
+    currentDOM.textContent = char; 
+    return currentSq;
+  }
 
-    currentDOM.textContent = fillChar; // display on screen
-    filledWords[currentSq] = fillChar; // input -> object
+  function storeCharCoordinates(saveIt, currentSq) {
+    console.groupCollapsed("storeCharCoordinates()");
 
+    let { wordCoordinates, isStart } = wordPlacementData;
+
+    let currentIndex = !wordCoordinates.length ? 0 : wordCoordinates.length - 1;
+    //let storingIndex = !currentIndex ? currentIndex : currentIndex + 1;
+    
     if (saveIt) {
-      if (startOrEnd === "start") {
-        // Initialize the object if it's the start of a new entry
-        startAndEnd[startAndEndIndex] = {};
-        startAndEnd[startAndEndIndex]["start"] = currentSq;
-        startOrEnd = "end";
+      if (isStart) {
+        wordCoordinates[currentIndex] = {};         // Initialize the object if it's the start of a new entry
+        wordCoordinates[currentIndex]["start"] = currentSq;
+        isStart = false;
       }
-      else if (startOrEnd === "end") {
-        startAndEnd[startAndEndIndex]["end"] = currentSq;
-        startOrEnd = "start";
-        startAndEndIndex++;
+      else if (!isStart) {
+        wordCoordinates[currentIndex]["end"] = currentSq;
+        isStart = true;
       }
-      //console.log("startAndEndIndex: ", startAndEndIndex);
-      //console.log("startAndEnd[]: ", startAndEnd);
     }
+
+    wordPlacementData.wordCoordinates = wordCoordinates;
+    wordPlacementData.isStart = isStart;
+    
+    console.groupEnd();
   }
 
   function listAWord(incoming) {
@@ -385,14 +405,6 @@ export function dataManager(globals, utilsManager) {
     liElement.textContent = incoming;
     ulElement.appendChild(liElement);
     sectionWordList.appendChild(ulElement);
-  }
-
-  function processChar(row, col, char, index) {
-    // check starting and ending index, set saveIt, and calls charFill(),
-
-    let saveIt = (index === 0 || index === tempHolder.length - 1); // check sn2.MD ( saveIt = (i === 0 || i === tempHolder.length - 1) ? true : false;)
-    charFill(row, col, char, saveIt);
-    return saveIt;
   }
 
   function handleMaxAttempts(attempts, maxAttempts) {
