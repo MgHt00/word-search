@@ -360,12 +360,12 @@ export function dataManager(globals, utilsManager) {
     return success;
   }
 
-  // check starting and ending index, set saveIt, and proceed
+  // check starting and ending index, set isFirstOrLastChar, and proceed
   function processChar(row, col, char, index) {
-    let saveIt = (index === 0 || index === tempHolder.length - 1); // [sn2]
-    let currentSq = printCharOnScreen(char, row, col);             // display on screen and get currentSq
-    if(saveIt) storeCharCoordinates(currentSq);
-    return saveIt;
+    let isFirstOrLastChar = (index === 0 || index === tempHolder.length - 1); // [sn2]
+    let currentSq = printCharOnScreen(char, row, col);   // display on screen and get currentSq
+    if(isFirstOrLastChar) storeCharCoordinates(currentSq);
+    return isFirstOrLastChar;
   }
 
 
@@ -414,11 +414,11 @@ export function dataManager(globals, utilsManager) {
     sectionWordList.appendChild(ulElement);
   }
 
-  function handleMaxAttempts(attempts, maxAttempts) {
+  /*function handleMaxAttempts(attempts, maxAttempts) {
     if (attempts === maxAttempts) {
       console.log("!!! maxAttempt reached !!!");
     }
-  }
+  }*/
 
   return {
     fill,
