@@ -30,9 +30,9 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let { isEnoughSq, isExistingCharOK } = getPlacementData(direction, currentWord, startingRow, startingCol);
+        let { hasEnoughSpace, isExistingCharOK } = getPlacementData(direction, currentWord, startingRow, startingCol);
 
-        if( isEnoughSq && isExistingCharOK ) {
+        if( hasEnoughSpace && isExistingCharOK ) {
           fillAWord(direction, startingRow, startingCol)
           listAWord(currentWord);
 
@@ -66,10 +66,10 @@ export function dataManager(globals, utilsManager) {
 
     function getPlacementData(direction, currentWord, startingRow, startingCol) {
       let wordSpread = [...currentWord];
-      let isEnoughSq = enoughSq(direction, wordSpread, startingRow, startingCol);
+      let hasEnoughSpace = enoughSq(direction, wordSpread, startingRow, startingCol);
       let isExistingCharOK = existingCharCheck(direction, wordSpread, startingRow, startingCol);
 
-      return { isEnoughSq, isExistingCharOK };
+      return { hasEnoughSpace, isExistingCharOK };
     }
 
     function getRandomDirection() {
