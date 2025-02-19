@@ -15,8 +15,16 @@ export function dataManager(globals, utilsManager) {
     isStart: true,
   }
 
+  let maxRetries = 10;
+  let retries = 0;
+
   function fill(wordListCopy, noOfWordsToDisplay) {
     console.groupCollapsed("fill()");
+
+    if (retries >= maxRetries) { // preventing possible infinite retries.
+      console.warn("Max retries reached. Stopping recursion.");
+      return;
+    }
 
     let wordsRemaining = noOfWordsToDisplay;
     console.info("Remaining word(s) to fill in:", noOfWordsToDisplay);
@@ -51,6 +59,7 @@ export function dataManager(globals, utilsManager) {
 
     // if there are still words left to be displayed, recall the root function. 
     if (wordsRemaining > 0) {
+      retries++;
       setTimeout(() => { // check sn1.MD for studying purpose
         fill(wordListCopy, wordsRemaining);
       }, 0);
