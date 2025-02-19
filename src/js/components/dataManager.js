@@ -254,20 +254,15 @@ export function dataManager(globals, utilsManager) {
 
   // Check whether alredy filled character is compatible with the character-to-be-filled.
   function oneByOneCheck(currentSq, char, index) {
-    console.groupCollapsed("oneByOneCheck()");
-
-    const currentChar = dataBank.getFilledWords(currentSq)  
-    console.info(currentChar);
-
-    if (!currentChar) {
-      console.log("No char in the sq. Good to go!");
+    if (!filledWords[currentSq]) {
+      //console.log("No char in the sq. Good to go!");
       tempHolder[index] = char;
       return true;
     }
-    else if (currentChar === char) {
-      console.log("Existing char in sq is same as incoming. Good to go!");
+    else if (filledWords[currentSq] === char) {
+      //console.log("Existing char in sq is same as incoming. Good to go!");
       tempHolder[index] = char;
-      return trues;
+      return true;
     }
     else {
       //console.log("Existing char in sq is NOT same as incoming. FAIL.");
