@@ -5,16 +5,26 @@ export function dataManager(globals, utilsManager) {
 
   const { helpers } = utilsManager;
 
-  let startAndEnd = []; // to store each word's start and end sq no. 
-  let startAndEndIndex = 0;
-  let startOrEnd = "start";
-  //let direction, startingRow, startingCol;
+  let filledWords = {}; // to store filled word's { char: sq no.} 
   let maxRow = noOfSquares;
   let maxCol = noOfSquares;
   let tempHolder = [];
 
+  let wordPlacementData = {
+    wordCoordinates: [],
+    isStart: true,
+  }
+
+  let maxRetries = 10;
+  let retries = 0;
+
   function fill(wordListCopy, noOfWordsToDisplay) {
     console.groupCollapsed("fill()");
+
+    if (retries >= maxRetries) { // preventing possible infinite retries.
+      console.warn("Max retries reached. Stopping recursion.");
+      return;
+    }
 
     let wordsRemaining = noOfWordsToDisplay;
     console.info("Remaining word(s) to fill in:", noOfWordsToDisplay);
@@ -44,10 +54,12 @@ export function dataManager(globals, utilsManager) {
           generateRandomCoordinates();
         }
       }
+      console.info("wordPlacementData",wordPlacementData.wordCoordinates);
     }
 
     // if there are still words left to be displayed, recall the root function. 
     if (wordsRemaining > 0) {
+      retries++;
       setTimeout(() => { // check sn1.MD for studying purpose
         fill(wordListCopy, wordsRemaining);
       }, 0);
@@ -353,31 +365,47 @@ export function dataManager(globals, utilsManager) {
     return success;
   }
 
-  function charFill(row, col, fillChar, saveIt) {
-    // () to fill the square with incoming character
+  // check starting and ending index, set isFirstOrLastChar, and proceed
+  function processChar(row, col, char, index) {
+    let isFirstOrLastChar = (index === 0 || index === tempHolder.length - 1); // [sn2]
+    let currentSq = printCharOnScreen(char, row, col);   // display on screen and get currentSq
+    if(isFirstOrLastChar) storeCharCoordinates(currentSq);
+    return isFirstOrLastChar;
+  }
+
+
+  function printCharOnScreen(char, row, col) {
+    console.groupCollapsed("printCharOnScreen()");
 
     let currentSq = `sq-${row}-${col}`;
     let currentDOM = document.querySelector(`#${currentSq}`);
-    //console.log("currentSq", currentSq);
+    console.info("Printing:",char);
+    currentDOM.textContent = char; 
+    
+    console.groupEnd();
+    return currentSq;
+  }
 
-    currentDOM.textContent = fillChar; // display on screen
-    filledWords[currentSq] = fillChar; // input -> object
+  function storeCharCoordinates(currentSq) {
+    console.groupCollapsed("storeCharCoordinates()");
 
-    if (saveIt) {
-      if (startOrEnd === "start") {
-        // Initialize the object if it's the start of a new entry
-        startAndEnd[startAndEndIndex] = {};
-        startAndEnd[startAndEndIndex]["start"] = currentSq;
-        startOrEnd = "end";
-      }
-      else if (startOrEnd === "end") {
-        startAndEnd[startAndEndIndex]["end"] = currentSq;
-        startOrEnd = "start";
-        startAndEndIndex++;
-      }
-      //console.log("startAndEndIndex: ", startAndEndIndex);
-      //console.log("startAndEnd[]: ", startAndEnd);
+    let { wordCoordinates, isStart } = wordPlacementData; // copy wordCoordinates by reference, isStart is a primitive
+    
+    let currentIndex = wordCoordinates.length;
+    console.info("currentIndex", currentIndex, isStart);
+
+    if (isStart) {
+      wordCoordinates.push({ start: currentSq });         // Append a new object
+      wordPlacementData.wordCoordinates[currentIndex]["start"] = currentSq;
+      console.info("storing start:", wordCoordinates[currentIndex]["start"]);
+      wordPlacementData.isStart = false;
     }
+    else {
+      wordPlacementData.wordCoordinates[currentIndex - 1]["end"] = currentSq; // modify the last object
+      console.info("storing end:", wordCoordinates[currentIndex - 1]["end"]);
+      wordPlacementData.isStart = true;
+    }
+    console.groupEnd();
   }
 
   function listAWord(incoming) {
@@ -391,31 +419,11 @@ export function dataManager(globals, utilsManager) {
     sectionWordList.appendChild(ulElement);
   }
 
-  function processChar(row, col, char, index) {
-    // check starting and ending index, set saveIt, and calls charFill(),
-
-    let saveIt = (index === 0 || index === tempHolder.length - 1); // check sn2.MD ( saveIt = (i === 0 || i === tempHolder.length - 1) ? true : false;)
-    charFill(row, col, char, saveIt);
-    return saveIt;
-  }
-
-  function handleMaxAttempts(attempts, maxAttempts) {
+  /*function handleMaxAttempts(attempts, maxAttempts) {
     if (attempts === maxAttempts) {
       console.log("!!! maxAttempt reached !!!");
     }
-  }
-
-  let dataBank = {
-    filledWords: {}, // to store filled word's in { char: sq no.} format
-
-    getFilledWords( key) {
-      return this.filledWords[key];
-    },
-
-    setFilledWords( key, value ) {
-      return this.filledWords[key] = value;
-    },
-  }
+  }*/
 
   return {
     fill,
