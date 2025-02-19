@@ -46,8 +46,7 @@ export function dataManager(globals, utilsManager) {
           generateRandomCoordinates();
         }
       }
-
-      console.info(wordPlacementData);
+      console.info("wordPlacementData",wordPlacementData.wordCoordinates);
     }
 
     // if there are still words left to be displayed, recall the root function. 
@@ -352,47 +351,46 @@ export function dataManager(globals, utilsManager) {
     return success;
   }
 
+  // check starting and ending index, set saveIt, and proceed
   function processChar(row, col, char, index) {
-    // check starting and ending index, set saveIt, and calls charFill(),
-
-    let saveIt = (index === 0 || index === tempHolder.length - 1); // check sn2.MD ( saveIt = (i === 0 || i === tempHolder.length - 1) ? true : false;)
-    let currentSq = printCharOnScreen(char, row, col);        // display on screen and get currentSq
-    storeCharCoordinates(saveIt, currentSq)
-    //charFill(char, saveIt, currentSq);
+    let saveIt = (index === 0 || index === tempHolder.length - 1); // [sn2]
+    let currentSq = printCharOnScreen(char, row, col);             // display on screen and get currentSq
+    if(saveIt) storeCharCoordinates(currentSq);
     return saveIt;
   }
 
 
   function printCharOnScreen(char, row, col) {
+    console.groupCollapsed("printCharOnScreen()");
+
     let currentSq = `sq-${row}-${col}`;
     let currentDOM = document.querySelector(`#${currentSq}`);
+    console.info("Printing:",char);
     currentDOM.textContent = char; 
+    
+    console.groupEnd();
     return currentSq;
   }
 
-  function storeCharCoordinates(saveIt, currentSq) {
+  function storeCharCoordinates(currentSq) {
     console.groupCollapsed("storeCharCoordinates()");
 
-    let { wordCoordinates, isStart } = wordPlacementData;
-
-    let currentIndex = !wordCoordinates.length ? 0 : wordCoordinates.length - 1;
-    //let storingIndex = !currentIndex ? currentIndex : currentIndex + 1;
+    let { wordCoordinates, isStart } = wordPlacementData; // copy wordCoordinates by reference, isStart is a primitive
     
-    if (saveIt) {
-      if (isStart) {
-        wordCoordinates[currentIndex] = {};         // Initialize the object if it's the start of a new entry
-        wordCoordinates[currentIndex]["start"] = currentSq;
-        isStart = false;
-      }
-      else if (!isStart) {
-        wordCoordinates[currentIndex]["end"] = currentSq;
-        isStart = true;
-      }
+    let currentIndex = wordCoordinates.length;
+    console.info("currentIndex", currentIndex, isStart);
+
+    if (isStart) {
+      wordCoordinates.push({ start: currentSq });         // Append a new object
+      wordPlacementData.wordCoordinates[currentIndex]["start"] = currentSq;
+      console.info("storing start:", wordCoordinates[currentIndex]["start"]);
+      wordPlacementData.isStart = false;
     }
-
-    wordPlacementData.wordCoordinates = wordCoordinates;
-    wordPlacementData.isStart = isStart;
-    
+    else {
+      wordPlacementData.wordCoordinates[currentIndex - 1]["end"] = currentSq; // modify the last object
+      console.info("storing end:", wordCoordinates[currentIndex - 1]["end"]);
+      wordPlacementData.isStart = true;
+    }
     console.groupEnd();
   }
 
