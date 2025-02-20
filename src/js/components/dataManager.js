@@ -71,7 +71,7 @@ export function dataManager(globals, utilsManager) {
 
     function getPlacementData(direction, currentWord, startingRow, startingCol) {
       let wordSpread = [...currentWord];
-      let hasEnoughSpace = enoughSq(direction, wordSpread, startingRow, startingCol);
+      let hasEnoughSpace = hasEnoughSq(direction, wordSpread, startingRow, startingCol);
       let isExistingCharOK = existingCharCheck(direction, wordSpread, startingRow, startingCol);
 
       return { hasEnoughSpace, isExistingCharOK };
@@ -93,7 +93,7 @@ export function dataManager(globals, utilsManager) {
 
 
   // To check whether there is enough square in the calcuated direction
-  function enoughSq(direction, wordSpread, startingRow, startingCol) {
+  function hasEnoughSq(direction, wordSpread, startingRow, startingCol) {
     
     let rightStatus = checkRight(wordSpread, startingRow, startingCol);
     let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
