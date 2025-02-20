@@ -1,5 +1,5 @@
 export function dataManager(globals, utilsManager) {
-  const { appData, selectors } =  globals;
+  const { appData, selectors, wordPlacementData } =  globals;
   const { noOfSquares } = appData;
   const { sectionWordList } =  selectors;
 
@@ -9,11 +9,6 @@ export function dataManager(globals, utilsManager) {
   let maxRow = noOfSquares;
   let maxCol = noOfSquares;
   let tempHolder = [];
-
-  let wordPlacementData = {
-    wordCoordinates: [],
-    isStart: true,
-  }
 
   let maxRetries = 10;
   let retries = 0;

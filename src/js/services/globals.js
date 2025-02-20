@@ -9,7 +9,13 @@ const selectors = {
   sectionWordList : document.querySelector("#section-word-list"),
 }
 
+const wordPlacementData = {
+  wordCoordinates: [],
+  isStart: true,
+}
+
 export const globals =  {
   appData,
   selectors,
+  wordPlacementData,
 }
