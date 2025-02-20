@@ -366,7 +366,9 @@ export function dataManager(globals, utilsManager) {
   function printCharOnScreen(char, row, col) {
     let currentSq = `sq-${row}-${col}`;
     let currentDOM = document.querySelector(`#${currentSq}`);
-    currentDOM.textContent = char; 
+    currentDOM.textContent = char; // display on screen
+    filledWords[currentSq] = char; // input -> object
+    
     return currentSq;
   }
 
