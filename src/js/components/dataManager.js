@@ -248,12 +248,13 @@ export function dataManager(globals, utilsManager) {
 
   // Check whether alredy filled character is compatible with the character-to-be-filled.
   function oneByOneCheck(currentSq, char, index) {
-    if (!filledWords[currentSq]) {
+    let { sqCharMap } = wordPlacementData;
+    if (!sqCharMap[currentSq]) {
       //console.log("No char in the sq. Good to go!");
       tempHolder[index] = char;
       return true;
     }
-    else if (filledWords[currentSq] === char) {
+    else if (sqCharMap[currentSq] === char) {
       //console.log("Existing char in sq is same as incoming. Good to go!");
       tempHolder[index] = char;
       return true;
@@ -272,7 +273,8 @@ export function dataManager(globals, utilsManager) {
     if (direction === 1) {
       let currentRow = startingRow;
       for (let i = 0; i < tempHolder.length; i++) {
-        processChar(currentRow, startingCol, tempHolder[i], i);
+        let currentSquareID = createSquareId(currentRow, startingCol);
+        processChar(currentSquareID, tempHolder[i], i);
         currentRow--;
       }
       return success = true;
@@ -282,7 +284,8 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        processChar(currentRow, currentCol, tempHolder[i], i);
+        let currentSquareID = createSquareId(currentRow, currentCol);
+        processChar(currentSquareID, tempHolder[i], i);
         currentRow--;
         currentCol++;
       }
@@ -292,7 +295,8 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 3) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        processChar(startingRow, currentCol, tempHolder[i], i);
+        let currentSquareID = createSquareId(startingRow, currentCol);
+        processChar(currentSquareID, tempHolder[i], i);
         currentCol++;
       }
       return success = true;
@@ -302,7 +306,8 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        processChar(currentRow, currentCol, tempHolder[i], i);
+        let currentSquareID = createSquareId(currentRow, currentCol);
+        processChar(currentSquareID, tempHolder[i], i);
         currentRow++;
         currentCol++;
       }
@@ -312,7 +317,8 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 5) {
       let currentRow = startingRow;
       for (let i = 0; i < tempHolder.length; i++) {
-        processChar(currentRow, startingCol, tempHolder[i], i);
+        let currentSquareID = createSquareId(currentRow, startingCol);
+        processChar(currentSquareID, tempHolder[i], i);
         currentRow++;
       }
       return success = true;
@@ -322,7 +328,8 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        processChar(currentRow, currentCol, tempHolder[i], i);
+        let currentSquareID = createSquareId(currentRow, currentCol);
+        processChar(currentSquareID, tempHolder[i], i);
         currentRow++;
         currentCol--;
       }
@@ -332,7 +339,8 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 7) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        processChar(startingRow, currentCol, tempHolder[i], i);
+        let currentSquareID = createSquareId(startingRow, currentCol);
+        processChar(currentSquareID, tempHolder[i], i);
         currentCol--;
       }
       return success = true;
@@ -342,7 +350,8 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        processChar(currentRow, currentCol, tempHolder[i], i);
+        let currentSquareID = createSquareId(currentRow, currentCol);
+        processChar(currentSquareID, tempHolder[i], i);
         currentRow--;
         currentCol--;
       }
@@ -354,36 +363,44 @@ export function dataManager(globals, utilsManager) {
     return success;
   }
 
+  function createSquareId(row, col) {
+    return `sq-${row}-${col}`;
+  }
+
   // check starting and ending index, set isFirstOrLastChar, and proceed
-  function processChar(row, col, char, index) {
+  function processChar(currentSquareID, char, index) {
+    printCharOnScreen(currentSquareID, char);   
+    storeCharMap(currentSquareID, char);        // Map squre no. to character
+    
     let isFirstOrLastChar = (index === 0 || index === tempHolder.length - 1); // [sn2]
-    let currentSq = printCharOnScreen(char, row, col);   // display on screen and get currentSq
-    if(isFirstOrLastChar) storeCharCoordinates(currentSq);
+    if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
     return isFirstOrLastChar;
   }
 
 
-  function printCharOnScreen(char, row, col) {
-    let currentSq = `sq-${row}-${col}`;
-    let currentDOM = document.querySelector(`#${currentSq}`);
+  function printCharOnScreen(currentSquareID, char) {
+    let currentDOM = document.querySelector(`#${currentSquareID}`);
     currentDOM.textContent = char; // display on screen
-    filledWords[currentSq] = char; // input -> object
-    
-    return currentSq;
   }
 
-  function storeCharCoordinates(currentSq) {
+  // Map squre no. to character
+  function storeCharMap(currentSquareID, char) {
+    let { sqCharMap } = wordPlacementData;
+    sqCharMap[currentSquareID] = char;  
+  }
+
+  function storeCharCoordinates(currentSquareID) {
     let { wordCoordinates, isStart } = wordPlacementData; // copy wordCoordinates by reference, isStart is a primitive
     
     let currentIndex = wordCoordinates.length;
 
     if (isStart) {
-      wordCoordinates.push({ start: currentSq });         // Append a new object
-      wordPlacementData.wordCoordinates[currentIndex]["start"] = currentSq;
+      wordCoordinates.push({ start: currentSquareID });         // Append a new object
+      wordPlacementData.wordCoordinates[currentIndex]["start"] = currentSquareID;
       wordPlacementData.isStart = false;
     }
     else {
-      wordPlacementData.wordCoordinates[currentIndex - 1]["end"] = currentSq; // modify the last object
+      wordPlacementData.wordCoordinates[currentIndex - 1]["end"] = currentSquareID; // modify the last object
       wordPlacementData.isStart = true;
     }
   }
