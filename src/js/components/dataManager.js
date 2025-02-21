@@ -5,12 +5,10 @@ export function dataManager(globals, utilsManager) {
 
   const { helpers } = utilsManager;
 
-  //let filledWords = {}; // to store filled word's { char: sq no.} 
   let maxRow = noOfSquares;
   let maxCol = noOfSquares;
-  //let tempHolder = [];
 
-  let maxRetries = 10;
+  let maxRetries = 50;
   let retries = 0;
 
   function fill(wordListCopy, noOfWordsToDisplay) {
@@ -25,7 +23,7 @@ export function dataManager(globals, utilsManager) {
     console.info("Remaining word(s) to fill in:", noOfWordsToDisplay);
 
     for (let i = 0; i < noOfWordsToDisplay; i++) {
-      let { arrayIndex, currentWord } = selectRandomWord(); 
+      let { index, selectedWord } = selectRandomWord(); 
       let { direction, startingRow, startingCol } = generateRandomCoordinates();
       
       let attempts = 0;
@@ -34,15 +32,15 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let { hasEnoughSpace, isExistingCharCheckOK } = getPlacementData(direction, currentWord, startingRow, startingCol);
+        let { hasEnoughSpace, isExistingCharCheckOK } = getPlacementData(direction, selectedWord, startingRow, startingCol);
 
         if( hasEnoughSpace && isExistingCharCheckOK ) {
-          fillAWord(direction, startingRow, startingCol, currentWord)
-          listAWord(currentWord);
-          //console.info("filled and listed:", {startingRow, startingCol, currentWord});
+          fillAWord(direction, startingRow, startingCol, selectedWord)
+          listAWord(selectedWord);
+          //console.info("filled and listed:", {startingRow, startingCol, selectedWord});
 
           status = 1;
-          wordListCopy.splice(arrayIndex, 1);   // delete filled words from array 
+          wordListCopy.splice(index, 1);   // delete filled words from array 
           wordsRemaining--;
           
           break;
@@ -65,14 +63,14 @@ export function dataManager(globals, utilsManager) {
 
     // helper functions
     function selectRandomWord() {
-      let arrayIndex = helpers.random(0, (wordListCopy.length - 1));
-      let currentWord = wordListCopy[arrayIndex];
+      let index = helpers.random(0, (wordListCopy.length - 1));
+      let selectedWord = wordListCopy[index];
 
-      return { arrayIndex, currentWord };
+      return { index, selectedWord };
     }
 
-    function getPlacementData(direction, currentWord, startingRow, startingCol) {
-      let wordSpread = [...currentWord];
+    function getPlacementData(direction, selectedWord, startingRow, startingCol) {
+      let wordSpread = [...selectedWord];
       let hasEnoughSpace = hasEnoughSq(direction, wordSpread, startingRow, startingCol);
       let isExistingCharCheckOK = existingCharCheck(direction, wordSpread, startingRow, startingCol);
 
