@@ -142,16 +142,19 @@ export function dataManager(globals, utilsManager) {
     //tempHolder = []; // resetting the array.
     let tempChars = [];
     // 1 = north
+
     if (direction === 1) {
       let currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSquareID = createSquareId(currentRow, startingCol);
-        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
-        if (tempChars) {
+        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        if (checkedChar) {
           currentRow--;
+          tempChars.push(checkedChar);
         }
         else return false;
       }
+      console.info("tempChar:",tempChars);
       return tempChars;
     }
     // 2 = north east
@@ -160,10 +163,11 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSquareID = createSquareId(currentRow, currentCol);
-        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
-        if (tempChars) {
+        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        if (checkedChar) {
           currentRow--;
           currentCol++;
+          tempChars.push(checkedChar);
         }
         else return false;
       }
@@ -174,9 +178,10 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSquareID = createSquareId(startingRow, currentCol);
-        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
-        if (tempChars) {
+        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        if (checkedChar) {
           currentCol++;
+          tempChars.push(checkedChar);
         }
         else return false;
       }
@@ -188,10 +193,11 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSquareID = createSquareId(currentRow, currentCol);
-        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
-        if (tempChars) {
+        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        if (checkedChar) {
           currentRow++;
           currentCol++;
+          tempChars.push(checkedChar);
         }
         else return false;
       }
@@ -202,9 +208,10 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSquareID = createSquareId(currentRow, startingCol);
-        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
-        if (tempChars) {
+        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        if (checkedChar) {
           currentRow++;
+          tempChars.push(checkedChar);
         }
         else return false;
       }
@@ -216,10 +223,11 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSquareID = createSquareId(currentRow, currentCol);
-        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
-        if (tempChars) {
+        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        if (checkedChar) {
           currentRow++;
           currentCol--;
+          tempChars.push(checkedChar);
         }
         else return false;
       }
@@ -230,9 +238,10 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSquareID = createSquareId(startingRow, currentCol);
-        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
-        if (tempChars) {
+        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        if (checkedChar) {
           currentCol--;
+          tempChars.push(checkedChar);
         }
         else return false;
       }
@@ -244,10 +253,11 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let currentSquareID = createSquareId(currentRow, currentCol);
-        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
-        if (tempChars) {
+        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        if (checkedChar) {
           currentRow--;
           currentCol--;
+          tempChars.push(checkedChar);
         }
         else return false;
       }
@@ -256,18 +266,18 @@ export function dataManager(globals, utilsManager) {
   }
 
   // Check whether alredy filled character is compatible with the character-to-be-filled.
-  function oneByOneCheck(currentSq, char, index) {
+  function oneByOneCheck(currentSq, char) {
     let { sqCharMap } = wordPlacementData;  // fetching global data
     let tempChars = [];
 
     if (!sqCharMap[currentSq]) {
       //console.log("No char in the sq. Good to go!");
-      tempChars[index] = char;
+      tempChars.push(char);
       return tempChars;
     }
     else if (sqCharMap[currentSq] === char) {
       //console.log("Existing char in sq is same as incoming. Good to go!");
-      tempChars[index] = char;
+      tempChars.push(char);
       return tempChars;
     }
     else {
