@@ -148,9 +148,7 @@ export function dataManager(globals, utilsManager) {
       currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
         let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) {
-          checkAnotherSquare({ row: -1 });
-        }
+        if (isCheckOK) checkAnotherSquare({ row: -1 });
         else return false;
       }
       return true;
@@ -161,9 +159,7 @@ export function dataManager(globals, utilsManager) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) {
-          checkAnotherSquare({ row: -1, col: 1 });
-        }
+        if (isCheckOK) checkAnotherSquare({ row: -1, col: 1 });
         else return false;
       }
       return true;
@@ -173,9 +169,7 @@ export function dataManager(globals, utilsManager) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) {
-          checkAnotherSquare({ col: 1 });
-        }
+        if (isCheckOK) checkAnotherSquare({ col: 1 });
         else return false;
       }
       return true;
@@ -186,9 +180,7 @@ export function dataManager(globals, utilsManager) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) {
-          checkAnotherSquare({ row: 1, col: 1 });
-        }
+        if (isCheckOK) checkAnotherSquare({ row: 1, col: 1 });
         else return false;
       }
       return true;
@@ -198,9 +190,7 @@ export function dataManager(globals, utilsManager) {
       currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
         let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) {
-          checkAnotherSquare({ row: 1 });
-        }
+        if (isCheckOK) checkAnotherSquare({ row: 1 });
         else return false;
       }
       return true;
@@ -211,9 +201,7 @@ export function dataManager(globals, utilsManager) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) {
-          checkAnotherSquare({ row: 1, col: -1 });
-        }
+        if (isCheckOK) checkAnotherSquare({ row: 1, col: -1 });
         else return false;
       }
       return true;
@@ -223,9 +211,7 @@ export function dataManager(globals, utilsManager) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) {
-          checkAnotherSquare({ col: -1 });
-        }
+        if (isCheckOK) checkAnotherSquare({ col: -1 });
         else return false;
       }
       return true;
@@ -236,9 +222,7 @@ export function dataManager(globals, utilsManager) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
         let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) {
-          checkAnotherSquare({ row: -1, col: -1 });
-        }
+        if (isCheckOK) checkAnotherSquare({ row: -1, col: -1 });
         else return false;
       }
       return true;
