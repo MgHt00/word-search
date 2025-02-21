@@ -273,9 +273,7 @@ export function dataManager(globals, utilsManager) {
     if (direction === 1) {
       let currentRow = startingRow;
       for (let i = 0; i < tempHolder.length; i++) {
-        let currentSquareID = createSquareId(currentRow, startingCol);
-        let isFirstOrLastChar = isStartOrEndIndex(i);
-        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
+        addCharacterToGrid(currentRow, startingCol, i);
         currentRow--;
       }
       return success = true;
@@ -285,9 +283,7 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        let currentSquareID = createSquareId(currentRow, currentCol);
-        let isFirstOrLastChar = isStartOrEndIndex(i);
-        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
+        addCharacterToGrid(currentRow, currentCol, i);
         currentRow--;
         currentCol++;
       }
@@ -297,9 +293,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 3) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        let currentSquareID = createSquareId(startingRow, currentCol);
-        let isFirstOrLastChar = isStartOrEndIndex(i);
-        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
+        addCharacterToGrid(startingRow, currentCol, i);
         currentCol++;
       }
       return success = true;
@@ -309,9 +303,7 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        let currentSquareID = createSquareId(currentRow, currentCol);
-        let isFirstOrLastChar = isStartOrEndIndex(i);
-        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
+        addCharacterToGrid(currentRow, currentCol, i);
         currentRow++;
         currentCol++;
       }
@@ -321,9 +313,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 5) {
       let currentRow = startingRow;
       for (let i = 0; i < tempHolder.length; i++) {
-        let currentSquareID = createSquareId(currentRow, startingCol);
-        let isFirstOrLastChar = isStartOrEndIndex(i);
-        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
+        addCharacterToGrid(currentRow, startingCol, i);
         currentRow++;
       }
       return success = true;
@@ -333,9 +323,7 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        let currentSquareID = createSquareId(currentRow, currentCol);
-        let isFirstOrLastChar = isStartOrEndIndex(i);
-        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
+        addCharacterToGrid(currentRow, currentCol, i);
         currentRow++;
         currentCol--;
       }
@@ -345,9 +333,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 7) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        let currentSquareID = createSquareId(startingRow, currentCol);
-        let isFirstOrLastChar = isStartOrEndIndex(i);
-        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
+        addCharacterToGrid(startingRow, currentCol, i);
         currentCol--;
       }
       return success = true;
@@ -357,9 +343,7 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
-        let currentSquareID = createSquareId(currentRow, currentCol);
-        let isFirstOrLastChar = isStartOrEndIndex(i);
-        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
+        addCharacterToGrid(currentRow, currentRow, i);
         currentRow--;
         currentCol--;
       }
@@ -369,6 +353,13 @@ export function dataManager(globals, utilsManager) {
       console.log(`No direction found`);
     }
     return success;
+
+    // helper functions
+    function addCharacterToGrid(row, col, index) {
+      let currentSquareID = createSquareId(row, col);
+      let isFirstOrLastChar = isStartOrEndIndex(index);
+      processChar(currentSquareID, tempHolder[index], isFirstOrLastChar);
+    }
   }
 
   function createSquareId(row, col) {
@@ -424,12 +415,6 @@ export function dataManager(globals, utilsManager) {
     ulElement.appendChild(liElement);
     sectionWordList.appendChild(ulElement);
   }
-
-  /*function handleMaxAttempts(attempts, maxAttempts) {
-    if (attempts === maxAttempts) {
-      console.log("!!! maxAttempt reached !!!");
-    }
-  }*/
 
   return {
     fill,
