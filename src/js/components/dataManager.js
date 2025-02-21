@@ -274,7 +274,8 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       for (let i = 0; i < tempHolder.length; i++) {
         let currentSquareID = createSquareId(currentRow, startingCol);
-        processChar(currentSquareID, tempHolder[i], i);
+        let isFirstOrLastChar = isStartOrEndIndex(i);
+        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
         currentRow--;
       }
       return success = true;
@@ -285,7 +286,8 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
         let currentSquareID = createSquareId(currentRow, currentCol);
-        processChar(currentSquareID, tempHolder[i], i);
+        let isFirstOrLastChar = isStartOrEndIndex(i);
+        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
         currentRow--;
         currentCol++;
       }
@@ -296,7 +298,8 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
         let currentSquareID = createSquareId(startingRow, currentCol);
-        processChar(currentSquareID, tempHolder[i], i);
+        let isFirstOrLastChar = isStartOrEndIndex(i);
+        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
         currentCol++;
       }
       return success = true;
@@ -307,7 +310,8 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
         let currentSquareID = createSquareId(currentRow, currentCol);
-        processChar(currentSquareID, tempHolder[i], i);
+        let isFirstOrLastChar = isStartOrEndIndex(i);
+        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
         currentRow++;
         currentCol++;
       }
@@ -318,7 +322,8 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       for (let i = 0; i < tempHolder.length; i++) {
         let currentSquareID = createSquareId(currentRow, startingCol);
-        processChar(currentSquareID, tempHolder[i], i);
+        let isFirstOrLastChar = isStartOrEndIndex(i);
+        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
         currentRow++;
       }
       return success = true;
@@ -329,7 +334,8 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
         let currentSquareID = createSquareId(currentRow, currentCol);
-        processChar(currentSquareID, tempHolder[i], i);
+        let isFirstOrLastChar = isStartOrEndIndex(i);
+        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
         currentRow++;
         currentCol--;
       }
@@ -340,7 +346,8 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
         let currentSquareID = createSquareId(startingRow, currentCol);
-        processChar(currentSquareID, tempHolder[i], i);
+        let isFirstOrLastChar = isStartOrEndIndex(i);
+        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
         currentCol--;
       }
       return success = true;
@@ -351,7 +358,8 @@ export function dataManager(globals, utilsManager) {
       let currentCol = startingCol;
       for (let i = 0; i < tempHolder.length; i++) {
         let currentSquareID = createSquareId(currentRow, currentCol);
-        processChar(currentSquareID, tempHolder[i], i);
+        let isFirstOrLastChar = isStartOrEndIndex(i);
+        processChar(currentSquareID, tempHolder[i], isFirstOrLastChar);
         currentRow--;
         currentCol--;
       }
@@ -367,14 +375,15 @@ export function dataManager(globals, utilsManager) {
     return `sq-${row}-${col}`;
   }
 
+  function isStartOrEndIndex(index) {
+    return (index === 0 || index === tempHolder.length - 1); // [sn2]
+  }
+
   // check starting and ending index, set isFirstOrLastChar, and proceed
-  function processChar(currentSquareID, char, index) {
+  function processChar(currentSquareID, char, isFirstOrLastChar) {
     printCharOnScreen(currentSquareID, char);   
     storeCharMap(currentSquareID, char);        // Map squre no. to character
-    
-    let isFirstOrLastChar = (index === 0 || index === tempHolder.length - 1); // [sn2]
     if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
-    return isFirstOrLastChar;
   }
 
 
