@@ -5,7 +5,7 @@ export function dataManager(globals, utilsManager) {
 
   const { helpers } = utilsManager;
 
-  let filledWords = {}; // to store filled word's { char: sq no.} 
+  //let filledWords = {}; // to store filled word's { char: sq no.} 
   let maxRow = noOfSquares;
   let maxCol = noOfSquares;
   //let tempHolder = [];
@@ -39,6 +39,7 @@ export function dataManager(globals, utilsManager) {
         if( hasEnoughSpace && tempChars ) {
           fillAWord(direction, startingRow, startingCol, tempChars)
           listAWord(currentWord);
+          console.info("filled and listed:", {startingRow, startingCol, currentWord});
 
           status = 1;
           wordListCopy.splice(arrayIndex, 1);   // delete filled words from array 
@@ -46,6 +47,7 @@ export function dataManager(globals, utilsManager) {
           
           break;
         } else {
+          console.info("maxAttempts reach.",maxAttempts);
           generateRandomCoordinates();
         }
       }
@@ -139,35 +141,29 @@ export function dataManager(globals, utilsManager) {
 
   // Check whether existing character which is already filled is compatible with the new word
   function existingCharCheck(direction, wordSpread, startingRow, startingCol) {
-    //tempHolder = []; // resetting the array.
     let tempChars = [];
-    // 1 = north
+    let currentRow = startingRow;
+    let currentCol = startingCol;
 
     if (direction === 1) {
-      let currentRow = startingRow;
+      currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSquareID = createSquareId(currentRow, startingCol);
-        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        let checkedChar = checkSquarePlacement(currentRow, startingCol, wordSpread[i]);
         if (checkedChar) {
-          currentRow--;
-          tempChars.push(checkedChar);
+          moveAndStore({ row: -1, char: checkedChar});
         }
         else return false;
       }
-      console.info("tempChar:",tempChars);
       return tempChars;
     }
     // 2 = north east
     else if (direction === 2) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
+      currentRow = startingRow;
+      currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSquareID = createSquareId(currentRow, currentCol);
-        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        let checkedChar = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (checkedChar) {
-          currentRow--;
-          currentCol++;
-          tempChars.push(checkedChar);
+          moveAndStore({ row: -1, col: 1, char: checkedChar});
         }
         else return false;
       }
@@ -175,13 +171,11 @@ export function dataManager(globals, utilsManager) {
     }
     // 3 = east
     else if (direction === 3) {
-      let currentCol = startingCol;
+      currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSquareID = createSquareId(startingRow, currentCol);
-        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        let checkedChar = checkSquarePlacement(startingRow, currentCol, wordSpread[i]);
         if (checkedChar) {
-          currentCol++;
-          tempChars.push(checkedChar);
+          moveAndStore({ col: 1, char: checkedChar});
         }
         else return false;
       }
@@ -189,15 +183,12 @@ export function dataManager(globals, utilsManager) {
     }
     // 4 = south east
     else if (direction === 4) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
+      currentRow = startingRow;
+      currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSquareID = createSquareId(currentRow, currentCol);
-        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        let checkedChar = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (checkedChar) {
-          currentRow++;
-          currentCol++;
-          tempChars.push(checkedChar);
+          moveAndStore({ row: 1, col: 1, char: checkedChar});
         }
         else return false;
       }
@@ -205,13 +196,11 @@ export function dataManager(globals, utilsManager) {
     }
     // south
     else if (direction === 5) {
-      let currentRow = startingRow;
+      currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSquareID = createSquareId(currentRow, startingCol);
-        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        let checkedChar = checkSquarePlacement(currentRow, startingCol, wordSpread[i]);
         if (checkedChar) {
-          currentRow++;
-          tempChars.push(checkedChar);
+          moveAndStore({ row: 1, char: checkedChar});
         }
         else return false;
       }
@@ -219,15 +208,12 @@ export function dataManager(globals, utilsManager) {
     }
     // south west
     else if (direction === 6) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
+      currentRow = startingRow;
+      currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSquareID = createSquareId(currentRow, currentCol);
-        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        let checkedChar = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (checkedChar) {
-          currentRow++;
-          currentCol--;
-          tempChars.push(checkedChar);
+          moveAndStore({ row: 1, col: -1, char: checkedChar});
         }
         else return false;
       }
@@ -235,13 +221,11 @@ export function dataManager(globals, utilsManager) {
     }
     // west
     else if (direction === 7) {
-      let currentCol = startingCol;
+      currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSquareID = createSquareId(startingRow, currentCol);
-        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        let checkedChar =checkSquarePlacement(startingRow, currentCol, wordSpread[i]);
         if (checkedChar) {
-          currentCol--;
-          tempChars.push(checkedChar);
+          moveAndStore({ col: -1, char: checkedChar});
         }
         else return false;
       }
@@ -249,19 +233,29 @@ export function dataManager(globals, utilsManager) {
     }
     // north west
     else if (direction === 8) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
+      currentRow = startingRow;
+      currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSquareID = createSquareId(currentRow, currentCol);
-        let checkedChar = oneByOneCheck(currentSquareID, wordSpread[i]);
+        let checkedChar = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (checkedChar) {
-          currentRow--;
-          currentCol--;
-          tempChars.push(checkedChar);
+          moveAndStore({ row: -1, col: -1, char: checkedChar});
         }
         else return false;
       }
       return tempChars;
+    }
+
+    // helper functions
+    function checkSquarePlacement(row, col, char) {
+      let currentSquareID = createSquareId(row, col);
+      let checkedChar = oneByOneCheck(currentSquareID, char);
+      return checkedChar;
+    }
+
+    function moveAndStore({ row = 0, col = 0, char }) {
+      currentRow += row;
+      currentCol += col;
+      tempChars.push(char);
     }
   }
 
