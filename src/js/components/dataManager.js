@@ -8,7 +8,7 @@ export function dataManager(globals, utilsManager) {
   let filledWords = {}; // to store filled word's { char: sq no.} 
   let maxRow = noOfSquares;
   let maxCol = noOfSquares;
-  let tempHolder = [];
+  //let tempHolder = [];
 
   let maxRetries = 10;
   let retries = 0;
@@ -34,10 +34,10 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let { hasEnoughSpace, isExistingCharOK } = getPlacementData(direction, currentWord, startingRow, startingCol);
+        let { hasEnoughSpace, tempChars } = getPlacementData(direction, currentWord, startingRow, startingCol);
 
-        if( hasEnoughSpace && isExistingCharOK ) {
-          fillAWord(direction, startingRow, startingCol)
+        if( hasEnoughSpace && tempChars ) {
+          fillAWord(direction, startingRow, startingCol, tempChars)
           listAWord(currentWord);
 
           status = 1;
@@ -72,9 +72,9 @@ export function dataManager(globals, utilsManager) {
     function getPlacementData(direction, currentWord, startingRow, startingCol) {
       let wordSpread = [...currentWord];
       let hasEnoughSpace = hasEnoughSq(direction, wordSpread, startingRow, startingCol);
-      let isExistingCharOK = existingCharCheck(direction, wordSpread, startingRow, startingCol);
+      let tempChars = existingCharCheck(direction, wordSpread, startingRow, startingCol);
 
-      return { hasEnoughSpace, isExistingCharOK };
+      return { hasEnoughSpace, tempChars };
     }
 
     function getRandomDirection() {
@@ -139,125 +139,136 @@ export function dataManager(globals, utilsManager) {
 
   // Check whether existing character which is already filled is compatible with the new word
   function existingCharCheck(direction, wordSpread, startingRow, startingCol) {
-    tempHolder = []; // resetting the array.
+    //tempHolder = []; // resetting the array.
+    let tempChars = [];
     // 1 = north
     if (direction === 1) {
       let currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSq = `sq-${currentRow}-${startingCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
+        let currentSquareID = createSquareId(currentRow, startingCol);
+        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
+        if (tempChars) {
           currentRow--;
         }
         else return false;
       }
-      return true;
+      return tempChars;
     }
     // 2 = north east
     else if (direction === 2) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSq = `sq-${currentRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
+        let currentSquareID = createSquareId(currentRow, currentCol);
+        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
+        if (tempChars) {
           currentRow--;
           currentCol++;
         }
         else return false;
       }
-      return true;
+      return tempChars;
     }
     // 3 = east
     else if (direction === 3) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSq = `sq-${startingRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
+        let currentSquareID = createSquareId(startingRow, currentCol);
+        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
+        if (tempChars) {
           currentCol++;
         }
         else return false;
       }
-      return true;
+      return tempChars;
     }
     // 4 = south east
     else if (direction === 4) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSq = `sq-${currentRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
+        let currentSquareID = createSquareId(currentRow, currentCol);
+        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
+        if (tempChars) {
           currentRow++;
           currentCol++;
         }
         else return false;
       }
-      return true;
+      return tempChars;
     }
     // south
     else if (direction === 5) {
       let currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSq = `sq-${currentRow}-${startingCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
+        let currentSquareID = createSquareId(currentRow, startingCol);
+        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
+        if (tempChars) {
           currentRow++;
         }
         else return false;
       }
-      return true;
+      return tempChars;
     }
     // south west
     else if (direction === 6) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSq = `sq-${currentRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
+        let currentSquareID = createSquareId(currentRow, currentCol);
+        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
+        if (tempChars) {
           currentRow++;
           currentCol--;
         }
         else return false;
       }
-      return true;
+      return tempChars;
     }
     // west
     else if (direction === 7) {
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSq = `sq-${startingRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
+        let currentSquareID = createSquareId(startingRow, currentCol);
+        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
+        if (tempChars) {
           currentCol--;
         }
         else return false;
       }
-      return true;
+      return tempChars;
     }
     // north west
     else if (direction === 8) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let currentSq = `sq-${currentRow}-${currentCol}`;
-        if (oneByOneCheck(currentSq, wordSpread[i], i)) {
+        let currentSquareID = createSquareId(currentRow, currentCol);
+        tempChars = oneByOneCheck(currentSquareID, wordSpread[i], i);
+        if (tempChars) {
           currentRow--;
           currentCol--;
         }
         else return false;
       }
-      return true;
+      return tempChars;
     }
   }
 
   // Check whether alredy filled character is compatible with the character-to-be-filled.
   function oneByOneCheck(currentSq, char, index) {
-    let { sqCharMap } = wordPlacementData;
+    let { sqCharMap } = wordPlacementData;  // fetching global data
+    let tempChars = [];
+
     if (!sqCharMap[currentSq]) {
       //console.log("No char in the sq. Good to go!");
-      tempHolder[index] = char;
-      return true;
+      tempChars[index] = char;
+      return tempChars;
     }
     else if (sqCharMap[currentSq] === char) {
       //console.log("Existing char in sq is same as incoming. Good to go!");
-      tempHolder[index] = char;
-      return true;
+      tempChars[index] = char;
+      return tempChars;
     }
     else {
       //console.log("Existing char in sq is NOT same as incoming. FAIL.");
@@ -265,15 +276,15 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  function fillAWord(direction, startingRow, startingCol) {
+  function fillAWord(direction, startingRow, startingCol, tempChars) {
     // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
 
     let success = false;
     // north
     if (direction === 1) {
       let currentRow = startingRow;
-      for (let i = 0; i < tempHolder.length; i++) {
-        addCharacterToGrid(currentRow, startingCol, i);
+      for (let i = 0; i < tempChars.length; i++) {
+        addCharacterToGrid(currentRow, startingCol, i, tempChars);
         currentRow--;
       }
       return success = true;
@@ -282,8 +293,8 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 2) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (let i = 0; i < tempHolder.length; i++) {
-        addCharacterToGrid(currentRow, currentCol, i);
+      for (let i = 0; i < tempChars.length; i++) {
+        addCharacterToGrid(currentRow, currentCol, i, tempChars);
         currentRow--;
         currentCol++;
       }
@@ -292,8 +303,8 @@ export function dataManager(globals, utilsManager) {
     // east
     else if (direction === 3) {
       let currentCol = startingCol;
-      for (let i = 0; i < tempHolder.length; i++) {
-        addCharacterToGrid(startingRow, currentCol, i);
+      for (let i = 0; i < tempChars.length; i++) {
+        addCharacterToGrid(startingRow, currentCol, i, tempChars);
         currentCol++;
       }
       return success = true;
@@ -302,8 +313,8 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 4) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (let i = 0; i < tempHolder.length; i++) {
-        addCharacterToGrid(currentRow, currentCol, i);
+      for (let i = 0; i < tempChars.length; i++) {
+        addCharacterToGrid(currentRow, currentCol, i, tempChars);
         currentRow++;
         currentCol++;
       }
@@ -312,8 +323,8 @@ export function dataManager(globals, utilsManager) {
     // south
     else if (direction === 5) {
       let currentRow = startingRow;
-      for (let i = 0; i < tempHolder.length; i++) {
-        addCharacterToGrid(currentRow, startingCol, i);
+      for (let i = 0; i < tempChars.length; i++) {
+        addCharacterToGrid(currentRow, startingCol, i, tempChars);
         currentRow++;
       }
       return success = true;
@@ -322,8 +333,8 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 6) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (let i = 0; i < tempHolder.length; i++) {
-        addCharacterToGrid(currentRow, currentCol, i);
+      for (let i = 0; i < tempChars.length; i++) {
+        addCharacterToGrid(currentRow, currentCol, i, tempChars);
         currentRow++;
         currentCol--;
       }
@@ -332,8 +343,8 @@ export function dataManager(globals, utilsManager) {
     // west
     else if (direction === 7) {
       let currentCol = startingCol;
-      for (let i = 0; i < tempHolder.length; i++) {
-        addCharacterToGrid(startingRow, currentCol, i);
+      for (let i = 0; i < tempChars.length; i++) {
+        addCharacterToGrid(startingRow, currentCol, i, tempChars);
         currentCol--;
       }
       return success = true;
@@ -342,8 +353,8 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 8) {
       let currentRow = startingRow;
       let currentCol = startingCol;
-      for (let i = 0; i < tempHolder.length; i++) {
-        addCharacterToGrid(currentRow, currentRow, i);
+      for (let i = 0; i < tempChars.length; i++) {
+        addCharacterToGrid(currentRow, currentRow, i, tempChars);
         currentRow--;
         currentCol--;
       }
@@ -355,10 +366,10 @@ export function dataManager(globals, utilsManager) {
     return success;
 
     // helper functions
-    function addCharacterToGrid(row, col, index) {
+    function addCharacterToGrid(row, col, index, tempChars) {
       let currentSquareID = createSquareId(row, col);
-      let isFirstOrLastChar = isStartOrEndIndex(index);
-      processChar(currentSquareID, tempHolder[index], isFirstOrLastChar);
+      let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
+      processChar(currentSquareID, tempChars[index], isFirstOrLastChar);
     }
   }
 
@@ -366,8 +377,8 @@ export function dataManager(globals, utilsManager) {
     return `sq-${row}-${col}`;
   }
 
-  function isStartOrEndIndex(index) {
-    return (index === 0 || index === tempHolder.length - 1); // [sn2]
+  function isStartOrEndIndex(index, tempChars) {
+    return (index === 0 || index === tempChars.length - 1); // [sn2]
   }
 
   // check starting and ending index, set isFirstOrLastChar, and proceed
