@@ -265,17 +265,17 @@ export function dataManager(globals, utilsManager) {
     let tempChars = [];
 
     if (!sqCharMap[currentSq]) {
-      //console.log("No char in the sq. Good to go!");
+      console.log("No char in the sq. Good to go!");
       tempChars.push(char);
       return tempChars;
     }
     else if (sqCharMap[currentSq] === char) {
-      //console.log("Existing char in sq is same as incoming. Good to go!");
+      console.log("Existing char in sq is same as incoming. Good to go!");
       tempChars.push(char);
       return tempChars;
     }
     else {
-      //console.log("Existing char in sq is NOT same as incoming. FAIL.");
+      console.log("Existing char in sq is NOT same as incoming. FAIL.");
       return false;
     }
   }
