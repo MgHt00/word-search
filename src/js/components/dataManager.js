@@ -27,10 +27,13 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord);
-        let isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord);
+
+        let hasEnoughSpace, isExistingCharCheckOK;
+        hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord);
+        if (hasEnoughSpace) { isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord); }
 
         if( hasEnoughSpace && isExistingCharCheckOK ) {
+          console.warn(hasEnoughSpace, isExistingCharCheckOK);
           fillAWord(randomCoordinates, selectedWord);
           listAWord(selectedWord);
           //console.info("filled and listed:", {startingRow, startingCol, selectedWord});
