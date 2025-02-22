@@ -5,9 +5,6 @@ export function dataManager(globals, utilsManager) {
 
   const { helpers } = utilsManager;
 
-  let maxRow = noOfSquares;
-  let maxCol = noOfSquares;
-
   let maxRetries = 50;
   let retries = 0;
 
@@ -94,6 +91,8 @@ export function dataManager(globals, utilsManager) {
 
   // To check whether there is enough square in the calcuated direction
   function hasEnoughSq(direction, wordSpread, startingRow, startingCol) {
+    let maxRow = noOfSquares; // fetching global property
+    let maxCol = noOfSquares; // fetching global property
     
     let rightStatus = checkRight(wordSpread, startingRow, startingCol);
     let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
