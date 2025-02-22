@@ -35,7 +35,7 @@ export function dataManager(globals, utilsManager) {
         let { hasEnoughSpace, isExistingCharCheckOK } = getPlacementData(direction, selectedWord, startingRow, startingCol);
 
         if( hasEnoughSpace && isExistingCharCheckOK ) {
-          fillAWord(direction, startingRow, startingCol, selectedWord)
+          fillAWord(direction, startingRow, startingCol, selectedWord, wordPlacementData)
           listAWord(selectedWord);
           //console.info("filled and listed:", {startingRow, startingCol, selectedWord});
 
@@ -258,7 +258,7 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  function fillAWord(direction, startingRow, startingCol, wordToFill) {
+  function fillAWord(direction, startingRow, startingCol, wordToFill, wordPlacementData) {
     // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
     let tempChars = [...wordToFill];
     let success = false;
@@ -266,7 +266,7 @@ export function dataManager(globals, utilsManager) {
     if (direction === 1) {
       let currentRow = startingRow;
       for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, startingCol, i, tempChars);
+        addCharacterToGrid(currentRow, startingCol, i, tempChars, wordPlacementData);
         currentRow--;
       }
       return success = true;
@@ -276,7 +276,7 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, currentCol, i, tempChars);
+        addCharacterToGrid(currentRow, currentCol, i, tempChars, wordPlacementData);
         currentRow--;
         currentCol++;
       }
@@ -286,7 +286,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 3) {
       let currentCol = startingCol;
       for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(startingRow, currentCol, i, tempChars);
+        addCharacterToGrid(startingRow, currentCol, i, tempChars, wordPlacementData);
         currentCol++;
       }
       return success = true;
@@ -296,7 +296,7 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, currentCol, i, tempChars);
+        addCharacterToGrid(currentRow, currentCol, i, tempChars, wordPlacementData);
         currentRow++;
         currentCol++;
       }
@@ -306,7 +306,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 5) {
       let currentRow = startingRow;
       for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, startingCol, i, tempChars);
+        addCharacterToGrid(currentRow, startingCol, i, tempChars, wordPlacementData);
         currentRow++;
       }
       return success = true;
@@ -316,7 +316,7 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, currentCol, i, tempChars);
+        addCharacterToGrid(currentRow, currentCol, i, tempChars, wordPlacementData);
         currentRow++;
         currentCol--;
       }
@@ -326,7 +326,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 7) {
       let currentCol = startingCol;
       for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(startingRow, currentCol, i, tempChars);
+        addCharacterToGrid(startingRow, currentCol, i, tempChars, wordPlacementData);
         currentCol--;
       }
       return success = true;
@@ -336,7 +336,7 @@ export function dataManager(globals, utilsManager) {
       let currentRow = startingRow;
       let currentCol = startingCol;
       for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, currentRow, i, tempChars);
+        addCharacterToGrid(currentRow, currentRow, i, tempChars, wordPlacementData);
         currentRow--;
         currentCol--;
       }
@@ -348,10 +348,12 @@ export function dataManager(globals, utilsManager) {
     return success;
 
     // helper functions
-    function addCharacterToGrid(row, col, index, tempChars) {
+    function addCharacterToGrid(row, col, index, tempChars, wordPlacementData) {
       let currentSquareID = createSquareId(row, col);
       let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
-      processChar(currentSquareID, tempChars[index], isFirstOrLastChar);
+      printCharOnScreen(currentSquareID, tempChars[index]); 
+      storeCharMap(currentSquareID, tempChars[index], wordPlacementData);
+      if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
     }
   }
 
@@ -363,21 +365,13 @@ export function dataManager(globals, utilsManager) {
     return (index === 0 || index === tempChars.length - 1); // [sn2]
   }
 
-  // check starting and ending index, set isFirstOrLastChar, and proceed
-  function processChar(currentSquareID, char, isFirstOrLastChar) {
-    printCharOnScreen(currentSquareID, char);   
-    storeCharMap(currentSquareID, char);        // Map squre no. to character
-    if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
-  }
-
-
   function printCharOnScreen(currentSquareID, char) {
     let currentDOM = document.querySelector(`#${currentSquareID}`);
     currentDOM.textContent = char; // display on screen
   }
 
   // Map squre no. to character
-  function storeCharMap(currentSquareID, char) {
+  function storeCharMap(currentSquareID, char, wordPlacementData) {
     let { sqCharMap } = wordPlacementData;
     sqCharMap[currentSquareID] = char;
     //console.info(sqCharMap);
