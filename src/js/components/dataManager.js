@@ -24,7 +24,7 @@ export function dataManager(globals, utilsManager) {
 
     for (let i = 0; i < noOfWordsToDisplay; i++) {
       let { index, selectedWord } = selectRandomWord(); 
-      let { direction, startingRow, startingCol } = generateRandomCoordinates();
+      const randomCoordinates = generateRandomCoordinates();
       
       let attempts = 0;
       let maxAttempts = 30;
@@ -32,10 +32,10 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let { hasEnoughSpace, isExistingCharCheckOK } = getPlacementData(direction, selectedWord, startingRow, startingCol);
+        let { hasEnoughSpace, isExistingCharCheckOK } = getPlacementData(randomCoordinates, selectedWord);
 
         if( hasEnoughSpace && isExistingCharCheckOK ) {
-          fillAWord(direction, startingRow, startingCol, selectedWord, wordPlacementData)
+          fillAWord(randomCoordinates, selectedWord, wordPlacementData)
           listAWord(selectedWord);
           //console.info("filled and listed:", {startingRow, startingCol, selectedWord});
 
@@ -69,7 +69,8 @@ export function dataManager(globals, utilsManager) {
       return { index, selectedWord };
     }
 
-    function getPlacementData(direction, selectedWord, startingRow, startingCol) {
+    function getPlacementData(randomCoordinates, selectedWord) {
+      let { direction,startingRow, startingCol } = randomCoordinates;
       let wordSpread = [...selectedWord];
       let hasEnoughSpace = hasEnoughSq(direction, wordSpread, startingRow, startingCol);
       let isExistingCharCheckOK = existingCharCheck(direction, wordSpread, startingRow, startingCol);
@@ -258,8 +259,8 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  function fillAWord(direction, startingRow, startingCol, wordToFill, wordPlacementData) {
-    // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
+  function fillAWord(randomCoordinates, wordToFill, wordPlacementData) {
+    let { direction, startingRow, startingCol } = randomCoordinates;
     let tempChars = [...wordToFill];
     let success = false;
     // north
