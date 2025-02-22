@@ -70,11 +70,8 @@ export function dataManager(globals, utilsManager) {
     }
 
     function getPlacementData(randomCoordinates, selectedWord) {
-      let { direction,startingRow, startingCol } = randomCoordinates;
-      let wordSpread = [...selectedWord];
-      let hasEnoughSpace = hasEnoughSq(direction, wordSpread, startingRow, startingCol);
-      let isExistingCharCheckOK = existingCharCheck(direction, wordSpread, startingRow, startingCol);
-
+      let hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord);
+      let isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord);
       return { hasEnoughSpace, isExistingCharCheckOK };
     }
 
@@ -94,7 +91,9 @@ export function dataManager(globals, utilsManager) {
 
 
   // To check whether there is enough square in the calcuated direction
-  function hasEnoughSq(direction, wordSpread, startingRow, startingCol) {
+  function hasEnoughSq(randomCoordinates, selectedWord) {
+    let { direction,startingRow, startingCol } = randomCoordinates;
+    let wordSpread = [...selectedWord];
     
     let rightStatus = checkRight(wordSpread, startingRow, startingCol);
     let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
@@ -139,7 +138,10 @@ export function dataManager(globals, utilsManager) {
   }
 
   // Check whether existing character which is already filled is compatible with the new word
-  function existingCharCheck(direction, wordSpread, startingRow, startingCol) {
+  function existingCharCheck(randomCoordinates, selectedWord) {
+    let { direction,startingRow, startingCol } = randomCoordinates;
+    let wordSpread = [...selectedWord];
+
     let currentRow = startingRow;
     let currentCol = startingCol;
 
