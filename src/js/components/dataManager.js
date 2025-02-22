@@ -5,10 +5,7 @@ export function dataManager(globals, utilsManager) {
 
   const { helpers } = utilsManager;
 
-  let maxRow = noOfSquares;
-  let maxCol = noOfSquares;
-
-  let maxRetries = 50;
+  const maxRetries = 50;
   let retries = 0;
 
   function fill(wordListCopy, noOfWordsToDisplay) {
@@ -32,7 +29,7 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let { hasEnoughSpace, isExistingCharCheckOK } = getPlacementData(randomCoordinates, selectedWord);
+        let { hasEnoughSpace, isExistingCharCheckOK } = getPlacementData(randomCoordinates, selectedWord, noOfSquares);
 
         if( hasEnoughSpace && isExistingCharCheckOK ) {
           fillAWord(randomCoordinates, selectedWord, wordPlacementData)
@@ -69,8 +66,8 @@ export function dataManager(globals, utilsManager) {
       return { index, selectedWord };
     }
 
-    function getPlacementData(randomCoordinates, selectedWord) {
-      let hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord);
+    function getPlacementData(randomCoordinates, selectedWord, noOfSquares) {
+      let hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord, noOfSquares);
       let isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord);
       return { hasEnoughSpace, isExistingCharCheckOK };
     }
@@ -91,9 +88,11 @@ export function dataManager(globals, utilsManager) {
 
 
   // To check whether there is enough square in the calcuated direction
-  function hasEnoughSq(randomCoordinates, selectedWord) {
+  function hasEnoughSq(randomCoordinates, selectedWord, noOfSquares) {
     let { direction,startingRow, startingCol } = randomCoordinates;
     let wordSpread = [...selectedWord];
+    const maxRow = noOfSquares;
+    const maxCol = noOfSquares;
     
     let rightStatus = checkRight(wordSpread, startingRow, startingCol);
     let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
