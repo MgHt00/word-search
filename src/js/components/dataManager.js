@@ -9,8 +9,6 @@ export function dataManager(globals, utilsManager) {
   let retries = 0;
 
   function fill(wordListCopy, noOfWordsToDisplay) {
-    console.groupCollapsed("fill()");
-
     if (retries >= maxRetries) { // preventing possible infinite retries.
       console.warn("Max retries reached. Stopping recursion.");
       return;
@@ -29,12 +27,15 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        let { hasEnoughSpace, isExistingCharCheckOK } = getPlacementData(randomCoordinates, selectedWord, noOfSquares);
+
+        let hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord, noOfSquares);
+        let isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord, wordPlacementData);
+        console.info("isExistingCharCheckOK",isExistingCharCheckOK);
 
         if( hasEnoughSpace && isExistingCharCheckOK ) {
+          console.info("Both parameter ok.");
           fillAWord(randomCoordinates, selectedWord, wordPlacementData)
           listAWord(selectedWord);
-          //console.info("filled and listed:", {startingRow, startingCol, selectedWord});
 
           status = 1;
           wordListCopy.splice(index, 1);   // delete filled words from array 
@@ -42,7 +43,6 @@ export function dataManager(globals, utilsManager) {
           
           break;
         } else {
-          //console.info("maxAttempts reach.",maxAttempts);
           generateRandomCoordinates();
         }
       }
@@ -56,20 +56,12 @@ export function dataManager(globals, utilsManager) {
       }, 0);
     }
 
-    console.groupEnd();
-
     // helper functions
     function selectRandomWord() {
       let index = helpers.random(0, (wordListCopy.length - 1));
       let selectedWord = wordListCopy[index];
 
       return { index, selectedWord };
-    }
-
-    function getPlacementData(randomCoordinates, selectedWord, noOfSquares) {
-      let hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord, noOfSquares);
-      let isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord);
-      return { hasEnoughSpace, isExistingCharCheckOK };
     }
 
     function getRandomDirection() {
@@ -137,8 +129,8 @@ export function dataManager(globals, utilsManager) {
   }
 
   // Check whether existing character which is already filled is compatible with the new word
-  function existingCharCheck(randomCoordinates, selectedWord) {
-    let { direction,startingRow, startingCol } = randomCoordinates;
+  function existingCharCheck(randomCoordinates, selectedWord, wordPlacementData) {
+    let { direction, startingRow, startingCol } = randomCoordinates;
     let wordSpread = [...selectedWord];
 
     let currentRow = startingRow;
@@ -147,7 +139,7 @@ export function dataManager(globals, utilsManager) {
     if (direction === 1) {
       currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
         if (isCheckOK) checkAnotherSquare({ row: -1 });
         else return false;
       }
@@ -158,7 +150,7 @@ export function dataManager(globals, utilsManager) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
         if (isCheckOK) checkAnotherSquare({ row: -1, col: 1 });
         else return false;
       }
@@ -168,7 +160,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 3) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
         if (isCheckOK) checkAnotherSquare({ col: 1 });
         else return false;
       }
@@ -179,7 +171,7 @@ export function dataManager(globals, utilsManager) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
         if (isCheckOK) checkAnotherSquare({ row: 1, col: 1 });
         else return false;
       }
@@ -189,7 +181,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 5) {
       currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
         if (isCheckOK) checkAnotherSquare({ row: 1 });
         else return false;
       }
@@ -200,7 +192,7 @@ export function dataManager(globals, utilsManager) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
         if (isCheckOK) checkAnotherSquare({ row: 1, col: -1 });
         else return false;
       }
@@ -210,7 +202,7 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 7) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
         if (isCheckOK) checkAnotherSquare({ col: -1 });
         else return false;
       }
@@ -221,7 +213,7 @@ export function dataManager(globals, utilsManager) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
         if (isCheckOK) checkAnotherSquare({ row: -1, col: -1 });
         else return false;
       }
@@ -229,9 +221,9 @@ export function dataManager(globals, utilsManager) {
     }
 
     // helper functions
-    function checkSquarePlacement(row, col, char) {
+    function checkSquarePlacement(row, col, char, wordPlacementData) {
       let currentSquareID = createSquareId(row, col);
-      let isCheckOK = oneByOneCheck(currentSquareID, char);
+      let isCheckOK = oneByOneCheck(currentSquareID, char, wordPlacementData);
       return isCheckOK;
     }
 
@@ -243,7 +235,7 @@ export function dataManager(globals, utilsManager) {
   }
 
   // Check whether alredy filled character is compatible with the character-to-be-filled.
-  function oneByOneCheck(currentSq, char) {
+  function oneByOneCheck(currentSq, char, wordPlacementData) {
     let { sqCharMap } = wordPlacementData;  // fetching global data
 
     if (!sqCharMap[currentSq]) {
@@ -255,7 +247,7 @@ export function dataManager(globals, utilsManager) {
       return true;
     }
     else {
-      //console.log("Existing char in sq is NOT same as incoming. FAIL.");
+      console.log("Existing char in sq is NOT same as incoming. FAIL.");
       return false;
     }
   }
@@ -355,7 +347,7 @@ export function dataManager(globals, utilsManager) {
       let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
       printCharOnScreen(currentSquareID, tempChars[index]); 
       storeCharMap(currentSquareID, tempChars[index], wordPlacementData);
-      if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
+      if(isFirstOrLastChar) storeCharCoordinates(currentSquareID, wordPlacementData);
     }
   }
 
@@ -379,7 +371,7 @@ export function dataManager(globals, utilsManager) {
     //console.info(sqCharMap);
   }
 
-  function storeCharCoordinates(currentSquareID) {
+  function storeCharCoordinates(currentSquareID, wordPlacementData) {
     let { wordCoordinates, isStart } = wordPlacementData; // copy wordCoordinates by reference, isStart is a primitive
     
     let currentIndex = wordCoordinates.length;
