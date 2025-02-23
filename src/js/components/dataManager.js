@@ -24,17 +24,20 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        const randomCoordinates =  generateRandomCoordinates();
+        const coordinates =  generateRandomCoordinates();
         let hasEnoughSpace =  false; 
-        let isExistingCharCheckOK = false;
+        let charCheckData = false;
 
-        hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord);
+        hasEnoughSpace = hasEnoughSq(coordinates, selectedWord);
 
-        if (hasEnoughSpace) isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord); 
+        if (hasEnoughSpace) { 
+          charCheckData = existingCharCheck(coordinates, selectedWord);  
+        }
 
-        if( hasEnoughSpace && isExistingCharCheckOK ) {
-          console.info({PROCCEDING: {selectedWord, hasEnoughSpace, isExistingCharCheckOK}});
-          fillAWord(randomCoordinates, selectedWord);
+        if( hasEnoughSpace && charCheckData ) {
+          console.info({PROCCEDING: {selectedWord, hasEnoughSpace, charCheckData}});
+          //fillAWord(coordinates, selectedWord);
+          fillWordToGrid(charCheckData);
           listAWord(selectedWord);
 
           wordListCopy.splice(index, 1);   // delete filled words from array 
@@ -74,6 +77,18 @@ export function dataManager(globals, utilsManager) {
 
       return { direction, startingRow, startingCol } ;
     }
+  }
+
+  function fillWordToGrid(charCheckData) {
+    
+    Object.entries(charCheckData).forEach(([key, value]) => { // [sn3]
+      printCharOnScreen(key, value)
+    });
+    /*let currentSquareID = createSquareId(row, col);
+      let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
+      printCharOnScreen(currentSquareID, tempChars[index]);   
+      storeCharMap(currentSquareID, tempChars[index]);        // Map squre no. to character
+      if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);*/
   }
 
 
@@ -133,102 +148,103 @@ export function dataManager(globals, utilsManager) {
     let wordSpread = [...selectedWord];
     let currentRow = startingRow;
     let currentCol = startingCol;
+    let placementData = {};
 
     if (direction === 1) {
       currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (isCheckOK) checkAnotherSquare({ row: -1 });
         else return false;
       }
-      return true;
+      return placementData;
     }
     // 2 = north east
     else if (direction === 2) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (isCheckOK) checkAnotherSquare({ row: -1, col: 1 });
         else return false;
       }
-      return true;
+      return placementData;
     }
     // 3 = east
     else if (direction === 3) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (isCheckOK) checkAnotherSquare({ col: 1 });
         else return false;
       }
-      return true;
+      return placementData;
     }
     // 4 = south east
     else if (direction === 4) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (isCheckOK) checkAnotherSquare({ row: 1, col: 1 });
         else return false;
       }
-      return true;
+      return placementData;
     }
     // south
     else if (direction === 5) {
       currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (isCheckOK) checkAnotherSquare({ row: 1 });
         else return false;
       }
-      return true;
+      return placementData;
     }
     // south west
     else if (direction === 6) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (isCheckOK) checkAnotherSquare({ row: 1, col: -1 });
         else return false;
       }
-      return true;
+      return placementData;
     }
     // west
     else if (direction === 7) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (isCheckOK) checkAnotherSquare({ col: -1 });
         else return false;
       }
-      return true;
+      return placementData;
     }
     // north west
     else if (direction === 8) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i], wordPlacementData);
+        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
         if (isCheckOK) checkAnotherSquare({ row: -1, col: -1 });
         else return false;
       }
-      return true;
+      return placementData;
     }
 
     // helper functions
-    function checkSquarePlacement(row, col, char, wordPlacementData) {
+    function checkSquarePlacement(row, col, char) {
       let currentSquareID = createSquareId(row, col);
-      let isCheckOK = oneByOneCheck(currentSquareID, char, wordPlacementData);
+      let isCheckOK = oneByOneCheck(currentSquareID, char);
+      if (isCheckOK) placementData[currentSquareID] = char;
       return isCheckOK;
     }
 
     function checkAnotherSquare({ row = 0, col = 0 }) {
       currentRow += row;
       currentCol += col;
-      //tempChars.push(char);
     }
   }
 
@@ -254,7 +270,7 @@ export function dataManager(globals, utilsManager) {
       return false;
     }
   }
-
+/*
   function fillAWord(randomCoordinates, wordToFill) {
     let { direction, startingRow, startingCol } = randomCoordinates;
     // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
@@ -346,7 +362,7 @@ export function dataManager(globals, utilsManager) {
     return success;
 
     // helper functions
-    function addCharacterToGrid(row, col, index, tempChars, wordPlacementData) {
+    function addCharacterToGrid(row, col, index, tempChars) {
       let currentSquareID = createSquareId(row, col);
       let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
       printCharOnScreen(currentSquareID, tempChars[index]);   
@@ -354,7 +370,7 @@ export function dataManager(globals, utilsManager) {
       if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
     }
   }
-
+*/
   function createSquareId(row, col) {
     return `sq-${row}-${col}`;
   }
@@ -369,12 +385,12 @@ export function dataManager(globals, utilsManager) {
   }
 
   // Map squre no. to character
-  function storeCharMap(currentSquareID, char) {
+/*  function storeCharMap(currentSquareID, char) {
     sqCharMap[currentSquareID] = char;
     //console.info(sqCharMap);
   }
-
-  function storeCharCoordinates(currentSquareID) {    
+*/
+/*  function storeCharCoordinates(currentSquareID) {    
     let currentIndex = wordCoordinates.length;
 
     if (isStart) {
@@ -387,7 +403,7 @@ export function dataManager(globals, utilsManager) {
       isStart = true;
     }
   }
-
+*/
   function listAWord(incoming) {
     // function to list the words underneath the square frame
 
