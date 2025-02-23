@@ -86,6 +86,7 @@ export function dataManager(globals, utilsManager) {
 
     entries.forEach(([key, value], index) => { // [sn3]
       printCharOnScreen(key, value);
+      storeCharMap(key, value);        // Map squre no. to character
       if (index === firstIndex || index === lastIndex) storeCharCoordinates(key);
     });
     /*let currentSquareID = createSquareId(row, col);
@@ -292,7 +293,7 @@ export function dataManager(globals, utilsManager) {
       return false;
     }
   }
-/*
+
   function fillAWord(randomCoordinates, wordToFill) {
     let { direction, startingRow, startingCol } = randomCoordinates;
     // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
@@ -392,7 +393,7 @@ export function dataManager(globals, utilsManager) {
       if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
     }
   }
-*/
+
   function createSquareId(row, col) {
     return `sq-${row}-${col}`;
   }
@@ -407,11 +408,10 @@ export function dataManager(globals, utilsManager) {
   }
 
   // Map squre no. to character
-/*  function storeCharMap(currentSquareID, char) {
+  function storeCharMap(currentSquareID, char) {
     sqCharMap[currentSquareID] = char;
     //console.info(sqCharMap);
   }
-*/
 
   function listAWord(incoming) {
     // function to list the words underneath the square frame
