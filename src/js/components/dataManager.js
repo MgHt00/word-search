@@ -19,7 +19,7 @@ export function dataManager(globals, utilsManager) {
 
     for (let i = 0; i < noOfWordsToDisplay; i++) {
       let { index, selectedWord } = selectRandomWord(); 
-      const randomCoordinates =  generateRandomCoordinates();
+      //const randomCoordinates =  generateRandomCoordinates();
       
       let attempts = 0;
       let maxAttempts = 30;
@@ -27,16 +27,20 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
+        const randomCoordinates =  generateRandomCoordinates();
+        let hasEnoughSpace =  false; 
+        let isExistingCharCheckOK = false;
 
-        let hasEnoughSpace, isExistingCharCheckOK;
         hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord);
-        if (hasEnoughSpace) { isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord); }
+
+        if (hasEnoughSpace) { 
+          isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord); 
+        }
 
         if( hasEnoughSpace && isExistingCharCheckOK ) {
-          console.warn(hasEnoughSpace, isExistingCharCheckOK);
+          console.info({PROCCEDING: {selectedWord, hasEnoughSpace, isExistingCharCheckOK}});
           fillAWord(randomCoordinates, selectedWord);
           listAWord(selectedWord);
-          //console.info("filled and listed:", {startingRow, startingCol, selectedWord});
 
           status = 1;
           wordListCopy.splice(index, 1);   // delete filled words from array 
@@ -57,7 +61,7 @@ export function dataManager(globals, utilsManager) {
         fill(wordListCopy, wordsRemaining);
       }, 0);
     }
-    console.info(wordCoordinates);
+    //console.info(wordCoordinates);
 
     // helper functions
     function selectRandomWord() {
@@ -133,6 +137,7 @@ export function dataManager(globals, utilsManager) {
 
   // Check whether existing character which is already filled is compatible with the new word
   function existingCharCheck(randomCoordinates, selectedWord) {
+    console.info("selectedWord:",selectedWord)
     let { direction, startingRow, startingCol } = randomCoordinates;
     let wordSpread = [...selectedWord];
     let currentRow = startingRow;
@@ -247,7 +252,14 @@ export function dataManager(globals, utilsManager) {
       return true;
     }
     else {
-      //console.log("Existing char in sq is NOT same as incoming. FAIL.");
+      console.warn({
+        oneByOneCheckFail: { 
+          char, 
+          currentSq, 
+          storedChar: sqCharMap[currentSq] 
+        }
+      });
+      //console.warn("Existing char in sq is NOT same as incoming. FAIL.");
       return false;
     }
   }
