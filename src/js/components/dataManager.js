@@ -55,7 +55,7 @@ export function dataManager(globals, utilsManager) {
         fill(wordListCopy, wordsRemaining);
       }, 0);
     }
-    //console.info(wordCoordinates);
+    console.info(wordCoordinates);
 
     // helper functions
     function selectRandomWord() {
@@ -80,15 +80,33 @@ export function dataManager(globals, utilsManager) {
   }
 
   function fillWordToGrid(charCheckData) {
-    
-    Object.entries(charCheckData).forEach(([key, value]) => { // [sn3]
-      printCharOnScreen(key, value)
+    const entries = Object.entries(charCheckData);
+    const firstIndex = 0;
+    const lastIndex = entries.length - 1;
+
+    entries.forEach(([key, value], index) => { // [sn3]
+      printCharOnScreen(key, value);
+      if (index === firstIndex || index === lastIndex) storeCharCoordinates(key);
     });
     /*let currentSquareID = createSquareId(row, col);
       let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
       printCharOnScreen(currentSquareID, tempChars[index]);   
       storeCharMap(currentSquareID, tempChars[index]);        // Map squre no. to character
       if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);*/
+  }
+
+  function storeCharCoordinates(currentSquareID) {
+    let currentIndex = wordCoordinates.length;
+
+    if (isStart) {
+      wordCoordinates.push({ start: currentSquareID });         // Append a new object
+      wordCoordinates[currentIndex]["start"] = currentSquareID;
+      isStart = false;
+    }
+    else {
+      wordCoordinates[currentIndex - 1]["end"] = currentSquareID; // modify the last object
+      isStart = true;
+    }
   }
 
 
@@ -238,8 +256,12 @@ export function dataManager(globals, utilsManager) {
     function checkSquarePlacement(row, col, char) {
       let currentSquareID = createSquareId(row, col);
       let isCheckOK = oneByOneCheck(currentSquareID, char);
-      if (isCheckOK) placementData[currentSquareID] = char;
+      if (isCheckOK) addToPlacementData(currentSquareID, char);
       return isCheckOK;
+    }
+
+    function addToPlacementData(currentSquareID, char) {
+      placementData[currentSquareID] = char;
     }
 
     function checkAnotherSquare({ row = 0, col = 0 }) {
@@ -390,20 +412,7 @@ export function dataManager(globals, utilsManager) {
     //console.info(sqCharMap);
   }
 */
-/*  function storeCharCoordinates(currentSquareID) {    
-    let currentIndex = wordCoordinates.length;
 
-    if (isStart) {
-      wordCoordinates.push({ start: currentSquareID });         // Append a new object
-      wordCoordinates[currentIndex]["start"] = currentSquareID;
-      isStart = false;
-    }
-    else {
-      wordCoordinates[currentIndex - 1]["end"] = currentSquareID; // modify the last object
-      isStart = true;
-    }
-  }
-*/
   function listAWord(incoming) {
     // function to list the words underneath the square frame
 
