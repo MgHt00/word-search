@@ -18,12 +18,9 @@ export function dataManager(globals, utilsManager) {
     console.info("Remaining word(s) to fill in:", noOfWordsToDisplay);
 
     for (let i = 0; i < noOfWordsToDisplay; i++) {
-      let { index, selectedWord } = selectRandomWord(); 
-      //const randomCoordinates =  generateRandomCoordinates();
-      
+      let { index, selectedWord } = selectRandomWord();       
       let attempts = 0;
       let maxAttempts = 30;
-      let status = 0; // 0 = fail, 1 = success
 
       while ( attempts < maxAttempts ) {
         attempts++;
@@ -33,24 +30,18 @@ export function dataManager(globals, utilsManager) {
 
         hasEnoughSpace = hasEnoughSq(randomCoordinates, selectedWord);
 
-        if (hasEnoughSpace) { 
-          isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord); 
-        }
+        if (hasEnoughSpace) isExistingCharCheckOK = existingCharCheck(randomCoordinates, selectedWord); 
 
         if( hasEnoughSpace && isExistingCharCheckOK ) {
           console.info({PROCCEDING: {selectedWord, hasEnoughSpace, isExistingCharCheckOK}});
           fillAWord(randomCoordinates, selectedWord);
           listAWord(selectedWord);
 
-          status = 1;
           wordListCopy.splice(index, 1);   // delete filled words from array 
           wordsRemaining--;
           
           break;
-        } else {
-          //console.info("maxAttempts reach.",maxAttempts);
-          generateRandomCoordinates();
-        }
+        } 
       }
     }
 
