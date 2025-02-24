@@ -31,7 +31,7 @@ export function dataManager(globals, utilsManager) {
         hasEnoughSpace = hasEnoughSq(coordinates, selectedWord);
 
         if (hasEnoughSpace) { 
-          charCheckData = existingCharCheck(coordinates, selectedWord);  
+          charCheckData = existingCharCheck(coordinates, selectedWord, sqCharMap);  
         }
 
         if( hasEnoughSpace && charCheckData ) {
@@ -187,22 +187,23 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
+  const directionOffsets = new Map([
+    [1, { row: -1, col: 0 }],
+    [2, { row: -1, col: 1 }],
+    [3, { row: 0, col: 1 }],
+    [4, { row: 1, col: 1 }],
+    [5, { row: 1, col: 0 }],
+    [6, { row: 1, col: -1 }],
+    [7, { row: 0, col: -1 }],
+    [8, { row: -1, col: -1 }]
+  ]);
+
   // Check whether existing character which is already filled is compatible with the new word
-  function existingCharCheck(randomCoordinates, selectedWord) {
-    
-    console.info("selectedWord:",selectedWord)
-    const directionOffsets = new Map([
-      [1, { row: -1, col: 0 }],
-      [2, { row: -1, col: 1 }],
-      [3, { row: 0, col: 1 }],
-      [4, { row: 1, col: 1 }],
-      [5, { row: 1, col: 0 }],
-      [6, { row: 1, col: -1 }],
-      [7, { row: 0, col: -1 }],
-      [8, { row: -1, col: -1 }]
-    ]);
+  function existingCharCheck(randomCoordinates, selectedWord, charMap) {
+    console.info("selectedWord:",selectedWord);
 
     let { direction, startingRow, startingCol } = randomCoordinates;
+    let offset = directionOffsets.get(direction); 
     let wordSpread = [...selectedWord];
     let currentRow = startingRow;
     let currentCol = startingCol;
@@ -211,9 +212,9 @@ export function dataManager(globals, utilsManager) {
     if (direction === 1) {
       currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) checkAnotherSquare({ row: -1 });
-        else return false;
+        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
+        if (!charCheckOK) return false;
+        updateRowAndCol(offset);
       }
       return placementData;
     }
@@ -222,9 +223,9 @@ export function dataManager(globals, utilsManager) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) checkAnotherSquare({ row: -1, col: 1 });
-        else return false;
+        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
+        if (!charCheckOK) return false;
+        updateRowAndCol(offset);
       }
       return placementData;
     }
@@ -232,9 +233,9 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 3) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) checkAnotherSquare({ col: 1 });
-        else return false;
+        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
+        if (!charCheckOK) return false;
+        updateRowAndCol(offset);
       }
       return placementData;
     }
@@ -243,9 +244,9 @@ export function dataManager(globals, utilsManager) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) checkAnotherSquare({ row: 1, col: 1 });
-        else return false;
+        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
+        if (!charCheckOK) return false;
+        updateRowAndCol(offset);
       }
       return placementData;
     }
@@ -253,9 +254,9 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 5) {
       currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) checkAnotherSquare({ row: 1 });
-        else return false;
+        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
+        if (!charCheckOK) return false;
+        updateRowAndCol(offset);
       }
       return placementData;
     }
@@ -264,9 +265,9 @@ export function dataManager(globals, utilsManager) {
       currentRow = startingRow;
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) checkAnotherSquare({ row: 1, col: -1 });
-        else return false;
+        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
+        if (!charCheckOK) return false;
+        updateRowAndCol(offset);
       }
       return placementData;
     }
@@ -274,20 +275,18 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 7) {
       currentCol = startingCol;
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) checkAnotherSquare({ col: -1 });
-        else return false;
+        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
+        if (!charCheckOK) return false;
+        updateRowAndCol(offset);
       }
       return placementData;
     }
     // north west
     else if (direction === 8) {
       currentRow = startingRow;
-      currentCol = startingCol;
-      let offset = directionOffsets.get(direction); 
-      
+      currentCol = startingCol;      
       for (let i = 0; i < wordSpread.length; i++) {
-        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], direction);
+        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
         if (!charCheckOK) return false;
 
         updateRowAndCol(offset);
@@ -295,10 +294,10 @@ export function dataManager(globals, utilsManager) {
       return placementData;
     }
 
-    function charCheck(row, col, char) {
+    function charCheck(row, col, char, charMap) {
       console.error("We ARE REFACTORING!!");
       let currentSquareID = createSquareId(row, col);
-      let isCheckOK = oneByOneCheck(currentSquareID, char);
+      let isCheckOK = oneByOneCheck(currentSquareID, char, charMap);
       if (isCheckOK) {
         addToPlacementData(currentSquareID, char);
         return true;
@@ -306,21 +305,21 @@ export function dataManager(globals, utilsManager) {
     }
 
     // helper functions
-    function checkSquarePlacement(row, col, char) {
+    /*function checkSquarePlacement(row, col, char) {
       let currentSquareID = createSquareId(row, col);
       let isCheckOK = oneByOneCheck(currentSquareID, char);
       if (isCheckOK) addToPlacementData(currentSquareID, char);
       return isCheckOK;
-    }
+    }*/
 
     function addToPlacementData(currentSquareID, char) {
       placementData[currentSquareID] = char;
     }
 
-    function checkAnotherSquare({ row = 0, col = 0 }) {
+    /*function checkAnotherSquare({ row = 0, col = 0 }) {
       currentRow += row;
       currentCol += col;
-    }
+    }*/
 
     function updateRowAndCol(offset) {
       currentRow += offset.row;
@@ -329,12 +328,12 @@ export function dataManager(globals, utilsManager) {
   }
 
   // Check whether alredy filled character is compatible with the character-to-be-filled.
-  function oneByOneCheck(currentSq, char) {
-    if (!sqCharMap[currentSq]) {
+  function oneByOneCheck(currentSq, char, charMap) {
+    if (!charMap[currentSq]) {
       //console.log("No char in the sq. Good to go!");
       return true;
     }
-    else if (sqCharMap[currentSq] === char) {
+    else if (charMap[currentSq] === char) {
       //console.log("Existing char in sq is same as incoming. Good to go!");
       return true;
     }
@@ -343,7 +342,7 @@ export function dataManager(globals, utilsManager) {
         oneByOneCheckFail: { 
           char, 
           currentSq, 
-          storedChar: sqCharMap[currentSq] 
+          storedChar: charMap[currentSq],
         }
       });
       //console.warn("Existing char in sq is NOT same as incoming. FAIL.");
