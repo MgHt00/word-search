@@ -36,7 +36,6 @@ export function dataManager(globals, utilsManager) {
 
         if( hasEnoughSpace && charCheckData ) {
           console.info({PROCCEDING: {selectedWord, hasEnoughSpace, charCheckData}});
-          //fillAWord(coordinates, selectedWord);
           const entries = Object.entries(charCheckData);
           const firstIndex = 0;
           const lastIndex = entries.length - 1;
@@ -44,7 +43,7 @@ export function dataManager(globals, utilsManager) {
           entries.forEach(([squareID, char], index) => {
             printCharOnScreen(squareID, char);
             if (index === firstIndex || index === lastIndex) setStartOrEnd(squareID);
-            updateSqCharMap(squareID, char, sqCharMap)
+            updateSqCharMap(squareID, char, sqCharMap) // Map squre no. to character
           });
           
           listAWord(selectedWord);
@@ -88,39 +87,9 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  /*function fillWordToGrid(entries) {
-    const firstIndex = 0;
-    const lastIndex = entries.length - 1;
-
-    entries.forEach(([key, value], index) => { // [sn3]
-      printCharOnScreen(key, value);
-      //storeCharMap(key, value);        // Map squre no. to character
-      if (index === firstIndex || index === lastIndex) storeCharCoordinates(key);
-    });
-    //let currentSquareID = createSquareId(row, col);
-    //  let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
-    //  printCharOnScreen(currentSquareID, tempChars[index]);   
-    //  storeCharMap(currentSquareID, tempChars[index]);        // Map squre no. to character
-    //  if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
-    
-  }*/
-
+  // Map squre no. to character
   function updateSqCharMap(key, value, charMap) {
       charMap[key] = value;
-  }
-
-  function storeCharCoordinates(currentSquareID) {
-    let currentIndex = wordCoordinates.length;
-
-    if (isStart) {
-      wordCoordinates.push({ start: currentSquareID });         // Append a new object
-      wordCoordinates[currentIndex]["start"] = currentSquareID;
-      isStart = false;
-    }
-    else {
-      wordCoordinates[currentIndex - 1]["end"] = currentSquareID; // modify the last object
-      isStart = true;
-    }
   }
 
   function setStartOrEnd(startOrEndID) {
@@ -136,7 +105,6 @@ export function dataManager(globals, utilsManager) {
       isStart = true;
     }
   }
-
 
   // To check whether there is enough square in the calcuated direction
   function hasEnoughSq(randomCoordinates, selectedWord) {
@@ -217,91 +185,6 @@ export function dataManager(globals, utilsManager) {
     }
     return placementData;
 
-    /*if (direction === 1) {
-      currentRow = startingRow;
-      for (let i = 0; i < wordSpread.length; i++) {
-        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
-        if (!charCheckOK) return false;
-        updateRowAndCol(offset);
-      }
-      return placementData;
-    }
-    // 2 = north east
-    else if (direction === 2) {
-      currentRow = startingRow;
-      currentCol = startingCol;
-      for (let i = 0; i < wordSpread.length; i++) {
-        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
-        if (!charCheckOK) return false;
-        updateRowAndCol(offset);
-      }
-      return placementData;
-    }
-    // 3 = east
-    else if (direction === 3) {
-      currentCol = startingCol;
-      for (let i = 0; i < wordSpread.length; i++) {
-        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
-        if (!charCheckOK) return false;
-        updateRowAndCol(offset);
-      }
-      return placementData;
-    }
-    // 4 = south east
-    else if (direction === 4) {
-      currentRow = startingRow;
-      currentCol = startingCol;
-      for (let i = 0; i < wordSpread.length; i++) {
-        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
-        if (!charCheckOK) return false;
-        updateRowAndCol(offset);
-      }
-      return placementData;
-    }
-    // south
-    else if (direction === 5) {
-      currentRow = startingRow;
-      for (let i = 0; i < wordSpread.length; i++) {
-        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
-        if (!charCheckOK) return false;
-        updateRowAndCol(offset);
-      }
-      return placementData;
-    }
-    // south west
-    else if (direction === 6) {
-      currentRow = startingRow;
-      currentCol = startingCol;
-      for (let i = 0; i < wordSpread.length; i++) {
-        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
-        if (!charCheckOK) return false;
-        updateRowAndCol(offset);
-      }
-      return placementData;
-    }
-    // west
-    else if (direction === 7) {
-      currentCol = startingCol;
-      for (let i = 0; i < wordSpread.length; i++) {
-        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
-        if (!charCheckOK) return false;
-        updateRowAndCol(offset);
-      }
-      return placementData;
-    }
-    // north west
-    else if (direction === 8) {
-      currentRow = startingRow;
-      currentCol = startingCol;      
-
-      for (let i = 0; i < wordSpread.length; i++) {
-        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
-        if (!charCheckOK) return false;
-        updateRowAndCol(offset);
-      }
-      return placementData;
-    }*/
-
     // helper functions
     function charCheck(row, col, char, charMap) {
       let currentSquareID = createSquareId(row, col);
@@ -344,127 +227,16 @@ export function dataManager(globals, utilsManager) {
       return false;
     }
   }
-/*
-  function fillAWord(randomCoordinates, wordToFill) {
-    let { direction, startingRow, startingCol } = randomCoordinates;
-    // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
-    let tempChars = [...wordToFill];
-    let success = false;
-    // north
-    if (direction === 1) {
-      let currentRow = startingRow;
-      for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, startingCol, i, tempChars, wordPlacementData);
-        currentRow--;
-      }
-      return success = true;
-    }
-    // north east
-    else if (direction === 2) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
-      for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, currentCol, i, tempChars, wordPlacementData);
-        currentRow--;
-        currentCol++;
-      }
-      return success = true;
-    }
-    // east
-    else if (direction === 3) {
-      let currentCol = startingCol;
-      for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(startingRow, currentCol, i, tempChars, wordPlacementData);
-        currentCol++;
-      }
-      return success = true;
-    }
-    // south east
-    else if (direction === 4) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
-      for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, currentCol, i, tempChars, wordPlacementData);
-        currentRow++;
-        currentCol++;
-      }
-      return success = true;
-    }
-    // south
-    else if (direction === 5) {
-      let currentRow = startingRow;
-      for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, startingCol, i, tempChars, wordPlacementData);
-        currentRow++;
-      }
-      return success = true;
-    }
-    // south west
-    else if (direction === 6) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
-      for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, currentCol, i, tempChars, wordPlacementData);
-        currentRow++;
-        currentCol--;
-      }
-      return success = true;
-    }
-    // west
-    else if (direction === 7) {
-      let currentCol = startingCol;
-      for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(startingRow, currentCol, i, tempChars, wordPlacementData);
-        currentCol--;
-      }
-      return success = true;
-    }
-    // north west
-    else if (direction === 8) {
-      let currentRow = startingRow;
-      let currentCol = startingCol;
-      for (let i = 0; i < tempChars.length; i++) {
-        addCharacterToGrid(currentRow, currentRow, i, tempChars, wordPlacementData);
-        currentRow--;
-        currentCol--;
-      }
-      return success = true;
-    }
-    else {
-      console.log(`No direction found`);
-    }
-    return success;
-
-    // helper functions
-    function addCharacterToGrid(row, col, index, tempChars) {
-      let currentSquareID = createSquareId(row, col);
-      let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
-      printCharOnScreen(currentSquareID, tempChars[index]);   
-      storeCharMap(currentSquareID, tempChars[index]);        // Map squre no. to character
-      if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
-    }
-  }
-*/ 
  
   function createSquareId(row, col) {
     return `sq-${row}-${col}`;
   }
-/*
-  function isStartOrEndIndex(index, tempChars) {
-    return (index === 0 || index === tempChars.length - 1); // [sn2]
-  }
-*/
+
   function printCharOnScreen(currentSquareID, char) {
     let currentDOM = document.querySelector(`#${currentSquareID}`);
     currentDOM.textContent = char; // display on screen
   }
 
-  // Map squre no. to character
-/*  function storeCharMap(currentSquareID, char) {
-    sqCharMap[currentSquareID] = char;
-    //console.info(sqCharMap);
-  }
-*/
   function listAWord(incoming) {
     // function to list the words underneath the square frame
 
