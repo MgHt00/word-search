@@ -205,11 +205,19 @@ export function dataManager(globals, utilsManager) {
     let { direction, startingRow, startingCol } = randomCoordinates;
     let offset = directionOffsets.get(direction); 
     let wordSpread = [...selectedWord];
-    let currentRow = startingRow;
-    let currentCol = startingCol;
     let placementData = {};
 
-    if (direction === 1) {
+    let currentRow = startingRow;
+    let currentCol = startingCol;
+
+    for (let i = 0; i < wordSpread.length; i++) {
+      let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
+      if (!charCheckOK) return false;
+      updateRowAndCol(offset);
+    }
+    return placementData;
+
+    /*if (direction === 1) {
       currentRow = startingRow;
       for (let i = 0; i < wordSpread.length; i++) {
         let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
@@ -285,17 +293,17 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 8) {
       currentRow = startingRow;
       currentCol = startingCol;      
+
       for (let i = 0; i < wordSpread.length; i++) {
         let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
         if (!charCheckOK) return false;
-
         updateRowAndCol(offset);
       }
       return placementData;
-    }
+    }*/
 
+    // helper functions
     function charCheck(row, col, char, charMap) {
-      console.error("We ARE REFACTORING!!");
       let currentSquareID = createSquareId(row, col);
       let isCheckOK = oneByOneCheck(currentSquareID, char, charMap);
       if (isCheckOK) {
@@ -304,22 +312,9 @@ export function dataManager(globals, utilsManager) {
       } else return false;
     }
 
-    // helper functions
-    /*function checkSquarePlacement(row, col, char) {
-      let currentSquareID = createSquareId(row, col);
-      let isCheckOK = oneByOneCheck(currentSquareID, char);
-      if (isCheckOK) addToPlacementData(currentSquareID, char);
-      return isCheckOK;
-    }*/
-
     function addToPlacementData(currentSquareID, char) {
-      placementData[currentSquareID] = char;
+      placementData[currentSquareID] = char;  // add char to a local variable
     }
-
-    /*function checkAnotherSquare({ row = 0, col = 0 }) {
-      currentRow += row;
-      currentCol += col;
-    }*/
 
     function updateRowAndCol(offset) {
       currentRow += offset.row;
