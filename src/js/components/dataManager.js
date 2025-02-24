@@ -189,7 +189,19 @@ export function dataManager(globals, utilsManager) {
 
   // Check whether existing character which is already filled is compatible with the new word
   function existingCharCheck(randomCoordinates, selectedWord) {
+    
     console.info("selectedWord:",selectedWord)
+    const directionOffsets = new Map([
+      [1, { row: -1, col: 0 }],
+      [2, { row: -1, col: 1 }],
+      [3, { row: 0, col: 1 }],
+      [4, { row: 1, col: 1 }],
+      [5, { row: 1, col: 0 }],
+      [6, { row: 1, col: -1 }],
+      [7, { row: 0, col: -1 }],
+      [8, { row: -1, col: -1 }]
+    ]);
+
     let { direction, startingRow, startingCol } = randomCoordinates;
     let wordSpread = [...selectedWord];
     let currentRow = startingRow;
@@ -272,12 +284,25 @@ export function dataManager(globals, utilsManager) {
     else if (direction === 8) {
       currentRow = startingRow;
       currentCol = startingCol;
+      let offset = directionOffsets.get(direction); 
+      
       for (let i = 0; i < wordSpread.length; i++) {
-        let isCheckOK = checkSquarePlacement(currentRow, currentCol, wordSpread[i]);
-        if (isCheckOK) checkAnotherSquare({ row: -1, col: -1 });
-        else return false;
+        let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], direction);
+        if (!charCheckOK) return false;
+
+        updateRowAndCol(offset);
       }
       return placementData;
+    }
+
+    function charCheck(row, col, char) {
+      console.error("We ARE REFACTORING!!");
+      let currentSquareID = createSquareId(row, col);
+      let isCheckOK = oneByOneCheck(currentSquareID, char);
+      if (isCheckOK) {
+        addToPlacementData(currentSquareID, char);
+        return true;
+      } else return false;
     }
 
     // helper functions
@@ -295,6 +320,11 @@ export function dataManager(globals, utilsManager) {
     function checkAnotherSquare({ row = 0, col = 0 }) {
       currentRow += row;
       currentCol += col;
+    }
+
+    function updateRowAndCol(offset) {
+      currentRow += offset.row;
+      currentCol += offset.col;
     }
   }
 
