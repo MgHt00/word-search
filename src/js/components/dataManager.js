@@ -37,7 +37,16 @@ export function dataManager(globals, utilsManager) {
         if( hasEnoughSpace && charCheckData ) {
           console.info({PROCCEDING: {selectedWord, hasEnoughSpace, charCheckData}});
           //fillAWord(coordinates, selectedWord);
-          fillWordToGrid(charCheckData);
+          const entries = Object.entries(charCheckData);
+          const firstIndex = 0;
+          const lastIndex = entries.length - 1;
+
+          entries.forEach(([squareID, char], index) => {
+            printCharOnScreen(squareID, char);
+            if (index === firstIndex || index === lastIndex) setStartOrEnd(squareID);
+            updateSqCharMap(squareID, char, sqCharMap)
+          });
+          
           listAWord(selectedWord);
 
           wordListCopy.splice(index, 1);   // delete filled words from array 
@@ -79,21 +88,25 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  function fillWordToGrid(charCheckData) {
-    const entries = Object.entries(charCheckData);
+  /*function fillWordToGrid(entries) {
     const firstIndex = 0;
     const lastIndex = entries.length - 1;
 
     entries.forEach(([key, value], index) => { // [sn3]
       printCharOnScreen(key, value);
-      storeCharMap(key, value);        // Map squre no. to character
+      //storeCharMap(key, value);        // Map squre no. to character
       if (index === firstIndex || index === lastIndex) storeCharCoordinates(key);
     });
-    /*let currentSquareID = createSquareId(row, col);
-      let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
-      printCharOnScreen(currentSquareID, tempChars[index]);   
-      storeCharMap(currentSquareID, tempChars[index]);        // Map squre no. to character
-      if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);*/
+    //let currentSquareID = createSquareId(row, col);
+    //  let isFirstOrLastChar = isStartOrEndIndex(index, tempChars);
+    //  printCharOnScreen(currentSquareID, tempChars[index]);   
+    //  storeCharMap(currentSquareID, tempChars[index]);        // Map squre no. to character
+    //  if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
+    
+  }*/
+
+  function updateSqCharMap(key, value, charMap) {
+      charMap[key] = value;
   }
 
   function storeCharCoordinates(currentSquareID) {
@@ -106,6 +119,20 @@ export function dataManager(globals, utilsManager) {
     }
     else {
       wordCoordinates[currentIndex - 1]["end"] = currentSquareID; // modify the last object
+      isStart = true;
+    }
+  }
+
+  function setStartOrEnd(startOrEndID) {
+    let currentIndex = wordCoordinates.length;
+
+    if (isStart) {
+      wordCoordinates.push({ start: startOrEndID });         // Append a new object
+      wordCoordinates[currentIndex]["start"] = startOrEndID;
+      isStart = false;
+    }
+    else {
+      wordCoordinates[currentIndex - 1]["end"] = startOrEndID; // modify the last object
       isStart = true;
     }
   }
@@ -293,7 +320,7 @@ export function dataManager(globals, utilsManager) {
       return false;
     }
   }
-
+/*
   function fillAWord(randomCoordinates, wordToFill) {
     let { direction, startingRow, startingCol } = randomCoordinates;
     // () ရလာတဲ့ direction အတိုင်း tempHolder ထဲက စာလုံးတွေဖြည့်မယ်
@@ -393,26 +420,27 @@ export function dataManager(globals, utilsManager) {
       if(isFirstOrLastChar) storeCharCoordinates(currentSquareID);
     }
   }
-
+*/ 
+ 
   function createSquareId(row, col) {
     return `sq-${row}-${col}`;
   }
-
+/*
   function isStartOrEndIndex(index, tempChars) {
     return (index === 0 || index === tempChars.length - 1); // [sn2]
   }
-
+*/
   function printCharOnScreen(currentSquareID, char) {
     let currentDOM = document.querySelector(`#${currentSquareID}`);
     currentDOM.textContent = char; // display on screen
   }
 
   // Map squre no. to character
-  function storeCharMap(currentSquareID, char) {
+/*  function storeCharMap(currentSquareID, char) {
     sqCharMap[currentSquareID] = char;
     //console.info(sqCharMap);
   }
-
+*/
   function listAWord(incoming) {
     // function to list the words underneath the square frame
 
