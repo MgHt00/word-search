@@ -232,25 +232,6 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  /*
-  function setStartOrEnd(startOrEndID, allCoordinatesData) {
-  /// If used, use the following line to call from fill()
-  /// if (index === firstIndex || index === lastIndex) setStartOrEnd(squareID, wordCoordinates, isStart);
-
-    let currentIndex = allCoordinatesData.length;
-
-    if (isStart) {
-      allCoordinatesData.push({ start: startOrEndID });         // Append a new object
-      allCoordinatesData[currentIndex]["start"] = startOrEndID;
-      isStart = false;
-    }
-    else {
-      allCoordinatesData[currentIndex - 1]["end"] = startOrEndID; // modify the last object
-      isStart = true;
-    }
-  }
-  */
-
   function listAWord(incoming) {
     // function to list the words underneath the square frame
 
