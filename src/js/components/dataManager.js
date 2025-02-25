@@ -64,41 +64,54 @@ export function dataManager(globals, utilsManager) {
       }, 0);
     }
     console.info({ startAndEnds : { startPoints, endPoints }});
+
+    // helper functions of fill()
+    function printCharOnScreen(currentSquareID, char) {
+      let currentDOM = document.querySelector(`#${currentSquareID}`);
+      currentDOM.textContent = char; // display on screen
+    }
+
+    // Map squre no. to character
+    function updateSqCharMap(key, value, charMap) {
+      charMap[key] = value;
+    }
+
+    function storeStartPoint(squareID, startCoordinates) {
+      startCoordinates.push(squareID);
+    }
+  
+    function storeEndPoint(squareID, endCoordinates) {
+      endCoordinates.push(squareID);
+    }
   }
 
   function selectRandomWord(wordsArray) {
     let index = helpers.random(0, (wordsArray.length - 1));
     let selectedWord = wordsArray[index];
-
     return { index, selectedWord };
   }
 
-  // generate new starting positons
+  // generate new starting positons and direction
   function generateRandomCoordinates(gridDimension) {
     let direction = getRandomDirection();
     let startingRow = helpers.random(1, gridDimension);
     let startingCol = helpers.random(1, gridDimension);
 
-    return { direction, startingRow, startingCol } ;
-    
+    return { direction, startingRow, startingCol };
+
     // helper function
     function getRandomDirection() {
       return helpers.random(1, 8);
     }
   }
 
-  // Map squre no. to character
-  function updateSqCharMap(key, value, charMap) {
-      charMap[key] = value;
-  }
-
   // To check whether there is enough square in the calcuated direction
   function hasEnoughSq(randomCoordinates, selectedWord, gridDimension) {
     let { direction, startingRow, startingCol } = randomCoordinates;
     let wordSpread = [...selectedWord];
-    let maxRow = gridDimension; 
-    let maxCol = gridDimension; 
-    
+    let maxRow = gridDimension;
+    let maxCol = gridDimension;
+
     let rightStatus = checkRight(wordSpread, startingRow, startingCol);
     let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
     let topStatus = checkTop(wordSpread, startingRow, startingCol);
@@ -119,28 +132,29 @@ export function dataManager(globals, utilsManager) {
       if (!isWithinBounds(row, col + (word.length - 1))) return false;
       return true;  // Explicitly return true if the word fits within the boundary
     }
-  
+
     function checkLeft(word, row, col) {
       if (!isWithinBounds(row, col - (word.length - 1))) return false;
       return true;
     }
-  
+
     function checkTop(word, row, col) {
       if (!(isWithinBounds(row - (word.length - 1), col))) return false;
       return true;
     }
-  
+
     function checkBelow(word, row, col) {
       if (!(isWithinBounds(row + word.length - 1, col))) return false;
       return true;
     }
-  
+
     // Boundary check function
     function isWithinBounds(row, col) {
       return row > 0 && row <= maxRow && col > 0 && col <= maxCol;
     }
   }
 
+  // Data for existingCharCheck()
   const directionOffsets = new Map([
     [1, { row: -1, col: 0 }],
     [2, { row: -1, col: 1 }],
@@ -154,10 +168,10 @@ export function dataManager(globals, utilsManager) {
 
   // Check whether existing character which is already filled is compatible with the new word
   function existingCharCheck(randomCoordinates, selectedWord, charMap) {
-    console.info("selectedWord:",selectedWord);
+    console.info("selectedWord:", selectedWord);
 
     let { direction, startingRow, startingCol } = randomCoordinates;
-    let offset = directionOffsets.get(direction); 
+    let offset = directionOffsets.get(direction);
     let wordSpread = [...selectedWord];
     let placementData = {};
 
@@ -181,6 +195,10 @@ export function dataManager(globals, utilsManager) {
       } else return false;
     }
 
+    function createSquareId(row, col) {
+      return `sq-${row}-${col}`;
+    }
+
     function addToPlacementData(currentSquareID, char) {
       placementData[currentSquareID] = char;  // add char to a local variable
     }
@@ -189,38 +207,29 @@ export function dataManager(globals, utilsManager) {
       currentRow += offset.row;
       currentCol += offset.col;
     }
-  }
 
-  // Check whether alredy filled character is compatible with the character-to-be-filled.
-  function oneByOneCheck(currentSq, char, charMap) {
-    if (!charMap[currentSq]) {
-      //console.log("No char in the sq. Good to go!");
-      return true;
+    // Check whether alredy filled character is compatible with the character-to-be-filled.
+    function oneByOneCheck(currentSq, char, charMap) {
+      if (!charMap[currentSq]) {
+        //console.log("No char in the sq. Good to go!");
+        return true;
+      }
+      else if (charMap[currentSq] === char) {
+        //console.log("Existing char in sq is same as incoming. Good to go!");
+        return true;
+      }
+      else {
+        console.warn({
+          oneByOneCheckFail: {
+            char,
+            currentSq,
+            storedChar: charMap[currentSq],
+          }
+        });
+        //console.warn("Existing char in sq is NOT same as incoming. FAIL.");
+        return false;
+      }
     }
-    else if (charMap[currentSq] === char) {
-      //console.log("Existing char in sq is same as incoming. Good to go!");
-      return true;
-    }
-    else {
-      console.warn({
-        oneByOneCheckFail: { 
-          char, 
-          currentSq, 
-          storedChar: charMap[currentSq],
-        }
-      });
-      //console.warn("Existing char in sq is NOT same as incoming. FAIL.");
-      return false;
-    }
-  }
- 
-  function createSquareId(row, col) {
-    return `sq-${row}-${col}`;
-  }
-
-  function printCharOnScreen(currentSquareID, char) {
-    let currentDOM = document.querySelector(`#${currentSquareID}`);
-    currentDOM.textContent = char; // display on screen
   }
 
   /*
@@ -241,14 +250,6 @@ export function dataManager(globals, utilsManager) {
     }
   }
   */
-
-  function storeStartPoint(squareID, startCoordinates) {
-    startCoordinates.push(squareID);
-  }
-
-  function storeEndPoint(squareID, endCoordinates) {
-    endCoordinates.push(squareID);
-  }
 
   function listAWord(incoming) {
     // function to list the words underneath the square frame
