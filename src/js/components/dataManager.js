@@ -9,6 +9,7 @@ export function dataManager(globals, utilsManager) {
   let retries = 0;
 
   function fill(words, noOfWordsToDisplay) {
+    let wordsArray = [...words];
     if (retries >= maxRetries) { // preventing possible infinite retries.
       console.warn("Max retries reached. Stopping recursion.");
       return;
@@ -18,31 +19,28 @@ export function dataManager(globals, utilsManager) {
     console.info("Remaining word(s) to fill in:", noOfWordsToDisplay);
 
     for (let i = 0; i < noOfWordsToDisplay; i++) {
-      let { index, selectedWord } = selectRandomWord();       
+      let { index, selectedWord } = selectRandomWord(wordsArray);       
       let attempts = 0;
       let maxAttempts = 30;
 
       while ( attempts < maxAttempts ) {
         attempts++;
         const coordinates =  generateRandomCoordinates(gridSize);
-        let hasEnoughSpace =  false; 
-        let charCheckData = false;
 
-        hasEnoughSpace = hasEnoughSq(coordinates, selectedWord, gridSize);
-
-        if (hasEnoughSpace) { 
-          charCheckData = existingCharCheck(coordinates, selectedWord, sqCharMap);  
-        }
+        let hasEnoughSpace = hasEnoughSq(coordinates, selectedWord, gridSize);
+        let charCheckData = (hasEnoughSpace)
+          ? existingCharCheck(coordinates, selectedWord, sqCharMap) // If hasEnoughSpace is true
+          : false; 
 
         if( hasEnoughSpace && charCheckData ) {
-          console.info({PROCCEDING: {selectedWord, hasEnoughSpace, charCheckData}});
+          console.info({ PROCCEDING: {selectedWord, hasEnoughSpace, charCheckData} });
+
           const entries = Object.entries(charCheckData);
           const firstIndex = 0;
           const lastIndex = entries.length - 1;
 
           entries.forEach(([squareID, char], index) => {
             printCharOnScreen(squareID, char);
-            //if (index === firstIndex || index === lastIndex) setStartOrEnd(squareID, wordCoordinates, isStart);
             if (index === firstIndex) storeStartPoint(squareID, startPoints);
             if (index === lastIndex) storeEndPoint(squareID, endPoints);
             updateSqCharMap(squareID, char, sqCharMap) // Map squre no. to character
@@ -50,7 +48,7 @@ export function dataManager(globals, utilsManager) {
           
           listAWord(selectedWord);
 
-          words.splice(index, 1);   // delete filled words from array 
+          wordsArray.splice(index, 1);   // delete filled words from array 
           wordsRemaining--;
           
           break;
@@ -62,18 +60,17 @@ export function dataManager(globals, utilsManager) {
     if (wordsRemaining > 0) {
       retries++;
       setTimeout(() => { //[sn1]
-        fill(words, wordsRemaining);
+        fill(wordsArray, wordsRemaining);
       }, 0);
     }
     console.info({ startAndEnds : { startPoints, endPoints }});
+  }
 
-    // helper functions
-    function selectRandomWord() {
-      let index = helpers.random(0, (words.length - 1));
-      let selectedWord = words[index];
+  function selectRandomWord(wordsArray) {
+    let index = helpers.random(0, (wordsArray.length - 1));
+    let selectedWord = wordsArray[index];
 
-      return { index, selectedWord };
-    }
+    return { index, selectedWord };
   }
 
   // generate new starting positons
@@ -226,7 +223,11 @@ export function dataManager(globals, utilsManager) {
     currentDOM.textContent = char; // display on screen
   }
 
-  /*function setStartOrEnd(startOrEndID, allCoordinatesData) {
+  /*
+  function setStartOrEnd(startOrEndID, allCoordinatesData) {
+  /// If used, use the following line to call from fill()
+  /// if (index === firstIndex || index === lastIndex) setStartOrEnd(squareID, wordCoordinates, isStart);
+
     let currentIndex = allCoordinatesData.length;
 
     if (isStart) {
@@ -238,7 +239,8 @@ export function dataManager(globals, utilsManager) {
       allCoordinatesData[currentIndex - 1]["end"] = startOrEndID; // modify the last object
       isStart = true;
     }
-  }*/
+  }
+  */
 
   function storeStartPoint(squareID, startCoordinates) {
     startCoordinates.push(squareID);
