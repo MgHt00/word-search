@@ -42,7 +42,7 @@ export function dataManager(globals, utilsManager) {
 
           entries.forEach(([squareID, char], index) => {
             printCharOnScreen(squareID, char);
-            if (index === firstIndex || index === lastIndex) setStartOrEnd(squareID);
+            if (index === firstIndex || index === lastIndex) setStartOrEnd(squareID, wordCoordinates);
             updateSqCharMap(squareID, char, sqCharMap) // Map squre no. to character
           });
           
@@ -90,20 +90,6 @@ export function dataManager(globals, utilsManager) {
   // Map squre no. to character
   function updateSqCharMap(key, value, charMap) {
       charMap[key] = value;
-  }
-
-  function setStartOrEnd(startOrEndID) {
-    let currentIndex = wordCoordinates.length;
-
-    if (isStart) {
-      wordCoordinates.push({ start: startOrEndID });         // Append a new object
-      wordCoordinates[currentIndex]["start"] = startOrEndID;
-      isStart = false;
-    }
-    else {
-      wordCoordinates[currentIndex - 1]["end"] = startOrEndID; // modify the last object
-      isStart = true;
-    }
   }
 
   // To check whether there is enough square in the calcuated direction
@@ -235,6 +221,20 @@ export function dataManager(globals, utilsManager) {
   function printCharOnScreen(currentSquareID, char) {
     let currentDOM = document.querySelector(`#${currentSquareID}`);
     currentDOM.textContent = char; // display on screen
+  }
+
+  function setStartOrEnd(startOrEndID, allCoordinatesData) {
+    let currentIndex = allCoordinatesData.length;
+
+    if (isStart) {
+      allCoordinatesData.push({ start: startOrEndID });         // Append a new object
+      allCoordinatesData[currentIndex]["start"] = startOrEndID;
+      isStart = false;
+    }
+    else {
+      allCoordinatesData[currentIndex - 1]["end"] = startOrEndID; // modify the last object
+      isStart = true;
+    }
   }
 
   function listAWord(incoming) {
