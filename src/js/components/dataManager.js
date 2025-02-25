@@ -2,7 +2,7 @@ export function dataManager(globals, utilsManager) {
   const { appData, selectors, wordPlacementData } =  globals;
   const { noOfSquares } = appData;
   const { sectionWordList } =  selectors;
-  let { wordCoordinates, isStart, sqCharMap } = wordPlacementData;
+  let { startPoints, endPoints, sqCharMap } = wordPlacementData;
   const { helpers } = utilsManager;
 
   const maxRetries = 50;
@@ -42,7 +42,9 @@ export function dataManager(globals, utilsManager) {
 
           entries.forEach(([squareID, char], index) => {
             printCharOnScreen(squareID, char);
-            if (index === firstIndex || index === lastIndex) setStartOrEnd(squareID, wordCoordinates);
+            //if (index === firstIndex || index === lastIndex) setStartOrEnd(squareID, wordCoordinates, isStart);
+            if (index === firstIndex) storeStartPoint(squareID, startPoints);
+            if (index === lastIndex) storeEndPoint(squareID, endPoints);
             updateSqCharMap(squareID, char, sqCharMap) // Map squre no. to character
           });
           
@@ -63,7 +65,12 @@ export function dataManager(globals, utilsManager) {
         fill(wordListCopy, wordsRemaining);
       }, 0);
     }
-    console.info(wordCoordinates);
+    console.info({
+      startAndEnds : {
+        startPoints,
+        endPoints,
+      }
+    });
 
     // helper functions
     function selectRandomWord() {
@@ -223,7 +230,7 @@ export function dataManager(globals, utilsManager) {
     currentDOM.textContent = char; // display on screen
   }
 
-  function setStartOrEnd(startOrEndID, allCoordinatesData) {
+  /*function setStartOrEnd(startOrEndID, allCoordinatesData) {
     let currentIndex = allCoordinatesData.length;
 
     if (isStart) {
@@ -235,6 +242,14 @@ export function dataManager(globals, utilsManager) {
       allCoordinatesData[currentIndex - 1]["end"] = startOrEndID; // modify the last object
       isStart = true;
     }
+  }*/
+
+  function storeStartPoint(squareID, startCoordinates) {
+    startCoordinates.push(squareID);
+  }
+
+  function storeEndPoint(squareID, endCoordinates) {
+    endCoordinates.push(squareID);
   }
 
   function listAWord(incoming) {

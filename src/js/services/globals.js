@@ -10,8 +10,10 @@ const selectors = {
 }
 
 const wordPlacementData = {
-  wordCoordinates: [],  // Stores the start and end square numbers for each word. (array of objects)
-  isStart: true,        // Flag indicating whether the current square is the start of a word.
+  //wordCoordinates: [],  // Stores the start and end square numbers for each word. (array of objects)
+  startPoints: [],
+  endPoints: [],
+  //isStart: true,        // Flag indicating whether the current square is the start of a word.
   sqCharMap: {},        // Maps square numbers to characters.
 };
 
