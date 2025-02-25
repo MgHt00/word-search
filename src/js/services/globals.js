@@ -1,7 +1,8 @@
 const appData = {
   wordList : ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"],
   noOfWordsToDisplay : 10,
-  noOfSquares: 14,
+  //noOfSquares: 14,
+  gridSize: 14,
 }
 
 const selectors = {

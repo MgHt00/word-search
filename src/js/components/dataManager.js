@@ -1,6 +1,6 @@
 export function dataManager(globals, utilsManager) {
   const { appData, selectors, wordPlacementData } =  globals;
-  const { noOfSquares } = appData;
+  const { gridSize } = appData;
   const { sectionWordList } =  selectors;
   let { startPoints, endPoints, sqCharMap } = wordPlacementData;
   const { helpers } = utilsManager;
@@ -24,11 +24,11 @@ export function dataManager(globals, utilsManager) {
 
       while ( attempts < maxAttempts ) {
         attempts++;
-        const coordinates =  generateRandomCoordinates();
+        const coordinates =  generateRandomCoordinates(gridSize);
         let hasEnoughSpace =  false; 
         let charCheckData = false;
 
-        hasEnoughSpace = hasEnoughSq(coordinates, selectedWord);
+        hasEnoughSpace = hasEnoughSq(coordinates, selectedWord, gridSize);
 
         if (hasEnoughSpace) { 
           charCheckData = existingCharCheck(coordinates, selectedWord, sqCharMap);  
@@ -65,12 +65,7 @@ export function dataManager(globals, utilsManager) {
         fill(wordListCopy, wordsRemaining);
       }, 0);
     }
-    console.info({
-      startAndEnds : {
-        startPoints,
-        endPoints,
-      }
-    });
+    console.info({ startAndEnds : { startPoints, endPoints }});
 
     // helper functions
     function selectRandomWord() {
@@ -79,18 +74,19 @@ export function dataManager(globals, utilsManager) {
 
       return { index, selectedWord };
     }
+  }
 
+  // generate new starting positons
+  function generateRandomCoordinates(gridDimension) {
+    let direction = getRandomDirection();
+    let startingRow = helpers.random(1, gridDimension);
+    let startingCol = helpers.random(1, gridDimension);
+
+    return { direction, startingRow, startingCol } ;
+    
+    // helper function
     function getRandomDirection() {
       return helpers.random(1, 8);
-    }
-
-    // generate new starting positons
-    function generateRandomCoordinates() {
-      let direction = getRandomDirection();
-      let startingRow = helpers.random(1, noOfSquares);
-      let startingCol = helpers.random(1, noOfSquares);
-
-      return { direction, startingRow, startingCol } ;
     }
   }
 
@@ -100,11 +96,11 @@ export function dataManager(globals, utilsManager) {
   }
 
   // To check whether there is enough square in the calcuated direction
-  function hasEnoughSq(randomCoordinates, selectedWord) {
+  function hasEnoughSq(randomCoordinates, selectedWord, gridDimension) {
     let { direction, startingRow, startingCol } = randomCoordinates;
     let wordSpread = [...selectedWord];
-    let maxRow = noOfSquares; // fetching global property
-    let maxCol = noOfSquares; // fetching global property
+    let maxRow = gridDimension; 
+    let maxCol = gridDimension; 
     
     let rightStatus = checkRight(wordSpread, startingRow, startingCol);
     let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
