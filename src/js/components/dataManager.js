@@ -91,6 +91,18 @@ export function dataManager(globals, utilsManager) {
     return { index, selectedWord };
   }
 
+  // Data for generateRandomCoordinates()
+  const directionMap = new Map([
+    [1 , "north"],
+    [2 , "north-east"],
+    [3 , "east"],
+    [4 , "south-east"],
+    [5 , "south"],
+    [6 , "south-west"],
+    [7 , "west"],
+    [8 , "north-west"],
+  ]);
+
   // generate new starting positons and direction
   function generateRandomCoordinates(gridDimension) {
     let direction = getRandomDirection();
@@ -101,7 +113,8 @@ export function dataManager(globals, utilsManager) {
 
     // helper function
     function getRandomDirection() {
-      return helpers.random(1, 8);
+      //return helpers.random(1, 8);
+      return directionMap.get(helpers.random(1, 8));
     }
   }
 
@@ -117,14 +130,14 @@ export function dataManager(globals, utilsManager) {
     let topStatus = checkTop(wordSpread, startingRow, startingCol);
     let belowStatus = checkBelow(wordSpread, startingRow, startingCol);
 
-    if (direction === 1) return topStatus;                          // 1 = north, check the max top no. 
-    else if (direction === 2) return (topStatus && rightStatus);    //2 = north east
-    else if (direction === 3) return rightStatus;                   // 3 = east
-    else if (direction === 4) return (belowStatus && rightStatus);  // 4 = south east
-    else if (direction === 5) return belowStatus;                   // 5 = south
-    else if (direction === 6) return (belowStatus && leftStatus);   // 6 = south west
-    else if (direction === 7) return leftStatus;                    // 7 = west
-    else if (direction === 8) return (topStatus && leftStatus);     //8 = north west
+    if (direction === "north") return topStatus;                          // 1 = north, check the max top no. 
+    else if (direction === "north-east") return (topStatus && rightStatus);    //2 = north east
+    else if (direction === "east") return rightStatus;                   // 3 = east
+    else if (direction === "south-east") return (belowStatus && rightStatus);  // 4 = south east
+    else if (direction === "south") return belowStatus;                   // 5 = south
+    else if (direction === "south-west") return (belowStatus && leftStatus);   // 6 = south west
+    else if (direction === "west") return leftStatus;                    // 7 = west
+    else if (direction === "north-west") return (topStatus && leftStatus);     //8 = north west
 
     // helper functions
     function checkRight(word, row, col) {
@@ -156,14 +169,14 @@ export function dataManager(globals, utilsManager) {
 
   // Data for existingCharCheck()
   const directionOffsets = new Map([
-    [1, { row: -1, col: 0 }],
-    [2, { row: -1, col: 1 }],
-    [3, { row: 0, col: 1 }],
-    [4, { row: 1, col: 1 }],
-    [5, { row: 1, col: 0 }],
-    [6, { row: 1, col: -1 }],
-    [7, { row: 0, col: -1 }],
-    [8, { row: -1, col: -1 }]
+    [ "north", { row: -1, col: 0 } ],
+    [ "north-east", { row: -1, col: 1 } ],
+    [ "east", { row: 0, col: 1 } ],
+    [ "south-east", { row: 1, col: 1 } ],
+    [ "south", { row: 1, col: 0 } ],
+    [ "south-west", { row: 1, col: -1 } ],
+    [ "west", { row: 0, col: -1 } ],
+    [ "north-west", { row: -1, col: -1 } ],
   ]);
 
   // Check whether existing character which is already filled is compatible with the new word
