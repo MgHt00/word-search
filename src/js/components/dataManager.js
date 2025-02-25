@@ -8,7 +8,7 @@ export function dataManager(globals, utilsManager) {
   const maxRetries = 50;
   let retries = 0;
 
-  function fill(wordListCopy, noOfWordsToDisplay) {
+  function fill(words, noOfWordsToDisplay) {
     if (retries >= maxRetries) { // preventing possible infinite retries.
       console.warn("Max retries reached. Stopping recursion.");
       return;
@@ -50,7 +50,7 @@ export function dataManager(globals, utilsManager) {
           
           listAWord(selectedWord);
 
-          wordListCopy.splice(index, 1);   // delete filled words from array 
+          words.splice(index, 1);   // delete filled words from array 
           wordsRemaining--;
           
           break;
@@ -62,15 +62,15 @@ export function dataManager(globals, utilsManager) {
     if (wordsRemaining > 0) {
       retries++;
       setTimeout(() => { //[sn1]
-        fill(wordListCopy, wordsRemaining);
+        fill(words, wordsRemaining);
       }, 0);
     }
     console.info({ startAndEnds : { startPoints, endPoints }});
 
     // helper functions
     function selectRandomWord() {
-      let index = helpers.random(0, (wordListCopy.length - 1));
-      let selectedWord = wordListCopy[index];
+      let index = helpers.random(0, (words.length - 1));
+      let selectedWord = words[index];
 
       return { index, selectedWord };
     }
