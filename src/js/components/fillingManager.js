@@ -18,6 +18,8 @@ export function fillingManager(globals, utilsManager) {
     let wordsRemaining = noOfWordsToDisplay;
     console.info("Remaining word(s) to fill in:", noOfWordsToDisplay);
 
+    wordsArray.sort((a, b) => b.length - a.length); // Sort by length (longer words first), to prioritize checking easy-to-place words first.
+
     for (let i = 0; i < noOfWordsToDisplay; i++) {
       let { index, selectedWord } = selectRandomWord(wordsArray);       
       let attempts = 0;
@@ -138,7 +140,7 @@ export function fillingManager(globals, utilsManager) {
     const checkFunction = directionChecks.get(direction);
     if (checkFunction) {
       return checkFunction();
-    } else console.warn("direction check failed!");
+    } else console.warn(`Direction check failed for direction: ${direction}`);
 
     // helper functions
     function checkRight() {
@@ -246,10 +248,9 @@ export function fillingManager(globals, utilsManager) {
     }
   }
 
+  // To list the words underneath the square frame
   function listAWord(incoming) {
-    // function to list the words underneath the square frame
-
-    let ulElement = document.createElement("ul");
+    let ulElement = sectionWordList.querySelector("ul") || document.createElement("ul"); // Cache & reuse the <ul> instead of creating a new one each time.
     let liElement = document.createElement("li");
 
     liElement.textContent = incoming;
