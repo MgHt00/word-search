@@ -10,8 +10,8 @@ const selectors = {
 }
 
 const wordPlacementData = {
-  startPoints: [],
-  endPoints: [],
+  startPoints: new Set(),
+  endPoints: new Set(),
   sqCharMap: new Map(),   // Maps square numbers to characters.
 };
 

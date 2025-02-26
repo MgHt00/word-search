@@ -73,16 +73,15 @@ export function dataManager(globals, utilsManager) {
 
     // Map squre no. to character
     function updateSqCharMap(squareID, char, charMap) {
-      //charMap[key] = value;
       charMap.set(squareID, char);
     }
 
     function storeStartPoint(squareID, startCoordinates) {
-      startCoordinates.push(squareID);
+      startCoordinates.add(squareID);
     }
   
     function storeEndPoint(squareID, endCoordinates) {
-      endCoordinates.push(squareID);
+      endCoordinates.add(squareID)
     }
   }
 
