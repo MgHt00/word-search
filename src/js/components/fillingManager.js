@@ -1,4 +1,4 @@
-export function dataManager(globals, utilsManager) {
+export function fillingManager(globals, utilsManager) {
   const { appData, selectors, wordPlacementData } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
