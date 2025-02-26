@@ -72,8 +72,9 @@ export function dataManager(globals, utilsManager) {
     }
 
     // Map squre no. to character
-    function updateSqCharMap(key, value, charMap) {
-      charMap[key] = value;
+    function updateSqCharMap(squareID, char, charMap) {
+      //charMap[key] = value;
+      charMap.set(squareID, char);
     }
 
     function storeStartPoint(squareID, startCoordinates) {
@@ -225,11 +226,11 @@ export function dataManager(globals, utilsManager) {
 
     // Check whether alredy filled character is compatible with the character-to-be-filled.
     function oneByOneCheck(currentSq, char, charMap) {
-      if (!charMap[currentSq]) {
+      if (!charMap.get(currentSq)) {
         //console.log("No char in the sq. Good to go!");
         return true;
       }
-      else if (charMap[currentSq] === char) {
+      else if (charMap.get(currentSq) === char) {
         //console.log("Existing char in sq is same as incoming. Good to go!");
         return true;
       }
@@ -238,7 +239,7 @@ export function dataManager(globals, utilsManager) {
           oneByOneCheckFail: {
             char,
             currentSq,
-            storedChar: charMap[currentSq],
+            storedChar: charMap.get(currentSq),
           }
         });
         //console.warn("Existing char in sq is NOT same as incoming. FAIL.");

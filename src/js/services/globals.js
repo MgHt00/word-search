@@ -12,7 +12,7 @@ const selectors = {
 const wordPlacementData = {
   startPoints: [],
   endPoints: [],
-  sqCharMap: {},        // Maps square numbers to characters.
+  sqCharMap: new Map(),   // Maps square numbers to characters.
 };
 
 export const globals =  {
