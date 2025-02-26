@@ -120,50 +120,52 @@ export function dataManager(globals, utilsManager) {
 
   // To check whether there is enough square in the calcuated direction
   function hasEnoughSq(randomCoordinates, selectedWord, gridDimension) {
-    let { direction, startingRow, startingCol } = randomCoordinates;
+    const { direction, startingRow, startingCol } = randomCoordinates;
     let wordSpread = [...selectedWord];
     let maxRow = gridDimension;
     let maxCol = gridDimension;
 
-    let rightStatus = checkRight(wordSpread, startingRow, startingCol);
-    let leftStatus = checkLeft(wordSpread, startingRow, startingCol);
-    let topStatus = checkTop(wordSpread, startingRow, startingCol);
-    let belowStatus = checkBelow(wordSpread, startingRow, startingCol);
+    const directionChecks = new Map([
+      [ "north", () => { return checkTop() } ],
+      [ "north-east", () => { return checkTop() && checkRight() }],
+      [ "east", () => { return checkRight() }],
+      [ "south-east",() => { return checkBelow() && checkRight() } ],
+      [ "south", () => { return checkBelow() } ],
+      [ "south-west", () => { return checkBelow() && checkLeft()} ],
+      [ "west", () => { return checkLeft()} ],
+      [ "north-west", () => { return checkTop() && checkLeft()} ],
+    ]);
 
-    if (direction === "north") return topStatus;                          // 1 = north, check the max top no. 
-    else if (direction === "north-east") return (topStatus && rightStatus);    //2 = north east
-    else if (direction === "east") return rightStatus;                   // 3 = east
-    else if (direction === "south-east") return (belowStatus && rightStatus);  // 4 = south east
-    else if (direction === "south") return belowStatus;                   // 5 = south
-    else if (direction === "south-west") return (belowStatus && leftStatus);   // 6 = south west
-    else if (direction === "west") return leftStatus;                    // 7 = west
-    else if (direction === "north-west") return (topStatus && leftStatus);     //8 = north west
+    const checkFunction = directionChecks.get(direction);
+    if (checkFunction) {
+      return checkFunction();
+    } else console.warn("direction check failed!");
 
     // helper functions
-    function checkRight(word, row, col) {
+    function checkRight() {
       // check le2.MD for the logic behind the adjustments
-      if (!isWithinBounds(row, col + (word.length - 1))) return false;
-      return true;  // Explicitly return true if the word fits within the boundary
+      if (!isWithinBounds(startingRow, startingCol + (wordSpread.length - 1))) return false;
+      return true; 
     }
 
-    function checkLeft(word, row, col) {
-      if (!isWithinBounds(row, col - (word.length - 1))) return false;
+    function checkLeft() {
+      if (!isWithinBounds(startingRow, startingCol - (wordSpread.length - 1))) return false;
       return true;
     }
 
-    function checkTop(word, row, col) {
-      if (!(isWithinBounds(row - (word.length - 1), col))) return false;
+    function checkTop() {
+      if (!(isWithinBounds(startingRow - (wordSpread.length - 1), startingCol))) return false;
       return true;
     }
 
-    function checkBelow(word, row, col) {
-      if (!(isWithinBounds(row + word.length - 1, col))) return false;
+    function checkBelow() {
+      if (!(isWithinBounds(startingRow + wordSpread.length - 1, startingCol))) return false;
       return true;
     }
 
     // Boundary check function
-    function isWithinBounds(row, col) {
-      return row > 0 && row <= maxRow && col > 0 && col <= maxCol;
+    function isWithinBounds(startingRow, startingCol) {
+      return startingRow > 0 && startingRow <= maxRow && startingCol > 0 && startingCol <= maxCol;
     }
   }
 
