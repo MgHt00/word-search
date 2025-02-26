@@ -66,8 +66,8 @@ export function dataManager(globals, utilsManager) {
     console.info({ startAndEnds : { startPoints, endPoints }});
 
     // helper functions of fill()
-    function printCharOnScreen(currentSquareID, char) {
-      let currentDOM = document.querySelector(`#${currentSquareID}`);
+    function printCharOnScreen(squareID, char) {
+      let currentDOM = document.querySelector(`#${squareID}`);
       currentDOM.textContent = char; // display on screen
     }
 
@@ -113,7 +113,6 @@ export function dataManager(globals, utilsManager) {
 
     // helper function
     function getRandomDirection() {
-      //return helpers.random(1, 8);
       return directionMap.get(helpers.random(1, 8));
     }
   }
@@ -188,7 +187,7 @@ export function dataManager(globals, utilsManager) {
     let { direction, startingRow, startingCol } = randomCoordinates;
     let offset = directionOffsets.get(direction);
     let wordSpread = [...selectedWord];
-    let placementData = {};
+    let placementData = {}; // to store squareID : char
 
     let currentRow = startingRow;
     let currentCol = startingCol;
@@ -202,10 +201,10 @@ export function dataManager(globals, utilsManager) {
 
     // helper functions
     function charCheck(row, col, char, charMap) {
-      let currentSquareID = createSquareId(row, col);
-      let isCheckOK = oneByOneCheck(currentSquareID, char, charMap);
+      let squareID = createSquareId(row, col);
+      let isCheckOK = isCharMatch(squareID, char, charMap);
       if (isCheckOK) {
-        addToPlacementData(currentSquareID, char);
+        addToPlacementData(squareID, char);
         return true;
       } else return false;
     }
@@ -214,8 +213,8 @@ export function dataManager(globals, utilsManager) {
       return `sq-${row}-${col}`;
     }
 
-    function addToPlacementData(currentSquareID, char) {
-      placementData[currentSquareID] = char;  // add char to a local variable
+    function addToPlacementData(squareID, char) {
+      placementData[squareID] = char;  // add char to a local variable
     }
 
     function updateRowAndCol(offset) {
@@ -224,7 +223,7 @@ export function dataManager(globals, utilsManager) {
     }
 
     // Check whether alredy filled character is compatible with the character-to-be-filled.
-    function oneByOneCheck(currentSq, char, charMap) {
+    function isCharMatch(currentSq, char, charMap) {
       if (!charMap.get(currentSq)) {
         //console.log("No char in the sq. Good to go!");
         return true;
