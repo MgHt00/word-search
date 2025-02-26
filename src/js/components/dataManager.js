@@ -28,14 +28,14 @@ export function dataManager(globals, utilsManager) {
         const coordinates =  generateRandomCoordinates(gridSize);
 
         let hasEnoughSpace = hasEnoughSq(coordinates, selectedWord, gridSize);
-        let charCheckData = (hasEnoughSpace)
-          ? existingCharCheck(coordinates, selectedWord, sqCharMap) // If hasEnoughSpace is true
+        let placementResult = (hasEnoughSpace)
+          ? compareExistingChar(coordinates, selectedWord, sqCharMap) // If hasEnoughSpace is true
           : false; 
 
-        if( hasEnoughSpace && charCheckData ) {
-          console.info({ PROCCEDING: {selectedWord, hasEnoughSpace, charCheckData} });
+        if( hasEnoughSpace && placementResult ) {
+          console.info({ PROCCEDING: {selectedWord, hasEnoughSpace, placementResult} });
 
-          const entries = Object.entries(charCheckData);
+          const entries = Object.entries(placementResult);
           const firstIndex = 0;
           const lastIndex = entries.length - 1;
 
@@ -169,7 +169,7 @@ export function dataManager(globals, utilsManager) {
     }
   }
 
-  // Data for existingCharCheck()
+  // Data for compareExistingChar()
   const directionOffsets = new Map([
     [ "north", { row: -1, col: 0 } ],
     [ "north-east", { row: -1, col: 1 } ],
@@ -182,7 +182,7 @@ export function dataManager(globals, utilsManager) {
   ]);
 
   // Check whether existing character which is already filled is compatible with the new word
-  function existingCharCheck(randomCoordinates, selectedWord, charMap) {
+  function compareExistingChar(randomCoordinates, selectedWord, charMap) {
     console.info("selectedWord:", selectedWord);
 
     let { direction, startingRow, startingCol } = randomCoordinates;
