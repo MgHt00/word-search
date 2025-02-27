@@ -5,87 +5,79 @@ export function fillingManager(globals, utilsManager) {
   let { startPoints, endPoints, sqCharMap } = wordPlacementData;
   const { helpers } = utilsManager;
 
-  const maxRetries = 50;
-  let retries = 0;
-
-  function fill(words, noOfWordsToDisplay) {
+  function fill(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
     let wordsArray = [...words];
-    if (retries >= maxRetries) { // preventing possible infinite retries.
-      console.warn("Max retries reached. Stopping recursion.");
+    let wordsRemaining = noOfWordsToDisplay;
+    let maxOverallAttempts = 20; // Limit overall retries to prevent infinite loops
+  
+    if (overallAttempts >= maxOverallAttempts) {
+      console.warn(`Max overallAttempts reached. Unable to place ${wordsRemaining} word(s).`);
       return;
     }
-
-    let wordsRemaining = noOfWordsToDisplay;
-    console.info("Remaining word(s) to fill in:", noOfWordsToDisplay);
-
-    wordsArray.sort((a, b) => b.length - a.length); // Sort by length (longer words first), to prioritize checking easy-to-place words first.
-
-    for (let i = 0; i < noOfWordsToDisplay; i++) {
-      let { index, selectedWord } = selectRandomWord(wordsArray);       
-      let attempts = 0;
-      let maxAttempts = 30;
-
-      while ( attempts < maxAttempts ) {
-        attempts++;
-        const coordinates =  generateRandomCoordinates(gridSize);
-
-        let hasEnoughSpace = hasEnoughSq(coordinates, selectedWord, gridSize);
-        let placementResult = (hasEnoughSpace)
-          ? compareExistingChar(coordinates, selectedWord, sqCharMap) // If hasEnoughSpace is true
-          : false; 
-
-        if( hasEnoughSpace && placementResult ) {
-          console.info({ PROCCEDING: {selectedWord, hasEnoughSpace, placementResult} });
-
-          const entries = Object.entries(placementResult);
-          const firstIndex = 0;
-          const lastIndex = entries.length - 1;
-
-          entries.forEach(([squareID, char], index) => {
-            printCharOnScreen(squareID, char);
-            if (index === firstIndex) storeStartPoint(squareID, startPoints);
-            if (index === lastIndex) storeEndPoint(squareID, endPoints);
-            updateSqCharMap(squareID, char, sqCharMap) // Map squre no. to character
-          });
-          
-          listAWord(selectedWord);
-
-          wordsArray.splice(index, 1);   // delete filled words from array 
-          wordsRemaining--;
-          
-          break;
-        } 
+  
+    console.info(`Attempt ${overallAttempts + 1}: Remaining word(s) to fill in:`, wordsRemaining);
+  
+    // wordsArray.sort((a, b) => b.length - a.length); // Prioritize longer words
+    
+    let { index, selectedWord } = selectRandomWord(wordsArray);
+    let singleWordRetries = 0;     
+    let maxSingleWordRetries = 30; // If a word fails placement 30 times, move to the next word
+  
+    while (singleWordRetries < maxSingleWordRetries) {
+      singleWordRetries++;
+      const coordinates = generateRandomCoordinates(gridSize);
+  
+      let hasEnoughSpace = hasEnoughSq(coordinates, selectedWord, gridSize);
+      let placementData = hasEnoughSpace && compareExistingChar(coordinates, selectedWord, sqCharMap); //[le3]
+  
+      if (hasEnoughSpace && placementData) {
+        console.info({ PROCEEDING: { selectedWord, hasEnoughSpace, placementData } });
+  
+        const entries = Object.entries(placementData);
+        const firstIndex = 0;
+        const lastIndex = entries.length - 1;
+  
+        entries.forEach(([squareID, char], i) => {
+          printCharOnScreen(squareID, char);
+          if (i === firstIndex) storeStartPoint(squareID, startPoints);
+          if (i === lastIndex) storeEndPoint(squareID, endPoints);
+          updateSqCharMap(squareID, char, sqCharMap);
+        });
+  
+        listAWord(selectedWord);
+  
+        wordsArray.splice(index, 1); // Remove placed word
+        wordsRemaining--;
+  
+        break; // Move to next word
       }
     }
-
-    // if there are still words left to be displayed, recall the root function. 
+  
     if (wordsRemaining > 0) {
-      retries++;
-      setTimeout(() => { //[sn1]
-        fill(wordsArray, wordsRemaining);
-      }, 0);
+      console.warn(`Retrying fill... Attempt ${overallAttempts + 1}/${maxOverallAttempts}`);
+      setTimeout(() => fill(wordsArray, wordsRemaining, overallAttempts + 1), 0); //[le4]
+    } else {
+      console.info({ startAndEnds: { startPoints, endPoints } });
     }
-    console.info({ startAndEnds : { startPoints, endPoints }});
-
-    // helper functions of fill()
+  
+    // Helper functions
     function printCharOnScreen(squareID, char) {
-      let currentDOM = document.querySelector(`#${squareID}`);
-      currentDOM.textContent = char; // display on screen
+      document.querySelector(`#${squareID}`).textContent = char;
     }
-
-    // Map squre no. to character
+  
     function updateSqCharMap(squareID, char, charMap) {
       charMap.set(squareID, char);
     }
-
+  
     function storeStartPoint(squareID, startCoordinates) {
       startCoordinates.add(squareID);
     }
   
     function storeEndPoint(squareID, endCoordinates) {
-      endCoordinates.add(squareID)
+      endCoordinates.add(squareID);
     }
   }
+  
 
   function selectRandomWord(wordsArray) {
     let index = helpers.random(0, (wordsArray.length - 1));
@@ -259,6 +251,7 @@ export function fillingManager(globals, utilsManager) {
   }
 
   return {
+    /*fill,*/
     fill,
   }
 }

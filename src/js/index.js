@@ -7,9 +7,9 @@ const { layoutManager, fillingManager } = componentsManager;
 import { utilsManager } from "./utils/utilsManager.js";
 
 const layoutMgr = layoutManager(globals);
-const dataMgr = fillingManager(globals, utilsManager);
+const fillingMgr = fillingManager(globals, utilsManager);
 
 (function initialize() {
   layoutMgr.generateSqs();
-  dataMgr.fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+  fillingMgr.fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
 })();
