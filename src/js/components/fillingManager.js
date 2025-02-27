@@ -39,9 +39,9 @@ export function fillingManager(globals, utilsManager) {
   
         entries.forEach(([squareID, char], i) => {
           printCharOnScreen(squareID, char);
-          if (i === firstIndex) storeStartPoint(squareID, startPoints);
-          if (i === lastIndex) storeEndPoint(squareID, endPoints);
-          updateSqCharMap(squareID, char, sqCharMap);
+          if (i === firstIndex) addStartPoint(squareID, startPoints);
+          if (i === lastIndex) addEndPoint(squareID, endPoints);
+          addSqCharMap(squareID, char, sqCharMap);
         });
   
         listAWord(selectedWord);
@@ -65,15 +65,15 @@ export function fillingManager(globals, utilsManager) {
       document.querySelector(`#${squareID}`).textContent = char;
     }
   
-    function updateSqCharMap(squareID, char, charMap) {
+    function addSqCharMap(squareID, char, charMap) {
       charMap.set(squareID, char);
     }
   
-    function storeStartPoint(squareID, startCoordinates) {
+    function addStartPoint(squareID, startCoordinates) {
       startCoordinates.add(squareID);
     }
   
-    function storeEndPoint(squareID, endCoordinates) {
+    function addEndPoint(squareID, endCoordinates) {
       endCoordinates.add(squareID);
     }
   }
@@ -198,22 +198,13 @@ export function fillingManager(globals, utilsManager) {
       let squareID = createSquareId(row, col);
       let isCheckOK = isCharMatch(squareID, char, charMap);
       if (isCheckOK) {
-        addToPlacementData(squareID, char);
+        addPlacementData(squareID, char);
         return true;
       } else return false;
     }
 
     function createSquareId(row, col) {
       return `sq-${row}-${col}`;
-    }
-
-    function addToPlacementData(squareID, char) {
-      placementData[squareID] = char;  // add char to a local variable
-    }
-
-    function updateRowAndCol(offset) {
-      currentRow += offset.row;
-      currentCol += offset.col;
     }
 
     // Check whether alredy filled character is compatible with the character-to-be-filled.
@@ -238,6 +229,15 @@ export function fillingManager(globals, utilsManager) {
         return false;
       }
     }
+
+    function addPlacementData(squareID, char) {
+      placementData[squareID] = char;  // add char to a local variable
+    }
+
+    function updateRowAndCol(offset) {
+      currentRow += offset.row;
+      currentCol += offset.col;
+    }
   }
 
   // To list the words underneath the square frame
@@ -251,7 +251,6 @@ export function fillingManager(globals, utilsManager) {
   }
 
   return {
-    /*fill,*/
     fill,
   }
 }
