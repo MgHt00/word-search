@@ -17,8 +17,6 @@ export function fillingManager(globals, utilsManager) {
   
     console.info(`Attempt ${overallAttempts + 1}: Remaining word(s) to fill in:`, wordsRemaining);
   
-    // wordsArray.sort((a, b) => b.length - a.length); // Prioritize longer words
-    
     let { index, selectedWord } = selectRandomWord(wordsArray);
     let singleWordRetries = 0;     
     let maxSingleWordRetries = 30; // If a word fails placement 30 times, move to the next word
@@ -182,6 +180,22 @@ export function fillingManager(globals, utilsManager) {
   ]);
 
   // Check whether existing character which is already filled is compatible with the new word
+  /**
+   * Checks if a word can be placed at the given coordinates and direction, considering
+   * any existing characters already placed in the grid.
+   *
+   * It iterates through each character of the word and checks if the corresponding
+   * square in the grid is either empty or contains the same character.
+   *
+   * @param {object} randomCoordinates - An object containing the starting coordinates and direction.
+   * @param {string} randomCoordinates.direction - The direction in which the word will be placed (e.g., "north", "east").
+   * @param {number} randomCoordinates.startingRow - The starting row for the word.
+   * @param {number} randomCoordinates.startingCol - The starting column for the word.
+   * @param {string} selectedWord - The word to be placed.
+   * @param {Map} charMap - The map of square IDs to characters, representing the current state of the grid.
+   * @returns {object|boolean} - Returns an object containing `squareID: char` key-value pairs representing the placement data if the word can be placed successfully.
+   *                             Returns `false` if any square is incompatible with the word or the word cannot be placed in the given direction.
+   */
   function compareExistingChar(randomCoordinates, selectedWord, charMap) {
     console.info("selectedWord:", selectedWord);
 
@@ -214,7 +228,20 @@ export function fillingManager(globals, utilsManager) {
       return `sq-${row}-${col}`;
     }
 
-    // Check whether alredy filled character is compatible with the character-to-be-filled.
+    // Checks if a given square is compatible with a character to be placed.
+    /**
+     *
+     * A square is considered compatible if:
+     *   1. It's currently empty (no character has been placed there yet).
+     *   2. It already contains the exact same character as the one to be placed.
+     *
+     * If a square is not compatible (it contains a different character), the function logs a warning to the console.
+     *
+     * @param {string} currentSq - The ID of the square to check (e.g., "sq-3-5").
+     * @param {string} char - The character that we want to place in the square.
+     * @param {Map} charMap - The map containing the characters already placed in squares, where keys are square IDs and values are characters.
+     * @returns {boolean} - True if the square is compatible, false otherwise.
+     */
     function isCharMatch(currentSq, char, charMap) {
       if (!charMap.get(currentSq)) {
         //console.log("No char in the sq. Good to go!");
