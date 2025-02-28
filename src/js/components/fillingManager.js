@@ -2,7 +2,7 @@ export function fillingManager(globals, utilsManager) {
   const { appData, selectors, wordPlacementData } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
-  let { startPoints, endPoints, sqCharMap } = wordPlacementData;
+  let { startPoints, endPoints, squareIdToChar } = wordPlacementData;
   const { helpers } = utilsManager;
 
   function fill(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
@@ -28,7 +28,7 @@ export function fillingManager(globals, utilsManager) {
       const coordinates = generateRandomCoordinates(gridSize);
   
       let hasEnoughSpace = hasEnoughSq(coordinates, selectedWord, gridSize);
-      let placementData = hasEnoughSpace && compareExistingChar(coordinates, selectedWord, sqCharMap); //[le3]
+      let placementData = hasEnoughSpace && compareExistingChar(coordinates, selectedWord, squareIdToChar); //[le3]
   
       if (hasEnoughSpace && placementData) {
         console.info({ PROCEEDING: { selectedWord, hasEnoughSpace, placementData } });
@@ -41,7 +41,7 @@ export function fillingManager(globals, utilsManager) {
           printCharOnScreen(squareID, char);
           if (i === firstIndex) addStartPoint(squareID, startPoints);
           if (i === lastIndex) addEndPoint(squareID, endPoints);
-          addSqCharMap(squareID, char, sqCharMap);
+          addSquareIdToChar(squareID, char, squareIdToChar);
         });
   
         listAWord(selectedWord);
@@ -65,7 +65,7 @@ export function fillingManager(globals, utilsManager) {
       document.querySelector(`#${squareID}`).textContent = char;
     }
   
-    function addSqCharMap(squareID, char, charMap) {
+    function addSquareIdToChar(squareID, char, charMap) {
       charMap.set(squareID, char);
     }
   

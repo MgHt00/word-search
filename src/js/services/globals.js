@@ -12,7 +12,8 @@ const selectors = {
 const wordPlacementData = {
   startPoints: new Set(),
   endPoints: new Set(),
-  sqCharMap: new Map(),   // Maps square numbers to characters.
+  squareIdToChar: new Map(), // Maps square numbers to characters.
+  placedWordCoordinates: new Map(),
 };
 
 export const globals =  {
