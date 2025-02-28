@@ -2,7 +2,7 @@ export function fillingManager(globals, utilsManager) {
   const { appData, selectors, wordPlacementData } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
-  let { startPoints, endPoints, squareIdToChar } = wordPlacementData;
+  let { startPoints, endPoints, squareIdToChar, placedWordCoordinates } = wordPlacementData;
   const { helpers } = utilsManager;
 
   function fill(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
@@ -43,7 +43,7 @@ export function fillingManager(globals, utilsManager) {
           if (i === lastIndex) addEndPoint(squareID, endPoints);
           addSquareIdToChar(squareID, char, squareIdToChar);
         });
-  
+        addPlacedWordCoordinates(selectedWord, placementData);
         listAWord(selectedWord);
   
         wordsArray.splice(index, 1); // Remove placed word
@@ -57,16 +57,15 @@ export function fillingManager(globals, utilsManager) {
       console.warn(`Retrying fill... Attempt ${overallAttempts + 1}/${maxOverallAttempts}`);
       setTimeout(() => fill(wordsArray, wordsRemaining, overallAttempts + 1), 0); //[le4]
     } else {
-      console.info({ startAndEnds: { startPoints, endPoints } });
+      console.info({ 
+        startAndEnds: { startPoints, endPoints },
+        placedWordCoordinates,
+      });
     }
   
     // Helper functions
     function printCharOnScreen(squareID, char) {
       document.querySelector(`#${squareID}`).textContent = char;
-    }
-  
-    function addSquareIdToChar(squareID, char, charMap) {
-      charMap.set(squareID, char);
     }
   
     function addStartPoint(squareID, startCoordinates) {
@@ -76,9 +75,17 @@ export function fillingManager(globals, utilsManager) {
     function addEndPoint(squareID, endCoordinates) {
       endCoordinates.add(squareID);
     }
+
+    function addSquareIdToChar(squareID, char, charMap) {
+      charMap.set(squareID, char);
+    }
+
+    function addPlacedWordCoordinates(word, placementData) {
+      placedWordCoordinates.set(word, placementData);
+    }
+    // helpers end
   }
   
-
   function selectRandomWord(wordsArray) {
     let index = helpers.random(0, (wordsArray.length - 1));
     let selectedWord = wordsArray[index];
