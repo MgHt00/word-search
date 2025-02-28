@@ -1,7 +1,7 @@
 import { layoutManager } from "./layoutManager.js";
-import { dataManager } from "./dataManager.js";
+import { fillingManager } from "./fillingManager.js";
 
 export const componentsManager = {
   layoutManager,
-  dataManager,
+  fillingManager,
 }

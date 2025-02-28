@@ -2,17 +2,14 @@ import { globals } from "./services/globals.js";
 const {appData, currentStatus, selectors} = globals;
 
 import { componentsManager } from "./components/componentsManager.js";
-const { layoutManager, dataManager } = componentsManager;
+const { layoutManager, fillingManager } = componentsManager;
 
 import { utilsManager } from "./utils/utilsManager.js";
 
 const layoutMgr = layoutManager(globals);
-const dataMgr = dataManager(globals, utilsManager);
-
-const wordListCopy = [...globals.appData.wordList];
-//console.info(wordListCopy);
+const fillingMgr = fillingManager(globals, utilsManager);
 
 (function initialize() {
   layoutMgr.generateSqs();
-  dataMgr.fillWords(wordListCopy, appData.noOfWordsToDisplay);
+  fillingMgr.fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
 })();
