@@ -1,4 +1,4 @@
-export function fillingManager(globals, utilsManager) {
+export function fillingManager(globals, utilsManager, listenerMgr) {
   const { appData, selectors, wordPlacementData } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
@@ -37,8 +37,14 @@ export function fillingManager(globals, utilsManager) {
   
         entries.forEach(([squareID, char], i) => {
           printCharOnScreen(squareID, char);
-          if (i === firstIndex) addStartPoint(squareID, startPoints);
-          if (i === lastIndex) addEndPoint(squareID, endPoints);
+          if (i === firstIndex) {
+            addStartPoint(squareID, startPoints); 
+            listenerMgr.addClickListener(`#${squareID}`, "start");
+          }
+          if (i === lastIndex) {
+            addEndPoint(squareID, endPoints);
+            listenerMgr.addClickListener(`#${squareID}`, "end");
+          }
           addSquareIdToChar(squareID, char, squareIdToChar);
         });
         addPlacedWordCoordinates(selectedWord, placementData);
