@@ -1,0 +1,10 @@
+:root {
+  --marked-background: antiquewhite;
+  --marked-color: black;
+}
+
+[class|=sq].marked {
+    background-color: var(--marked-background);
+    color: var(--marked-color);
+    font-weight: bold;
+}

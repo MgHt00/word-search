@@ -38,6 +38,7 @@ export function fillingManager(globals, utilsManager, listenerMgr) {
   
         entries.forEach(([squareID, char], i) => {
           printCharOnScreen(squareID, char);
+
           if (i === firstIndex) {
             addStartPoint(squareID, startPoints); 
             listenerMgr.addClickListener(`#${squareID}`, "start");
@@ -46,8 +47,10 @@ export function fillingManager(globals, utilsManager, listenerMgr) {
             addEndPoint(squareID, endPoints);
             listenerMgr.addClickListener(`#${squareID}`, "end");
           }
+
           addSquareIdToChar(squareID, char, squareIdToChar);
         });
+        
         addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
         listAWord(selectedWord);
   

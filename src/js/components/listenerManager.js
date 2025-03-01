@@ -9,7 +9,7 @@ export function listenerManager() {
     if (square) {
       square.addEventListener("click", () => {
         console.log(`Clicked ${type} square: ${squareID}`);
-        // square.classList.toggle("clicked"); 
+        square.classList.toggle("marked"); 
       })
     } else {
       console.warn(`Square with ID ${squareID} not found.`);
