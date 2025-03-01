@@ -2,7 +2,7 @@ export function interactionManager(globals) {
   const {wordPlacementData} =  globals;
   const {startPoints, endPoints, placedWordCoordinates} = wordPlacementData;
 
-  let endflag = null;
+  let endPointFlag = null;
 
   // Adds a click event listener to a specific square.
   /**
@@ -11,37 +11,32 @@ export function interactionManager(globals) {
   */
   function addClickListener(squareID, type, selectedWord) {
     const square = document.querySelector(squareID);
+    const cleanedSquareID = cleanSquareID(squareID); // Remove the first character (#)
 
     if (square) {
       square.addEventListener("click", () => {
-        const index = fetchIndex(squareID, type, wordPlacementData);
-
         if (type === "start") {
-          endflag = endPoints[index];
+          const index = fetchIndex(cleanedSquareID, type, wordPlacementData);
+          endPointFlag = endPoints[index];
         }
 
         if (type === "end") {
-          if (endflag === cleanSquareID(squareID)) {
-            console.warn("BINGOOOOOOOOOOO!!!!");
+          if (endPointFlag === cleanedSquareID) {
             const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
-            const direction = placedWordCoordinates.get(selectedWord).direction;
-            console.log({ squaresToFill, direction });
+            //const direction = placedWordCoordinates.get(selectedWord).direction;
             fillColor(squaresToFill);
           };
         }
-
-        console.log({ type, squareID, index, endflag });
-        //square.classList.toggle("marked"); 
       })
     } else {
       console.warn(`Square with ID ${squareID} not found.`);
     }
+
   }
 
   function fetchIndex(squareID, type, placementObject) {
       const arrayName = `${type}Points`;
-      const cleanedSquareID = cleanSquareID(squareID); // Remove the first character (#)
-      const index = placementObject[arrayName].indexOf(cleanedSquareID); // Get the index of squareID in the array
+      const index = placementObject[arrayName].indexOf(squareID); // Get the index of squareID in the array
       return index;
   }
 
