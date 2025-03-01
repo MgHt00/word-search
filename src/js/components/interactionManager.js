@@ -9,7 +9,7 @@ export function interactionManager(globals) {
     * @param {string} squareID - The ID of the square (e.g., "sq-3-5").
     * @param {string} type - The type of the square ("start" or "end").
   */
-  function addClickListener(squareID, type) {
+  function addClickListener(squareID, type, selectedWord) {
     const square = document.querySelector(squareID);
 
     if (square) {
@@ -23,7 +23,10 @@ export function interactionManager(globals) {
         if (type === "end") {
           if (endflag === cleanSquareID(squareID)) {
             console.warn("BINGOOOOOOOOOOO!!!!");
-            
+            const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
+            const direction = placedWordCoordinates.get(selectedWord).direction;
+            console.log({ squaresToFill, direction });
+            fillColor(squaresToFill);
           };
         }
 
@@ -45,7 +48,17 @@ export function interactionManager(globals) {
   function cleanSquareID(squareID) {
     return squareID.slice(1); // Remove the first character (#)
   }
-  
+
+  function constructDOMfromID(squareID) {
+    return `#${squareID}`;
+  }
+
+  function fillColor(squares) {
+    squares.map(square => {
+      const squareID = constructDOMfromID(square);
+      document.querySelector(squareID).classList.add("marked");
+    })
+  }
   return {
     addClickListener,
   }

@@ -41,11 +41,11 @@ export function fillingManager(globals, utilsManager, interactionMgr) {
 
           if (i === firstIndex) {
             addStartPoint(squareID, startPoints); 
-            interactionMgr.addClickListener(`#${squareID}`, "start");
+            interactionMgr.addClickListener(`#${squareID}`, "start", selectedWord);
           }
           if (i === lastIndex) {
             addEndPoint(squareID, endPoints);
-            interactionMgr.addClickListener(`#${squareID}`, "end");
+            interactionMgr.addClickListener(`#${squareID}`, "end", selectedWord);
           }
 
           addSquareIdToChar(squareID, char, squareIdToChar);
