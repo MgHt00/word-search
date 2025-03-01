@@ -21,7 +21,7 @@ export function interactionManager(globals) {
         }
 
         if (type === "end") {
-          if (endPointFlag === cleanedSquareID) {
+          if (cleanedSquareID === endPointFlag) {
             const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
             //const direction = placedWordCoordinates.get(selectedWord).direction;
             fillColor(squaresToFill);
@@ -34,10 +34,18 @@ export function interactionManager(globals) {
 
   }
 
+  // Fetches the index of a square ID in either the startPoints or endPoints array.
+  /**
+   *
+   * @param {string} squareID - The ID of the square (e.g., "sq-3-5").
+   * @param {string} type - The type of the square ("start" or "end").
+   * @param {object} placementObject - The object containing startPoints and endPoints arrays.
+   * @returns {number} - The index of the square ID in the corresponding array, or -1 if not found.
+   */
   function fetchIndex(squareID, type, placementObject) {
-      const arrayName = `${type}Points`;
-      const index = placementObject[arrayName].indexOf(squareID); // Get the index of squareID in the array
-      return index;
+    const arrayName = `${type}Points`;
+    const index = placementObject[arrayName].indexOf(squareID); // Get the index of squareID in the array
+    return index;
   }
 
   function cleanSquareID(squareID) {
@@ -48,6 +56,11 @@ export function interactionManager(globals) {
     return `#${squareID}`;
   }
 
+  // Fill the squares with the marked class.
+  /**
+   *
+   * @param {object} squaresToFill - The object that contains the key value of the squareID.
+   */
   function fillColor(squares) {
     squares.map(square => {
       const squareID = constructDOMfromID(square);
