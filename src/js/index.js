@@ -7,7 +7,7 @@ const { layoutManager, fillingManager, interactionManager } = componentsManager;
 import { utilsManager } from "./utils/utilsManager.js";
 
 const layoutMgr = layoutManager(globals);
-const interactionMgr = interactionManager();
+const interactionMgr = interactionManager(globals);
 const fillingMgr = fillingManager(globals, utilsManager, interactionMgr);
 
 (function initialize() {
