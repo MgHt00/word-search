@@ -34,6 +34,7 @@ export function fillingManager(globals, utilsManager, listenerMgr) {
         const entries = Object.entries(placementData);
         const firstIndex = 0;
         const lastIndex = entries.length - 1;
+        const currentWordSquareIDs = entries.map(([squareID]) => squareID);
   
         entries.forEach(([squareID, char], i) => {
           printCharOnScreen(squareID, char);
@@ -47,7 +48,7 @@ export function fillingManager(globals, utilsManager, listenerMgr) {
           }
           addSquareIdToChar(squareID, char, squareIdToChar);
         });
-        addPlacedWordCoordinates(selectedWord, placementData);
+        addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
         listAWord(selectedWord);
   
         wordsArray.splice(index, 1); // Remove placed word
@@ -84,8 +85,8 @@ export function fillingManager(globals, utilsManager, listenerMgr) {
       charMap.set(squareID, char);
     }
 
-    function addPlacedWordCoordinates(word, placementData) {
-      placedWordCoordinates.set(word, placementData);
+    function addPlacedWordCoordinates(word, placementData, coordinates) {
+      placedWordCoordinates.set(word, { placementData, direction: coordinates.direction });
     }
     // helpers end
   }
