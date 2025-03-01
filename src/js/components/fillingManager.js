@@ -1,4 +1,4 @@
-export function fillingManager(globals, utilsManager, listenerMgr) {
+export function fillingManager(globals, utilsManager, interactionMgr) {
   const { appData, selectors, wordPlacementData } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
@@ -41,16 +41,16 @@ export function fillingManager(globals, utilsManager, listenerMgr) {
 
           if (i === firstIndex) {
             addStartPoint(squareID, startPoints); 
-            listenerMgr.addClickListener(`#${squareID}`, "start");
+            interactionMgr.addClickListener(`#${squareID}`, "start");
           }
           if (i === lastIndex) {
             addEndPoint(squareID, endPoints);
-            listenerMgr.addClickListener(`#${squareID}`, "end");
+            interactionMgr.addClickListener(`#${squareID}`, "end");
           }
 
           addSquareIdToChar(squareID, char, squareIdToChar);
         });
-        
+
         addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
         listAWord(selectedWord);
   
@@ -77,11 +77,13 @@ export function fillingManager(globals, utilsManager, listenerMgr) {
     }
   
     function addStartPoint(squareID, startCoordinates) {
-      startCoordinates.add(squareID);
+      //startCoordinates.add(squareID);
+      startCoordinates.push(squareID);
     }
   
     function addEndPoint(squareID, endCoordinates) {
-      endCoordinates.add(squareID);
+      //endCoordinates.add(squareID);
+      endCoordinates.push(squareID);
     }
 
     function addSquareIdToChar(squareID, char, charMap) {

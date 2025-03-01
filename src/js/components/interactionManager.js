@@ -1,4 +1,4 @@
-export function listenerManager() {
+export function interactionManager() {
   // Adds a click event listener to a specific square.
   /**
     * @param {string} squareID - The ID of the square (e.g., "sq-3-5").

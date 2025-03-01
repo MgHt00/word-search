@@ -2,13 +2,13 @@ import { globals } from "./services/globals.js";
 const {appData, currentStatus, selectors} = globals;
 
 import { componentsManager } from "./components/componentsManager.js";
-const { layoutManager, fillingManager, listenerManager } = componentsManager;
+const { layoutManager, fillingManager, interactionManager } = componentsManager;
 
 import { utilsManager } from "./utils/utilsManager.js";
 
 const layoutMgr = layoutManager(globals);
-const listenerMgr = listenerManager();
-const fillingMgr = fillingManager(globals, utilsManager, listenerMgr);
+const interactionMgr = interactionManager();
+const fillingMgr = fillingManager(globals, utilsManager, interactionMgr);
 
 (function initialize() {
   layoutMgr.generateSqs();
