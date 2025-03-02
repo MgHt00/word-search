@@ -4,7 +4,12 @@
 }
 
 [class|=sq].marked {
+    margin: -5px;
     background-color: var(--marked-background);
     color: var(--marked-color);
     font-weight: bold;
+}
+
+.dim {
+  opacity: 0.3  ;
 }

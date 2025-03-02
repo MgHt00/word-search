@@ -13,4 +13,5 @@ const fillingMgr = fillingManager(globals, utilsManager, interactionMgr);
 (function initialize() {
   layoutMgr.generateSqs();
   fillingMgr.fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+  interactionMgr.interactionState.setFilledWordCount(appData.noOfWordsToDisplay);
 })();

@@ -2,7 +2,26 @@ export function interactionManager(globals) {
   const {wordPlacementData} =  globals;
   const {startPoints, endPoints, placedWordCoordinates} = wordPlacementData;
 
-  let endPointFlag = null;
+  const interactionState = {
+    filledWordCount: 0,
+    endPointFlag: null,
+
+    setFilledWordCount(value) {
+      this.filledWordCount = value;
+    },
+
+    getFilledWordCount() {
+      return this.filledWordCount;
+    },
+
+    setEndPointFlag(value) {
+      this.endPointFlag = value;
+    },
+
+    getEndPointFlag() {
+      return this.endPointFlag;
+    }
+  }
 
   // Adds a click event listener to a specific square.
   /**
@@ -17,14 +36,15 @@ export function interactionManager(globals) {
       square.addEventListener("click", () => {
         if (type === "start") {
           const index = fetchIndex(cleanedSquareID, type, wordPlacementData);
-          endPointFlag = endPoints[index];
+          interactionState.setEndPointFlag(endPoints[index]);
         }
 
         if (type === "end") {
-          if (cleanedSquareID === endPointFlag) {
+          if (cleanedSquareID === interactionState.getEndPointFlag()) {
             const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
             //const direction = placedWordCoordinates.get(selectedWord).direction;
             fillColor(squaresToFill);
+            markWordAsFound(selectedWord);
           };
         }
       })
@@ -52,10 +72,6 @@ export function interactionManager(globals) {
     return squareID.slice(1); // Remove the first character (#)
   }
 
-  function constructDOMfromID(squareID) {
-    return `#${squareID}`;
-  }
-
   // Fill the squares with the marked class.
   /**
    *
@@ -63,11 +79,18 @@ export function interactionManager(globals) {
    */
   function fillColor(squares) {
     squares.map(square => {
-      const squareID = constructDOMfromID(square);
+      const squareID = `#${square}`;
       document.querySelector(squareID).classList.add("marked");
     })
   }
+
+  function markWordAsFound(id) {
+    const foundWordElement = document.querySelector(`#${id}`);
+    foundWordElement.classList.add("dim");
+  }
+
   return {
+    interactionState,
     addClickListener,
   }
 }
