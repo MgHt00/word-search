@@ -52,7 +52,7 @@ export function fillingManager(globals, utilsManager, interactionMgr) {
         });
 
         addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
-        listAWord(selectedWord);
+        listAWord(selectedWord, sectionWordList);
   
         wordsArray.splice(index, 1); // Remove placed word
         wordsRemaining--;
@@ -287,13 +287,22 @@ export function fillingManager(globals, utilsManager, interactionMgr) {
   }
 
   // To list the words underneath the square frame
-  function listAWord(incoming) {
-    let ulElement = sectionWordList.querySelector("ul") || document.createElement("ul"); // Cache & reuse the <ul> instead of creating a new one each time.
+  function listAWord(selectedWord, wordList) {
+    let ulElement = wordList.querySelector("#word-list") || createUL(); // Cache & reuse the <ul> instead of creating a new one each time.
     let liElement = document.createElement("li");
 
-    liElement.textContent = incoming;
+    liElement.textContent = selectedWord;
+    liElement.id = selectedWord;
+
     ulElement.appendChild(liElement);
-    sectionWordList.appendChild(ulElement);
+    wordList.appendChild(ulElement);
+
+    // helper function
+    function createUL() {
+      let ulElement = document.createElement("ul");
+      ulElement.id = "word-list";
+      return ulElement;
+    }
   }
 
   return {
