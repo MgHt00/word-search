@@ -1,6 +1,7 @@
 export function interactionManager(globals) {
-  const {wordPlacementData} =  globals;
-  const {startPoints, endPoints, placedWordCoordinates} = wordPlacementData;
+  const { selectors, wordPlacementData} =  globals;
+  const { squareFrame } = selectors;
+  const { startPoints, endPoints, placedWordCoordinates } = wordPlacementData;
 
   const interactionState = {
     filledWordCount: 0,
@@ -48,8 +49,8 @@ export function interactionManager(globals) {
             const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
             //const direction = placedWordCoordinates.get(selectedWord).direction;
             highlightCompletedWord(squaresToFill);
-            dimCompletedWord(selectedWord);
-            checkAndHandleGameCompletion();
+            markCompletedWord(selectedWord);
+            checkAndHandleGameCompletion(squareFrame);
           };
         }
       })
@@ -58,11 +59,11 @@ export function interactionManager(globals) {
     }
 
     // helper function
-    function checkAndHandleGameCompletion() {
+    function checkAndHandleGameCompletion(frame) {
       interactionState.reduceFilledWordCount(); // Decrement first!
     
       if (interactionState.getFilledWordCount() === 0) {
-        alert("Finished");
+        frame.classList.add("dim");
       }
     }
     
@@ -94,13 +95,14 @@ export function interactionManager(globals) {
   function highlightCompletedWord(squares) {
     squares.map(square => {
       const squareID = `#${square}`;
-      document.querySelector(squareID).classList.add("marked");
+      document.querySelector(squareID).classList.add("highlight");
     })
   }
 
-  function dimCompletedWord(id) {
+  function markCompletedWord(id) {
     const foundWordElement = document.querySelector(`#${id}`);
-    foundWordElement.classList.add("dim");
+    console.info(`#${id}`);
+    foundWordElement.classList.add("dim", "marked");
   }
 
   return {
@@ -108,3 +110,5 @@ export function interactionManager(globals) {
     addClickListener,
   }
 }
+
+// bug -> highlight လုပ်ပြီးသား အတွဲကို ထပ်နှိပ်ရင် wordcount ကို နှုတ်နေတာကြောင့် စာလုံးအားလုံး highlight မလုပ်သော်ငြားလဲ complete ဖြစ်နေတယ်။

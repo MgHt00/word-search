@@ -1,15 +1,21 @@
 :root {
-  --marked-background: antiquewhite;
-  --marked-color: black;
+  --highlight-background: antiquewhite;
+  --highlight-color: black;
 }
 
-[class|=sq].marked {
+[class|=sq].highlight {
     margin: -5px;
-    background-color: var(--marked-background);
-    color: var(--marked-color);
+    background-color: var(--highlight-background);
+    color: var(--highlight-color);
     font-weight: bold;
 }
 
 .dim {
-  opacity: 0.3  ;
+  opacity: 0.3;
+  cursor: none;
+  pointer-events: none;
+}
+
+.marked {
+  text-decoration: line-through;
 }
