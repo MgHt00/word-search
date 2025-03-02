@@ -14,6 +14,10 @@ export function interactionManager(globals) {
       return this.filledWordCount;
     },
 
+    reduceFilledWordCount() {
+      this.filledWordCount--;
+    },
+
     setEndPointFlag(value) {
       this.endPointFlag = value;
     },
@@ -43,8 +47,9 @@ export function interactionManager(globals) {
           if (cleanedSquareID === interactionState.getEndPointFlag()) {
             const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
             //const direction = placedWordCoordinates.get(selectedWord).direction;
-            fillColor(squaresToFill);
-            markWordAsFound(selectedWord);
+            highlightCompletedWord(squaresToFill);
+            dimCompletedWord(selectedWord);
+            checkAndHandleGameCompletion();
           };
         }
       })
@@ -52,6 +57,15 @@ export function interactionManager(globals) {
       console.warn(`Square with ID ${squareID} not found.`);
     }
 
+    // helper function
+    function checkAndHandleGameCompletion() {
+      interactionState.reduceFilledWordCount(); // Decrement first!
+    
+      if (interactionState.getFilledWordCount() === 0) {
+        alert("Finished");
+      }
+    }
+    
   }
 
   // Fetches the index of a square ID in either the startPoints or endPoints array.
@@ -77,14 +91,14 @@ export function interactionManager(globals) {
    *
    * @param {object} squaresToFill - The object that contains the key value of the squareID.
    */
-  function fillColor(squares) {
+  function highlightCompletedWord(squares) {
     squares.map(square => {
       const squareID = `#${square}`;
       document.querySelector(squareID).classList.add("marked");
     })
   }
 
-  function markWordAsFound(id) {
+  function dimCompletedWord(id) {
     const foundWordElement = document.querySelector(`#${id}`);
     foundWordElement.classList.add("dim");
   }
