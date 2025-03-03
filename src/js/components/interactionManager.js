@@ -1,7 +1,7 @@
 export function interactionManager(globals) {
   const { selectors, wordPlacementData} =  globals;
   const { squareFrame } = selectors;
-  const { startPoints, endPoints, placedWordCoordinates } = wordPlacementData;
+  //const { startPoints, endPoints, placedWordCoordinates } = wordPlacementData;
 
   const interactionState = {
     filledWordCount: 0,
@@ -63,47 +63,52 @@ export function interactionManager(globals) {
   */
 
   function addClickListener(wordData) {
-    console.group("addClickListener()")
+    console.group("addClickListener()");
     console.info(wordData);
     const { selectedWord, currentWordSquareIDs } = wordData;
-
     interactionState.addWordData(selectedWord, currentWordSquareIDs);
+
     const startPoint = interactionState.getWordStartPoint(selectedWord);
     const endPoint = interactionState.getWordEndPoint(selectedWord);
-    
-    addListener(startPoint, "start");
-    addListener(endPoint, "end");
-    
-    console.groupEnd();
 
-    // helper function
-    function addListener(point, type) {
+    const squareMap = new Map([
+      [startPoint, "start"],
+      [endPoint, "end"],
+    ]);
+
+    squareMap.forEach((type, point) => {
       const square = document.querySelector(`#${point}`);
-      console.info(square);
       if (square) {
         square.addEventListener("click", () => {
-          if (type === "start") { 
-            interactionState.isStartPointClicked = true;
-          }
-          if (type === "end") { 
-            if (interactionState.isStartPointClicked &&
-              point === interactionState.getWordEndPoint(selectedWord)) {
-              console.warn("BINGOOOOO!!!!");
-              interactionState.isStartPointClicked = false;
-              const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
-              console.info(squaresToFill);
-              /*const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
-              highlightCompletedWord(squaresToFill);
-              markCompletedWord(selectedWord);
-              checkAndHandleGameCompletion(squareFrame);*/
-            }
-          }
-        })
+          handlesSquareClick(selectedWord, type, point);
+        });
       } else {
         console.warn(`Square with ID ${point} not found.`);
       }
+
+    });
+        
+    console.groupEnd();
+
+    // helper function
+    function handlesSquareClick(selectedWord, type, point) {
+      if (type === "start") { 
+        interactionState.isStartPointClicked = true;
+        console.info("Clicked startPoint:",interactionState.isStartPointClicked);
+      }
+      if (type === "end") { 
+        if (interactionState.isStartPointClicked &&
+          point === interactionState.getWordEndPoint(selectedWord)) {  
+          console.warn("BINGOOOOO!!!!");
+          interactionState.isStartPointClicked = false;
+          const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
+          highlightCompletedWord(squaresToFill);
+          markCompletedWord(selectedWord);
+          checkAndHandleGameCompletion(squareFrame);
+        }
+      }
     }
-    
+
     function checkAndHandleGameCompletion(frame) {
       interactionState.reduceFilledWordCount(); // Decrement first!
 

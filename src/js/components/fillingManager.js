@@ -35,16 +35,11 @@ export function fillingManager(globals, utilsManager, interactionMgr) {
         const firstIndex = 0;
         const lastIndex = entries.length - 1;
         const currentWordSquareIDs = entries.map(([squareID]) => squareID);
-        let wordData = { selectedWord, currentWordSquareIDs };
-  
+        const wordData = { selectedWord, currentWordSquareIDs };
+        interactionMgr.addClickListener(wordData);
+
         entries.forEach(([squareID, char], i) => {
           printCharOnScreen(squareID, char);
-
-          /*if (i === firstIndex) wordStartEndPoints.startPoint = squareID;
-          if (i === lastIndex) wordStartEndPoints.endPoint = squareID;*/
-
-          if (i === firstIndex || i === lastIndex) interactionMgr.addClickListener(wordData);
-
           addSquareIdToChar(squareID, char, squareIdToChar);
         });
   
