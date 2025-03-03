@@ -5,6 +5,7 @@ export function interactionManager(globals) {
 
   const interactionState = {
     filledWordCount: 0,
+    wordData : new Map(),
     endPointFlag: null,
 
     setFilledWordCount(value) {
@@ -25,6 +26,26 @@ export function interactionManager(globals) {
 
     getEndPointFlag() {
       return this.endPointFlag;
+    },
+
+    addWordData(selectedWord, startPoint, endPoint) {
+      this.wordData.set(selectedWord, { startPoint, endPoint });
+    },
+
+    getStartEndPoint(selectedWord) {
+      return this.wordData.get(selectedWord);
+    },
+
+    hasStartEndPoint(selectedWord) {
+      return this.wordData.has(selectedWord);
+    },
+
+    getEndPoint(selectedWord) {
+      return this.wordData.get(selectedWord).endPoint;
+    },
+
+    removeWordData(selectedWord) {
+      this.wordData.delete(selectedWord);
     }
   }
 
@@ -33,7 +54,8 @@ export function interactionManager(globals) {
     * @param {string} squareID - The ID of the square (e.g., "sq-3-5").
     * @param {string} type - The type of the square ("start" or "end").
   */
-  function addClickListener(squareID, type, selectedWord) {
+  /*function addClickListener(squareID, type, selectedWord) {
+    squareID = `#${squareID}`;
     const square = document.querySelector(squareID);
     const cleanedSquareID = cleanSquareID(squareID); // Remove the first character (#)
 
@@ -51,6 +73,7 @@ export function interactionManager(globals) {
             highlightCompletedWord(squaresToFill);
             markCompletedWord(selectedWord);
             checkAndHandleGameCompletion(squareFrame);
+            removeClickListener(squareID);
           };
         }
       })
@@ -66,8 +89,61 @@ export function interactionManager(globals) {
         frame.classList.add("dim");
       }
     }
+  }*/
+
+  function addClickListener(wordData) {
+    console.group("addClickListener()")
+    const { selectedWord, startPoint, endPoint } = wordData;
+
+    addListener(startPoint, "start");
+    addListener(endPoint, "end");
     
+    console.groupEnd();
+
+    // helper function
+    function addListener(point, type) {
+      const square = document.querySelector(`#${point}`);
+      if (square) {
+        square.addEventListener("click", () => {
+          if (type === "start") { 
+            interactionState.addWordData(selectedWord, startPoint, endPoint);
+          }
+          if (type === "end") { 
+            if (point === interactionState.getEndPoint(selectedWord)) {
+              const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
+              //const direction = placedWordCoordinates.get(selectedWord).direction;
+              highlightCompletedWord(squaresToFill);
+              markCompletedWord(selectedWord);
+              checkAndHandleGameCompletion(squareFrame);
+            }
+          }
+        })
+      } else {
+        console.warn(`Square with ID ${point} not found.`);
+      }
+    }
+    
+    function checkAndHandleGameCompletion(frame) {
+      interactionState.reduceFilledWordCount(); // Decrement first!
+
+      if (interactionState.getFilledWordCount() === 0) {
+        frame.classList.add("dim");
+      }
+    }
   }
+
+  function removeClickListener(squareID) { 
+    // ဒီ logic အလုပ်မလုပ် ၊ selectedWord ကိုသုံးပြီး global ထဲက placeWordCoordinates ထဲက အစ နဲ့ အဆုံးကို ဆွဲထုတ်ပြီး ...
+    // ...click ကို ဖြုတ်ရမယ်။
+    const square = document.querySelector(squareID);
+    console.info(square);
+    if (square) {
+      square.removeEventListener("click", () => {});
+    } else {
+      console.warn(`Square with ID ${squareID} not found.`);
+    }
+  }
+
 
   // Fetches the index of a square ID in either the startPoints or endPoints array.
   /**
