@@ -6,7 +6,9 @@ export function interactionManager(globals) {
   const interactionState = {
     filledWordCount: 0,
     wordData : new Map(),
-    endPointFlag: null,
+    isStartPointClicked: false,
+    
+    /*endPointFlag: null,*/
 
     setFilledWordCount(value) {
       this.filledWordCount = value;
@@ -20,28 +22,33 @@ export function interactionManager(globals) {
       this.filledWordCount--;
     },
 
-    setEndPointFlag(value) {
+    /*setEndPointFlag(value) {
       this.endPointFlag = value;
     },
 
     getEndPointFlag() {
       return this.endPointFlag;
+    },*/
+
+    addWordData(selectedWord, currentWordSquareIDs) {
+      this.wordData.set(selectedWord, currentWordSquareIDs);
     },
 
-    addWordData(selectedWord, startPoint, endPoint) {
-      this.wordData.set(selectedWord, { startPoint, endPoint });
-    },
-
-    getStartEndPoint(selectedWord) {
-      return this.wordData.get(selectedWord);
-    },
-
-    hasStartEndPoint(selectedWord) {
+    hasWordData(selectedWord) {
       return this.wordData.has(selectedWord);
     },
 
-    getEndPoint(selectedWord) {
-      return this.wordData.get(selectedWord).endPoint;
+    getWordStartPoint(selectedWord) {
+      return this.wordData.get(selectedWord)[0];
+    },
+
+    getWordEndPoint(selectedWord) {
+      const squareIDs = this.wordData.get(selectedWord);
+      return squareIDs[squareIDs.length - 1];
+    },
+
+    getWordSquareIDs(selectedWord) {
+      return this.wordData.get(selectedWord);
     },
 
     removeWordData(selectedWord) {
@@ -54,47 +61,16 @@ export function interactionManager(globals) {
     * @param {string} squareID - The ID of the square (e.g., "sq-3-5").
     * @param {string} type - The type of the square ("start" or "end").
   */
-  /*function addClickListener(squareID, type, selectedWord) {
-    squareID = `#${squareID}`;
-    const square = document.querySelector(squareID);
-    const cleanedSquareID = cleanSquareID(squareID); // Remove the first character (#)
-
-    if (square) {
-      square.addEventListener("click", () => {
-        if (type === "start") {
-          const index = fetchIndex(cleanedSquareID, type, wordPlacementData);
-          interactionState.setEndPointFlag(endPoints[index]);
-        }
-
-        if (type === "end") {
-          if (cleanedSquareID === interactionState.getEndPointFlag()) {
-            const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
-            //const direction = placedWordCoordinates.get(selectedWord).direction;
-            highlightCompletedWord(squaresToFill);
-            markCompletedWord(selectedWord);
-            checkAndHandleGameCompletion(squareFrame);
-            removeClickListener(squareID);
-          };
-        }
-      })
-    } else {
-      console.warn(`Square with ID ${squareID} not found.`);
-    }
-
-    // helper function
-    function checkAndHandleGameCompletion(frame) {
-      interactionState.reduceFilledWordCount(); // Decrement first!
-    
-      if (interactionState.getFilledWordCount() === 0) {
-        frame.classList.add("dim");
-      }
-    }
-  }*/
 
   function addClickListener(wordData) {
     console.group("addClickListener()")
-    const { selectedWord, startPoint, endPoint } = wordData;
+    console.info(wordData);
+    const { selectedWord, currentWordSquareIDs } = wordData;
 
+    interactionState.addWordData(selectedWord, currentWordSquareIDs);
+    const startPoint = interactionState.getWordStartPoint(selectedWord);
+    const endPoint = interactionState.getWordEndPoint(selectedWord);
+    
     addListener(startPoint, "start");
     addListener(endPoint, "end");
     
@@ -103,18 +79,23 @@ export function interactionManager(globals) {
     // helper function
     function addListener(point, type) {
       const square = document.querySelector(`#${point}`);
+      console.info(square);
       if (square) {
         square.addEventListener("click", () => {
           if (type === "start") { 
-            interactionState.addWordData(selectedWord, startPoint, endPoint);
+            interactionState.isStartPointClicked = true;
           }
           if (type === "end") { 
-            if (point === interactionState.getEndPoint(selectedWord)) {
-              const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
-              //const direction = placedWordCoordinates.get(selectedWord).direction;
+            if (interactionState.isStartPointClicked &&
+              point === interactionState.getWordEndPoint(selectedWord)) {
+              console.warn("BINGOOOOO!!!!");
+              interactionState.isStartPointClicked = false;
+              const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
+              console.info(squaresToFill);
+              /*const squaresToFill = placedWordCoordinates.get(selectedWord).placementData;
               highlightCompletedWord(squaresToFill);
               markCompletedWord(selectedWord);
-              checkAndHandleGameCompletion(squareFrame);
+              checkAndHandleGameCompletion(squareFrame);*/
             }
           }
         })

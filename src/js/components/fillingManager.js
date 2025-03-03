@@ -35,26 +35,19 @@ export function fillingManager(globals, utilsManager, interactionMgr) {
         const firstIndex = 0;
         const lastIndex = entries.length - 1;
         const currentWordSquareIDs = entries.map(([squareID]) => squareID);
-        let wordStartEndPoints = { selectedWord };
+        let wordData = { selectedWord, currentWordSquareIDs };
   
         entries.forEach(([squareID, char], i) => {
           printCharOnScreen(squareID, char);
 
-          /*if (i === firstIndex) {
-            addStartPoint(squareID, startPoints); 
-            interactionMgr.addClickListener(squareID, "start", selectedWord);
-          }
-          if (i === lastIndex) {
-            addEndPoint(squareID, endPoints);
-            interactionMgr.addClickListener(squareID, "end", selectedWord);
-          }*/
+          /*if (i === firstIndex) wordStartEndPoints.startPoint = squareID;
+          if (i === lastIndex) wordStartEndPoints.endPoint = squareID;*/
 
-          if (i === firstIndex) wordStartEndPoints.startPoint = squareID;
-          if (i === lastIndex) wordStartEndPoints.endPoint = squareID;
+          if (i === firstIndex || i === lastIndex) interactionMgr.addClickListener(wordData);
 
           addSquareIdToChar(squareID, char, squareIdToChar);
         });
-        interactionMgr.addClickListener(wordStartEndPoints);
+  
         addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
         listAWord(selectedWord, sectionWordList);
   
@@ -70,7 +63,7 @@ export function fillingManager(globals, utilsManager, interactionMgr) {
       setTimeout(() => fill(wordsArray, wordsRemaining, overallAttempts + 1), 0); //[le4]
     } else {
       console.info({ 
-        startAndEnds: { startPoints, endPoints },
+        //startAndEnds: { startPoints, endPoints },
         placedWordCoordinates,
       });
     }
