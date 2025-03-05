@@ -81,11 +81,11 @@ export function interactionManager(globals) {
       ["end", endPoint],
     ]);
 
-    squareMap.forEach((point, type) => {
+    squareMap.forEach((point, type, squareMap) => {
       const square = document.querySelector(`#${point}`);
       if (square) {
         square.addEventListener("click", () => {
-          handlesSquareClick(selectedWord, type, point);
+          handlesSquareClick(selectedWord, type, point, squareMap);
         });
       } else {
         console.warn(`Square with ID ${point} not found.`);
@@ -96,20 +96,13 @@ export function interactionManager(globals) {
     console.groupEnd();
 
     // helper function
-    function handlesSquareClick(selectedWord, type, point) {
+    function handlesSquareClick(selectedWord, type, point, squareMap) {
       if (type === "start") { 
-        /*interactionState.isStartPointClicked = true;
-        console.info("Clicked startPoint:",interactionState.isStartPointClicked);*/
-        /*interactionState.relatedEndPoint = endPoint;
-        console.info("Clicked startPoint:",interactionState.relatedEndPoint);*/
-        console.info("Click startPoint");
+        interactionState.endPointFlag =  squareMap.get("end");
       }
-      if (type === "end") { 
-        /*if (interactionState.isStartPointClicked &&
-          point === interactionState.getWordEndPoint(selectedWord)) { */ 
-        if (point === interactionState.interactionState.relatedEndPoint) { 
+      if (type === "end") {
+        if (point === interactionState.endPointFlag) { 
           console.warn("BINGOOOOO!!!!");
-          interactionState.isStartPointClicked = false;
           const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
           highlightCompletedWord(squaresToFill);
           markCompletedWord(selectedWord);
