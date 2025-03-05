@@ -43,6 +43,9 @@ export function interactionManager(globals) {
       return this.placedWordDetails.size;
     },
   }
+  
+  // Store a map to hold all the listener functions.
+  const squareClickListeners = new Map();
 
   // Adds a click event listener to a specific square.
   function addClickListener(placedWordDetails) {
@@ -59,13 +62,18 @@ export function interactionManager(globals) {
       ["end", endPoint],
     ]);
 
+    // create an object for the selectedWord, that is going to include all the listeners in it.
+    squareClickListeners.set(selectedWord, {});
+
     squareMap.forEach((point, type, squareMap) => {
       const square = document.querySelector(`#${point}`);
       if (square) {
-        square.addEventListener("click", () => {
+        const listener = () => {
           handlesSquareClick(selectedWord, type, point, squareMap);
-        });
-      } else {
+        };
+        square.addEventListener("click", listener);
+        squareClickListeners.get(selectedWord)[point] = listener;
+        } else {
         console.warn(`Square with ID ${point} not found.`);
       }
 
@@ -86,6 +94,7 @@ export function interactionManager(globals) {
         highlightCompletedWord(squaresToFill);
         markCompletedWord(selectedWord);
         checkAndHandleGameCompletion(selectedWord, squareFrame);
+        removeClickListenerNew(selectedWord);
       }
     }
   }
@@ -95,6 +104,22 @@ export function interactionManager(globals) {
 
     if (interactionState.getWordDetailsSize() === 0) {
       squareFrame.classList.add("dim");
+    }
+  }
+
+  function removeClickListenerNew(selectedWord) {
+    const listeners = squareClickListeners.get(selectedWord);
+    if (listeners) {
+      Object.keys(listeners).forEach(squareID => {
+        const square = document.querySelector(`#${squareID}`);
+        if (square && listeners[squareID]) {
+          square.removeEventListener("click", listeners[squareID]);
+        } else {
+          console.warn(`Square with ID ${squareID} not found.`);
+          listeners[squareID] = null; // good practice to remove the listener reference.
+        }
+      });
+      squareClickListeners.delete(selectedWord);
     }
   }
 
