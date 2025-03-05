@@ -1,24 +1,10 @@
 export function interactionManager(globals) {
   const { selectors, wordPlacementData} =  globals;
   const { squareFrame } = selectors;
-  //const { startPoints, endPoints, placedWordCoordinates } = wordPlacementData;
 
   const interactionState = {
-    filledWordCount: 0,
     placedWordDetails : new Map(),    
     endPointFlag: null,
-
-    setFilledWordCount(value) {
-      this.filledWordCount = value;
-    },
-
-    getFilledWordCount() {
-      return this.filledWordCount;
-    },
-
-    reduceFilledWordCount() {
-      this.filledWordCount--;
-    },
 
     setEndPointFlag(value) {
       this.endPointFlag = value;
@@ -51,9 +37,12 @@ export function interactionManager(globals) {
 
     removeWordDetails(selectedWord) {
       this.placedWordDetails.delete(selectedWord);
-    }
-  }
+    },
 
+    getWordDetailsSize() {
+      return this.placedWordDetails.size;
+    },
+  }
 
   // Adds a click event listener to a specific square.
   function addClickListener(placedWordDetails) {
@@ -96,16 +85,16 @@ export function interactionManager(globals) {
           const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
           highlightCompletedWord(squaresToFill);
           markCompletedWord(selectedWord);
-          checkAndHandleGameCompletion(squareFrame);
+          checkAndHandleGameCompletion(selectedWord, squareFrame);
         }
       }
     }
 
-    function checkAndHandleGameCompletion(frame) {
-      interactionState.reduceFilledWordCount(); // Decrement first!
+    function checkAndHandleGameCompletion(selectedWord, squareFrame) {
+      interactionState.removeWordDetails(selectedWord);
 
-      if (interactionState.getFilledWordCount() === 0) {
-        frame.classList.add("dim");
+      if (interactionState.getWordDetailsSize() === 0) {
+        squareFrame.classList.add("dim");
       }
     }
   }
