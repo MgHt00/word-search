@@ -5,9 +5,7 @@ export function interactionManager(globals) {
 
   const interactionState = {
     filledWordCount: 0,
-    wordData : new Map(),
-    isStartPointClicked: false,
-    
+    placedWordDetails : new Map(),    
     endPointFlag: null,
 
     setFilledWordCount(value) {
@@ -22,59 +20,50 @@ export function interactionManager(globals) {
       this.filledWordCount--;
     },
 
-    /*setEndPointFlag(value) {
+    setEndPointFlag(value) {
       this.endPointFlag = value;
     },
 
     getEndPointFlag() {
       return this.endPointFlag;
-    },*/
-
-    addWordData(selectedWord, currentWordSquareIDs) {
-      this.wordData.set(selectedWord, currentWordSquareIDs);
     },
 
-    hasWordData(selectedWord) {
-      return this.wordData.has(selectedWord);
+    addWordDetails(selectedWord, currentWordSquareIDs) {
+      this.placedWordDetails.set(selectedWord, currentWordSquareIDs);
+    },
+
+    hasWordDetails(selectedWord) {
+      return this.placedWordDetails.has(selectedWord);
     },
 
     getWordStartPoint(selectedWord) {
-      return this.wordData.get(selectedWord)[0];
+      return this.placedWordDetails.get(selectedWord)[0];
     },
 
     getWordEndPoint(selectedWord) {
-      const squareIDs = this.wordData.get(selectedWord);
+      const squareIDs = this.placedWordDetails.get(selectedWord);
       return squareIDs[squareIDs.length - 1];
     },
 
     getWordSquareIDs(selectedWord) {
-      return this.wordData.get(selectedWord);
+      return this.placedWordDetails.get(selectedWord);
     },
 
-    removeWordData(selectedWord) {
-      this.wordData.delete(selectedWord);
+    removeWordDetails(selectedWord) {
+      this.placedWordDetails.delete(selectedWord);
     }
   }
 
-  /*function showData(wordData) {
-    console.info("showData()",wordData);
-  }*/
 
   // Adds a click event listener to a specific square.
-  /**
-    * @param {string} squareID - The ID of the square (e.g., "sq-3-5").
-    * @param {string} type - The type of the square ("start" or "end").
-  */
-
-  function addClickListener(wordData) {
+  function addClickListener(placedWordDetails) {
     console.group("addClickListener()");
-    console.info(wordData);
-    const { selectedWord, currentWordSquareIDs, } = wordData;
+    console.info(placedWordDetails);
+    const { selectedWord, currentWordSquareIDs, } = placedWordDetails;
 
-    interactionState.addWordData(selectedWord, currentWordSquareIDs);
+    interactionState.addWordDetails(selectedWord, currentWordSquareIDs);
     const startPoint = interactionState.getWordStartPoint(selectedWord);
     const endPoint = interactionState.getWordEndPoint(selectedWord);
-
 
     const squareMap = new Map([
       ["start", startPoint],
@@ -98,10 +87,11 @@ export function interactionManager(globals) {
     // helper function
     function handlesSquareClick(selectedWord, type, point, squareMap) {
       if (type === "start") { 
-        interactionState.endPointFlag =  squareMap.get("end");
+        interactionState.setEndPointFlag(squareMap.get("end"));
+        console.info("Start point Clicked, endPoint:",interactionState.getEndPointFlag());
       }
       if (type === "end") {
-        if (point === interactionState.endPointFlag) { 
+        if (point === interactionState.getEndPointFlag()) { 
           console.warn("BINGOOOOO!!!!");
           const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
           highlightCompletedWord(squaresToFill);
