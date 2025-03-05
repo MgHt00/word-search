@@ -8,7 +8,7 @@ export function interactionManager(globals) {
     wordData : new Map(),
     isStartPointClicked: false,
     
-    /*endPointFlag: null,*/
+    endPointFlag: null,
 
     setFilledWordCount(value) {
       this.filledWordCount = value;
@@ -56,6 +56,10 @@ export function interactionManager(globals) {
     }
   }
 
+  /*function showData(wordData) {
+    console.info("showData()",wordData);
+  }*/
+
   // Adds a click event listener to a specific square.
   /**
     * @param {string} squareID - The ID of the square (e.g., "sq-3-5").
@@ -65,18 +69,19 @@ export function interactionManager(globals) {
   function addClickListener(wordData) {
     console.group("addClickListener()");
     console.info(wordData);
-    const { selectedWord, currentWordSquareIDs } = wordData;
-    interactionState.addWordData(selectedWord, currentWordSquareIDs);
+    const { selectedWord, currentWordSquareIDs, } = wordData;
 
+    interactionState.addWordData(selectedWord, currentWordSquareIDs);
     const startPoint = interactionState.getWordStartPoint(selectedWord);
     const endPoint = interactionState.getWordEndPoint(selectedWord);
 
+
     const squareMap = new Map([
-      [startPoint, "start"],
-      [endPoint, "end"],
+      ["start", startPoint],
+      ["end", endPoint],
     ]);
 
-    squareMap.forEach((type, point) => {
+    squareMap.forEach((point, type) => {
       const square = document.querySelector(`#${point}`);
       if (square) {
         square.addEventListener("click", () => {
@@ -93,12 +98,16 @@ export function interactionManager(globals) {
     // helper function
     function handlesSquareClick(selectedWord, type, point) {
       if (type === "start") { 
-        interactionState.isStartPointClicked = true;
-        console.info("Clicked startPoint:",interactionState.isStartPointClicked);
+        /*interactionState.isStartPointClicked = true;
+        console.info("Clicked startPoint:",interactionState.isStartPointClicked);*/
+        /*interactionState.relatedEndPoint = endPoint;
+        console.info("Clicked startPoint:",interactionState.relatedEndPoint);*/
+        console.info("Click startPoint");
       }
       if (type === "end") { 
-        if (interactionState.isStartPointClicked &&
-          point === interactionState.getWordEndPoint(selectedWord)) {  
+        /*if (interactionState.isStartPointClicked &&
+          point === interactionState.getWordEndPoint(selectedWord)) { */ 
+        if (point === interactionState.interactionState.relatedEndPoint) { 
           console.warn("BINGOOOOO!!!!");
           interactionState.isStartPointClicked = false;
           const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
@@ -170,6 +179,7 @@ export function interactionManager(globals) {
   return {
     interactionState,
     addClickListener,
+    /*showData,*/
   }
 }
 
