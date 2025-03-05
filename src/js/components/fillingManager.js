@@ -1,9 +1,15 @@
 export function fillingManager(globals, utilsManager, interactionMgr) {
-  const { appData, selectors, wordPlacementData } =  globals;
+  const { appData, selectors } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
-  let { startPoints, endPoints, squareIdToChar, placedWordCoordinates } = wordPlacementData;
   const { helpers } = utilsManager;
+
+  const wordPlacementData = {
+    squareIdToChar: new Map(), // Maps square numbers to characters.
+    placedWordCoordinates: new Map(),
+  };
+
+  const { squareIdToChar, placedWordCoordinates } = wordPlacementData;
 
   function fill(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
     let wordsArray = [...words];
@@ -58,7 +64,6 @@ export function fillingManager(globals, utilsManager, interactionMgr) {
       setTimeout(() => fill(wordsArray, wordsRemaining, overallAttempts + 1), 0); //[le4]
     } else {
       console.info({ 
-        //startAndEnds: { startPoints, endPoints },
         placedWordCoordinates,
       });
     }
@@ -68,16 +73,6 @@ export function fillingManager(globals, utilsManager, interactionMgr) {
       document.querySelector(`#${squareID}`).textContent = char;
     }
   
-    function addStartPoint(squareID, startCoordinates) {
-      //startCoordinates.add(squareID);
-      startCoordinates.push(squareID);
-    }
-  
-    function addEndPoint(squareID, endCoordinates) {
-      //endCoordinates.add(squareID);
-      endCoordinates.push(squareID);
-    }
-
     function addSquareIdToChar(squareID, char, charMap) {
       charMap.set(squareID, char);
     }
