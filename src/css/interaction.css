@@ -1,0 +1,21 @@
+:root {
+  --highlight-background: antiquewhite;
+  --highlight-color: black;
+}
+
+[class|=sq].highlight {
+    margin: -5px;
+    background-color: var(--highlight-background);
+    color: var(--highlight-color);
+    font-weight: bold;
+}
+
+.dim {
+  opacity: 0.3;
+  cursor: none;
+  pointer-events: none;
+}
+
+.marked {
+  text-decoration: line-through;
+}

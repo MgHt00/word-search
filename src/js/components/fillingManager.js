@@ -1,4 +1,4 @@
-export function fillingManager(globals, utilsManager) {
+export function fillingManager(globals, utilsManager, interactionMgr) {
   const { appData, selectors, wordPlacementData } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
@@ -34,15 +34,17 @@ export function fillingManager(globals, utilsManager) {
         const entries = Object.entries(placementData);
         const firstIndex = 0;
         const lastIndex = entries.length - 1;
-  
+        const currentWordSquareIDs = entries.map(([squareID]) => squareID);
+        const wordData = { selectedWord, currentWordSquareIDs };
+        interactionMgr.addClickListener(wordData);
+
         entries.forEach(([squareID, char], i) => {
           printCharOnScreen(squareID, char);
-          if (i === firstIndex) addStartPoint(squareID, startPoints);
-          if (i === lastIndex) addEndPoint(squareID, endPoints);
           addSquareIdToChar(squareID, char, squareIdToChar);
         });
-        addPlacedWordCoordinates(selectedWord, placementData);
-        listAWord(selectedWord);
+  
+        addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
+        listAWord(selectedWord, sectionWordList);
   
         wordsArray.splice(index, 1); // Remove placed word
         wordsRemaining--;
@@ -56,7 +58,7 @@ export function fillingManager(globals, utilsManager) {
       setTimeout(() => fill(wordsArray, wordsRemaining, overallAttempts + 1), 0); //[le4]
     } else {
       console.info({ 
-        startAndEnds: { startPoints, endPoints },
+        //startAndEnds: { startPoints, endPoints },
         placedWordCoordinates,
       });
     }
@@ -67,19 +69,21 @@ export function fillingManager(globals, utilsManager) {
     }
   
     function addStartPoint(squareID, startCoordinates) {
-      startCoordinates.add(squareID);
+      //startCoordinates.add(squareID);
+      startCoordinates.push(squareID);
     }
   
     function addEndPoint(squareID, endCoordinates) {
-      endCoordinates.add(squareID);
+      //endCoordinates.add(squareID);
+      endCoordinates.push(squareID);
     }
 
     function addSquareIdToChar(squareID, char, charMap) {
       charMap.set(squareID, char);
     }
 
-    function addPlacedWordCoordinates(word, placementData) {
-      placedWordCoordinates.set(word, placementData);
+    function addPlacedWordCoordinates(word, placementData, coordinates) {
+      placedWordCoordinates.set(word, { placementData, direction: coordinates.direction });
     }
     // helpers end
   }
@@ -275,13 +279,22 @@ export function fillingManager(globals, utilsManager) {
   }
 
   // To list the words underneath the square frame
-  function listAWord(incoming) {
-    let ulElement = sectionWordList.querySelector("ul") || document.createElement("ul"); // Cache & reuse the <ul> instead of creating a new one each time.
+  function listAWord(selectedWord, wordList) {
+    let ulElement = wordList.querySelector("#word-list") || createUL(); // Cache & reuse the <ul> instead of creating a new one each time.
     let liElement = document.createElement("li");
 
-    liElement.textContent = incoming;
+    liElement.textContent = selectedWord;
+    liElement.id = selectedWord;
+
     ulElement.appendChild(liElement);
-    sectionWordList.appendChild(ulElement);
+    wordList.appendChild(ulElement);
+
+    // helper function
+    function createUL() {
+      let ulElement = document.createElement("ul");
+      ulElement.id = "word-list";
+      return ulElement;
+    }
   }
 
   return {

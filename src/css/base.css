@@ -33,7 +33,7 @@ body {
   gap: var(--sq-margin);
 }
 
-#square-frame > *[class|=sq] {
+*[class|=sq] {
   background-color: var(--sq-bg-color);
   color: black;
   font-size: 11px;
@@ -43,4 +43,5 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }

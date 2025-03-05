@@ -1,6 +1,6 @@
 const appData = {
   wordList : ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"],
-  noOfWordsToDisplay : 10,
+  noOfWordsToDisplay : 2,
   gridSize: 14,
 }
 
@@ -10,8 +10,10 @@ const selectors = {
 }
 
 const wordPlacementData = {
-  startPoints: new Set(),
-  endPoints: new Set(),
+  //startPoints: new Set(),
+  //endPoints: new Set(),
+  startPoints: [],
+  endPoints: [],
   squareIdToChar: new Map(), // Maps square numbers to characters.
   placedWordCoordinates: new Map(),
 };
