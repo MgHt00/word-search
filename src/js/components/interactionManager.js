@@ -72,30 +72,29 @@ export function interactionManager(globals) {
     });
         
     console.groupEnd();
+  }
 
-    // helper function
-    function handlesSquareClick(selectedWord, type, point, squareMap) {
-      if (type === "start") { 
-        interactionState.setEndPointFlag(squareMap.get("end"));
-        console.info("Start point Clicked, endPoint:",interactionState.getEndPointFlag());
-      }
-      if (type === "end") {
-        if (point === interactionState.getEndPointFlag()) { 
-          console.warn("BINGOOOOO!!!!");
-          const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
-          highlightCompletedWord(squaresToFill);
-          markCompletedWord(selectedWord);
-          checkAndHandleGameCompletion(selectedWord, squareFrame);
-        }
+  function handlesSquareClick(selectedWord, type, point, squareMap) {
+    if (type === "start") { 
+      interactionState.setEndPointFlag(squareMap.get("end"));
+      console.info("Start point Clicked, endPoint:",interactionState.getEndPointFlag());
+    }
+    if (type === "end") {
+      if (point === interactionState.getEndPointFlag()) { 
+        console.warn("BINGOOOOO!!!!");
+        const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
+        highlightCompletedWord(squaresToFill);
+        markCompletedWord(selectedWord);
+        checkAndHandleGameCompletion(selectedWord, squareFrame);
       }
     }
+  }
 
-    function checkAndHandleGameCompletion(selectedWord, squareFrame) {
-      interactionState.removeWordDetails(selectedWord);
+  function checkAndHandleGameCompletion(selectedWord, squareFrame) {
+    interactionState.removeWordDetails(selectedWord);
 
-      if (interactionState.getWordDetailsSize() === 0) {
-        squareFrame.classList.add("dim");
-      }
+    if (interactionState.getWordDetailsSize() === 0) {
+      squareFrame.classList.add("dim");
     }
   }
 
@@ -111,30 +110,7 @@ export function interactionManager(globals) {
     }
   }
 
-
-  // Fetches the index of a square ID in either the startPoints or endPoints array.
-  /**
-   *
-   * @param {string} squareID - The ID of the square (e.g., "sq-3-5").
-   * @param {string} type - The type of the square ("start" or "end").
-   * @param {object} placementObject - The object containing startPoints and endPoints arrays.
-   * @returns {number} - The index of the square ID in the corresponding array, or -1 if not found.
-   */
-  function fetchIndex(squareID, type, placementObject) {
-    const arrayName = `${type}Points`;
-    const index = placementObject[arrayName].indexOf(squareID); // Get the index of squareID in the array
-    return index;
-  }
-
-  function cleanSquareID(squareID) {
-    return squareID.slice(1); // Remove the first character (#)
-  }
-
   // Fill the squares with the marked class.
-  /**
-   *
-   * @param {object} squaresToFill - The object that contains the key value of the squareID.
-   */
   function highlightCompletedWord(squares) {
     squares.map(square => {
       const squareID = `#${square}`;
@@ -151,7 +127,6 @@ export function interactionManager(globals) {
   return {
     interactionState,
     addClickListener,
-    /*showData,*/
   }
 }
 
