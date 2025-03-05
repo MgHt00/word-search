@@ -1,18 +1,10 @@
 export function interactionManager(globals) {
-  const { selectors, wordPlacementData} =  globals;
+  const { selectors } =  globals;
   const { squareFrame } = selectors;
 
-  const interactionState = {
-    placedWordDetails : new Map(),    
-    endPointFlag: null,
-
-    setEndPointFlag(value) {
-      this.endPointFlag = value;
-    },
-
-    getEndPointFlag() {
-      return this.endPointFlag;
-    },
+  // Object to manage the placed words data.
+  const placedWordData = {
+    placedWordDetails : new Map(),
 
     addWordDetails(selectedWord, currentWordSquareIDs) {
       this.placedWordDetails.set(selectedWord, currentWordSquareIDs);
@@ -43,6 +35,19 @@ export function interactionManager(globals) {
       return this.placedWordDetails.size;
     },
   }
+
+  // Object to manage the endPoint state
+  const interactionState = {
+    endPointFlag: null,
+
+    setEndPointFlag(value) {
+      this.endPointFlag = value;
+    },
+
+    getEndPointFlag() {
+      return this.endPointFlag;
+    },
+  }
   
   // Store a map to hold all the listener functions.
   const squareClickListeners = new Map();
@@ -50,12 +55,11 @@ export function interactionManager(globals) {
   // Adds a click event listener to a specific square.
   function addClickListener(placedWordDetails) {
     console.group("addClickListener()");
-    console.info(placedWordDetails);
     const { selectedWord, currentWordSquareIDs, } = placedWordDetails;
 
-    interactionState.addWordDetails(selectedWord, currentWordSquareIDs);
-    const startPoint = interactionState.getWordStartPoint(selectedWord);
-    const endPoint = interactionState.getWordEndPoint(selectedWord);
+    placedWordData.addWordDetails(selectedWord, currentWordSquareIDs);
+    const startPoint = placedWordData.getWordStartPoint(selectedWord);
+    const endPoint = placedWordData.getWordEndPoint(selectedWord);
 
     const squareMap = new Map([
       ["start", startPoint],
@@ -68,17 +72,15 @@ export function interactionManager(globals) {
     squareMap.forEach((squareID, type, squareMap) => {
       const square = document.querySelector(`#${squareID}`);
       if (square) {
-        const listener = () => { // creating lister() to be used later with the removeEventListener
-          handlesSquareClick(selectedWord, type, squareID, squareMap);
+        const listener = () => { // later to be used with the removeEventListener
+          handleSquareClick(selectedWord, type, squareID, squareMap);
         };
         square.addEventListener("click", listener);
         squareClickListeners.get(selectedWord)[squareID] = listener;
         } else {
         console.warn(`Square with ID ${squareID} not found.`);
       }
-
     });
-        
     console.groupEnd();
   }
 
@@ -87,29 +89,29 @@ export function interactionManager(globals) {
     console.info("Start squareID Clicked, endPoint:",interactionState.getEndPointFlag());
   }
 
-  function handleEndSquareClick(interactionState, squareID, selectedWord, squareFrame) {
+  function handleEndSquareClick(placedWordData, interactionState, squareID, selectedWord, squareFrame) {
     if (squareID === interactionState.getEndPointFlag()) { 
       console.warn("BINGOOOOO!!!!");
-      const squaresToFill = interactionState.getWordSquareIDs(selectedWord);
+      const squaresToFill = placedWordData.getWordSquareIDs(selectedWord);
       highlightCompletedWord(squaresToFill);
       markCompletedWord(selectedWord);
-      handleGameCompletion(selectedWord, squareFrame);
+      handleGameCompletion(placedWordData, selectedWord, squareFrame);
       removeClickListener(selectedWord);
     }
   }
 
-  function handlesSquareClick(selectedWord, type, squareID, squareMap) {
+  function handleSquareClick(selectedWord, type, squareID, squareMap) {
     if (type === "start") { 
       handleStartSquareClick(interactionState, squareMap);
     }
     if (type === "end") {
-      handleEndSquareClick(interactionState, squareID, selectedWord, squareFrame);
+      handleEndSquareClick(placedWordData, interactionState, squareID, selectedWord, squareFrame);
     }
   }
 
-  function handleGameCompletion(selectedWord, squareFrame) {
-    interactionState.removeWordDetails(selectedWord);
-    if (interactionState.getWordDetailsSize() === 0) {
+  function handleGameCompletion(placedWordData, selectedWord, squareFrame) {
+    placedWordData.removeWordDetails(selectedWord);
+    if (placedWordData.getWordDetailsSize() === 0) {
       squareFrame.classList.add("dim");
     }
   }
@@ -130,12 +132,12 @@ export function interactionManager(globals) {
     }
   }
 
-  // Fill the squares with the marked class.
+  // Fill the squares with the highlight class.
   function highlightCompletedWord(squares) {
-    squares.map(square => {
+    squares.forEach(square => {
       const squareID = `#${square}`;
       document.querySelector(squareID).classList.add("highlight");
-    })
+    });
   }
 
   function markCompletedWord(id) {
@@ -145,7 +147,6 @@ export function interactionManager(globals) {
   }
 
   return {
-    interactionState,
     addClickListener,
   }
 }
