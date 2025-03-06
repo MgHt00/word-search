@@ -1,11 +1,9 @@
-export function fillingManager(globals, helpers, interactionMgr) {
+export function fillingManager(globals, { random }, { addClickListener }) {
   const { appData, selectors, wordPlacementData } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
 
   const { squareIdToChar, placedWordCoordinates } = wordPlacementData;
-
-  const { addClickListener } = interactionMgr;
 
   function fill(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
     let wordsArray = [...words];
@@ -62,24 +60,22 @@ export function fillingManager(globals, helpers, interactionMgr) {
         placedWordCoordinates,
       });
     }
-  
-    // Helper functions
-    function printCharOnScreen(squareID, char) {
-      document.querySelector(`#${squareID}`).textContent = char;
-    }
-  
-    function addSquareIdToChar(squareID, char, charMap) {
-      charMap.set(squareID, char);
-    }
+  }
 
-    function addPlacedWordCoordinates(word, placementData, coordinates) {
-      placedWordCoordinates.set(word, { placementData, direction: coordinates.direction });
-    }
-    // helpers end
+  function printCharOnScreen(squareID, char) {
+    document.querySelector(`#${squareID}`).textContent = char;
+  }
+
+  function addSquareIdToChar(squareID, char, charMap) {
+    charMap.set(squareID, char);
+  }
+
+  function addPlacedWordCoordinates(word, placementData, coordinates) {
+    placedWordCoordinates.set(word, { placementData, direction: coordinates.direction });
   }
   
   function selectRandomWord(wordsArray) {
-    let index = helpers.random(0, (wordsArray.length - 1));
+    let index = random(0, (wordsArray.length - 1));
     let selectedWord = wordsArray[index];
     return { index, selectedWord };
   }
@@ -99,15 +95,14 @@ export function fillingManager(globals, helpers, interactionMgr) {
   // generate new starting positons and direction
   function generateRandomCoordinates(gridDimension) {
     let direction = getRandomDirection();
-    let startingRow = helpers.random(1, gridDimension);
-    let startingCol = helpers.random(1, gridDimension);
+    let startingRow = random(1, gridDimension);
+    let startingCol = random(1, gridDimension);
 
     return { direction, startingRow, startingCol };
+  }
 
-    // helper function
-    function getRandomDirection() {
-      return directionMap.get(helpers.random(1, 8));
-    }
+  function getRandomDirection() {
+    return directionMap.get(random(1, 8));
   }
 
   // To check whether there is enough square in the calcuated direction
@@ -202,70 +197,70 @@ export function fillingManager(globals, helpers, interactionMgr) {
     let currentCol = startingCol;
 
     for (let i = 0; i < wordSpread.length; i++) {
-      let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap);
+      let charCheckOK = charCheck(currentRow, currentCol, wordSpread[i], charMap, placementData);
       if (!charCheckOK) return false;
       updateRowAndCol(offset);
     }
     return placementData;
 
-    // helper functions
-    function charCheck(row, col, char, charMap) {
-      let squareID = createSquareId(row, col);
-      let isCheckOK = isCharMatch(squareID, char, charMap);
-      if (isCheckOK) {
-        addPlacementData(squareID, char);
-        return true;
-      } else return false;
-    }
-
-    function createSquareId(row, col) {
-      return `sq-${row}-${col}`;
-    }
-
-    // Checks if a given square is compatible with a character to be placed.
-    /**
-     *
-     * A square is considered compatible if:
-     *   1. It's currently empty (no character has been placed there yet).
-     *   2. It already contains the exact same character as the one to be placed.
-     *
-     * If a square is not compatible (it contains a different character), the function logs a warning to the console.
-     *
-     * @param {string} currentSq - The ID of the square to check (e.g., "sq-3-5").
-     * @param {string} char - The character that we want to place in the square.
-     * @param {Map} charMap - The map containing the characters already placed in squares, where keys are square IDs and values are characters.
-     * @returns {boolean} - True if the square is compatible, false otherwise.
-     */
-    function isCharMatch(currentSq, char, charMap) {
-      if (!charMap.get(currentSq)) {
-        //console.log("No char in the sq. Good to go!");
-        return true;
-      }
-      else if (charMap.get(currentSq) === char) {
-        //console.log("Existing char in sq is same as incoming. Good to go!");
-        return true;
-      }
-      else {
-        console.warn({
-          oneByOneCheckFail: {
-            char,
-            currentSq,
-            storedChar: charMap.get(currentSq),
-          }
-        });
-        //console.warn("Existing char in sq is NOT same as incoming. FAIL.");
-        return false;
-      }
-    }
-
-    function addPlacementData(squareID, char) {
-      placementData[squareID] = char;  // add char to a local variable
-    }
-
+    // helper function
     function updateRowAndCol(offset) {
       currentRow += offset.row;
       currentCol += offset.col;
     }
+  }
+
+  function charCheck(row, col, char, charMap, placementData) {
+    let squareID = createSquareId(row, col);
+    let isCheckOK = isCharMatch(squareID, char, charMap, placementData);
+    if (isCheckOK) {
+      addPlacementData(placementData, squareID, char);
+      return true;
+    } else return false;
+  }
+
+  function createSquareId(row, col) {
+    return `sq-${row}-${col}`;
+  }
+
+  // Checks if a given square is compatible with a character to be placed.
+  /**
+   *
+   * A square is considered compatible if:
+   *   1. It's currently empty (no character has been placed there yet).
+   *   2. It already contains the exact same character as the one to be placed.
+   *
+   * If a square is not compatible (it contains a different character), the function logs a warning to the console.
+   *
+   * @param {string} currentSq - The ID of the square to check (e.g., "sq-3-5").
+   * @param {string} char - The character that we want to place in the square.
+   * @param {Map} charMap - The map containing the characters already placed in squares, where keys are square IDs and values are characters.
+   * @returns {boolean} - True if the square is compatible, false otherwise.
+   */
+  function isCharMatch(currentSq, char, charMap) {
+    if (!charMap.get(currentSq)) {
+      //console.log("No char in the sq. Good to go!");
+      return true;
+    }
+    else if (charMap.get(currentSq) === char) {
+      //console.log("Existing char in sq is same as incoming. Good to go!");
+      return true;
+    }
+    else {
+      console.warn({
+        oneByOneCheckFail: {
+          char,
+          currentSq,
+          storedChar: charMap.get(currentSq),
+        }
+      });
+      //console.warn("Existing char in sq is NOT same as incoming. FAIL.");
+      return false;
+    }
+  }
+
+  function addPlacementData(placementData, squareID, char) {
+    placementData[squareID] = char;  // add char to a local variable
   }
 
   // To list the words underneath the square frame
