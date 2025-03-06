@@ -1,15 +1,11 @@
-export function fillingManager(globals, utilsManager, interactionMgr) {
-  const { appData, selectors } =  globals;
+export function fillingManager(globals, helpers, interactionMgr) {
+  const { appData, selectors, wordPlacementData } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
-  const { helpers } = utilsManager;
-
-  const wordPlacementData = {
-    squareIdToChar: new Map(), // Maps square numbers to characters.
-    placedWordCoordinates: new Map(),
-  };
 
   const { squareIdToChar, placedWordCoordinates } = wordPlacementData;
+
+  const { addClickListener } = interactionMgr;
 
   function fill(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
     let wordsArray = [...words];
@@ -38,13 +34,12 @@ export function fillingManager(globals, utilsManager, interactionMgr) {
         console.info({ PROCEEDING: { selectedWord, hasEnoughSpace, placementData } });
   
         const entries = Object.entries(placementData);
-        const firstIndex = 0;
-        const lastIndex = entries.length - 1;
         const currentWordSquareIDs = entries.map(([squareID]) => squareID);
         const wordData = { selectedWord, currentWordSquareIDs };
-        interactionMgr.addClickListener(wordData);
+        
+        addClickListener(wordData);
 
-        entries.forEach(([squareID, char], i) => {
+        entries.forEach(([squareID, char]) => {
           printCharOnScreen(squareID, char);
           addSquareIdToChar(squareID, char, squareIdToChar);
         });
