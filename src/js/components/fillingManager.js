@@ -1,4 +1,4 @@
-export function fillingManager(globals, { random }, { addClickListener }) {
+export function fillingManager(globals, { random }, { addClickListener }, { checkLeft, checkRight, checkTop, checkBelow, isWithinBounds }) {
   const { appData, selectors, wordPlacementData } =  globals;
   const { gridSize } = appData;
   const { sectionWordList } =  selectors;
@@ -8,7 +8,7 @@ export function fillingManager(globals, { random }, { addClickListener }) {
   function fill(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
     let wordsArray = [...words];
     let wordsRemaining = noOfWordsToDisplay;
-    let maxOverallAttempts = 20; // Limit overall retries to prevent infinite loops
+    let maxOverallAttempts = 20; // [Default = 20]Limit overall retries to prevent infinite loops
   
     if (overallAttempts >= maxOverallAttempts) {
       console.warn(`Max overallAttempts reached. Unable to place ${wordsRemaining} word(s).`);
@@ -19,7 +19,7 @@ export function fillingManager(globals, { random }, { addClickListener }) {
   
     let { index, selectedWord } = selectRandomWord(wordsArray);
     let singleWordRetries = 0;     
-    let maxSingleWordRetries = 30; // If a word fails placement 30 times, move to the next word
+    let maxSingleWordRetries = 30; // [Default = 30] If a word fails placement 30 times, move to the next word
   
     while (singleWordRetries < maxSingleWordRetries) {
       singleWordRetries++;
@@ -108,52 +108,28 @@ export function fillingManager(globals, { random }, { addClickListener }) {
   // To check whether there is enough square in the calcuated direction
   function hasEnoughSq(randomCoordinates, selectedWord, gridDimension) {
     const { direction, startingRow, startingCol } = randomCoordinates;
-    let wordSpread = [...selectedWord];
-    let maxRow = gridDimension;
-    let maxCol = gridDimension;
+    const checkParameters = {
+      startingRow, 
+      startingCol, 
+      wordSpread: [...selectedWord], 
+      gridDimension, 
+    }
 
     const directionChecks = new Map([
-      [ "north", () => { return checkTop() } ],
-      [ "north-east", () => { return checkTop() && checkRight() }],
-      [ "east", () => { return checkRight() }],
-      [ "south-east",() => { return checkBelow() && checkRight() } ],
-      [ "south", () => { return checkBelow() } ],
-      [ "south-west", () => { return checkBelow() && checkLeft()} ],
-      [ "west", () => { return checkLeft()} ],
-      [ "north-west", () => { return checkTop() && checkLeft()} ],
+      [ "north", () => { return checkTop(checkParameters) } ],
+      [ "north-east", () => { return checkTop(checkParameters) && checkRight(checkParameters) }],
+      [ "east", () => { return checkRight(checkParameters) }],
+      [ "south-east",() => { return checkBelow(checkParameters) && checkRight(checkParameters) } ],
+      [ "south", () => { return checkBelow(checkParameters) } ],
+      [ "south-west", () => { return checkBelow(checkParameters) && checkLeft(checkParameters)} ],
+      [ "west", () => { return checkLeft(checkParameters)} ],
+      [ "north-west", () => { return checkTop(checkParameters) && checkLeft(checkParameters)} ],
     ]);
 
     const checkFunction = directionChecks.get(direction);
     if (checkFunction) {
       return checkFunction();
     } else console.warn(`Direction check failed for direction: ${direction}`);
-
-    // helper functions
-    function checkRight() {
-      // check le2.MD for the logic behind the adjustments
-      if (!isWithinBounds(startingRow, startingCol + (wordSpread.length - 1))) return false;
-      return true; 
-    }
-
-    function checkLeft() {
-      if (!isWithinBounds(startingRow, startingCol - (wordSpread.length - 1))) return false;
-      return true;
-    }
-
-    function checkTop() {
-      if (!(isWithinBounds(startingRow - (wordSpread.length - 1), startingCol))) return false;
-      return true;
-    }
-
-    function checkBelow() {
-      if (!(isWithinBounds(startingRow + wordSpread.length - 1, startingCol))) return false;
-      return true;
-    }
-
-    // Boundary check function
-    function isWithinBounds(startingRow, startingCol) {
-      return startingRow > 0 && startingRow <= maxRow && startingCol > 0 && startingCol <= maxCol;
-    }
   }
 
   // Data for compareExistingChar()

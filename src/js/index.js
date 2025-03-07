@@ -3,6 +3,9 @@ const { appData, selectors } = globals;
 
 import { helpers } from "./utils/helpers.js";
 
+import { gridHelpers } from "./utils/gridHelpers.js";
+const { checkTop, checkBelow, checkRight, checkLeft, isWithinBounds } = gridHelpers();
+
 import { layoutManager } from "./components/layoutManager.js";
 const layoutMgr = layoutManager(globals);
 
@@ -35,6 +38,13 @@ const fillingMgr = fillingManager(
   globals,
   { random: helpers.random },
   { addClickListener },
+  { 
+    checkLeft,
+    checkRight,
+    checkTop,
+    checkBelow,
+    isWithinBounds,
+  },
 );
 
 (function initialize() {
