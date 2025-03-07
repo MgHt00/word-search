@@ -1,16 +1,35 @@
 import { globals } from "./services/globals.js";
 const { appData, selectors } = globals;
 
-import { componentsManager } from "./components/componentsManager.js";
-const { layoutManager, fillingManager, interactionManager } = componentsManager;
+import { helpers } from "./utils/helpers.js";
 
-import { utilsManager } from "./utils/utilsManager.js";
-const { helpers } = utilsManager;
-
+import { layoutManager } from "./components/layoutManager.js";
 const layoutMgr = layoutManager(globals);
 
-const interactionMgr = interactionManager(globals);
-const { addClickListener } = interactionMgr;
+import { interactionManager } from "./components/interactionManager.js";
+const { addClickListener } = interactionManager(globals);
+
+import { fillingManager } from "./components/fillingManager.js";
+/*const fillingMgr = fillingManager(
+  globals,
+  { random: helpers.random },
+  { addClickListener },
+  {
+    checkTop,
+    checkBelow,
+    checkRight,
+    checkLeft,
+    isWithinBounds
+  },
+  {
+    charCheck,
+    createSquareId,
+    isCharMatch,
+    addPlacementData,
+    updateRowAndCol
+  },
+  { createUL }
+);*/
 
 const fillingMgr = fillingManager(
   globals,
