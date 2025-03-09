@@ -1,14 +1,27 @@
 import { globals } from "./services/globals.js";
-const {appData, currentStatus, selectors} = globals;
+const { appData, selectors } = globals;
 
-import { componentsManager } from "./components/componentsManager.js";
-const { layoutManager, fillingManager, interactionManager } = componentsManager;
+import { random } from "./utils/mathHelpers.js";
+import { hasEnoughSq } from "./utils/gridHelpers.js";
+import { compareExistingChar } from "./utils/placementHelpers.js"; 
+import { createUL } from "./utils/domHelpers.js";
 
-import { utilsManager } from "./utils/utilsManager.js";
-
+import { layoutManager } from "./components/layoutManager.js";
 const layoutMgr = layoutManager(globals);
-const interactionMgr = interactionManager(globals);
-const fillingMgr = fillingManager(globals, utilsManager, interactionMgr);
+
+import { interactionManager } from "./components/interactionManager.js";
+const { addClickListener } = interactionManager(globals);
+
+import { fillingManager } from "./components/fillingManager.js";
+
+const fillingMgr = fillingManager(
+  globals,
+  { random },
+  { addClickListener },
+  { hasEnoughSq },
+  { compareExistingChar },
+  { createUL }
+);
 
 (function initialize() {
   layoutMgr.generateSqs();
