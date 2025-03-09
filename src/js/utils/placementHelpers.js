@@ -1,5 +1,5 @@
 // No more export here!
-const directionOffsets = new Map([
+const _directionOffsets = new Map([
   ["north", { row: -1, col: 0 }],
   ["north-east", { row: -1, col: 1 }],
   ["east", { row: 0, col: 1 }],
@@ -64,7 +64,7 @@ function placementHelpers() {
       console.info("selectedWord:", selectedWord);
 
       let { direction, startingRow, startingCol } = randomCoordinates;
-      let offset = directionOffsets.get(direction);
+      let offset = _directionOffsets.get(direction);
       let wordSpread = [...selectedWord];
       let placementData = {}; // to store squareID : char
 
