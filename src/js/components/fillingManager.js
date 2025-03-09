@@ -19,6 +19,11 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
 
   function _printCharOnScreen(squareID, char) {
     document.querySelector(`#${squareID}`).textContent = char;
+    document.querySelector(`#${squareID}`).classList.add("temp-identifier"); // remove this when stable
+  }
+
+  function _printCharOnScreenDUMMY(squareID, char) { // remove this function when stable
+    document.querySelector(`#${squareID}`).textContent = char;
   }
 
   function _addSquareIdToChar(squareID, char, charMap) {
@@ -59,9 +64,32 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
     wordList.appendChild(ulElement);
   }
 
+  function _toUpperCases(words) {
+    return words.map((word) => word.toUpperCase());
+  }
+
+  function _toLowerCases(selectedWord){
+    return selectedWord.toLowerCase();
+  }
+
+  // Function to fill remaining squares with dummy characters
+  function _fillRemainingSquares() {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const allSquares = document.querySelectorAll('[class|="sq"]');
+    allSquares.forEach((square) => {
+      const squareID = square.id;
+      if (!squareIdToChar.has(squareID)) {
+        const randomChar = alphabet[random(0, alphabet.length - 1)];
+        //_printCharOnScreen(squareID, randomChar); // use this when stable
+        _printCharOnScreenDUMMY(squareID, randomChar); // remove this when stable
+      }
+    });
+  }
+
   function fillingMgr() {
-    function _fill(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
-      let wordsArray = [...words];
+    async function _placeWords(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
+      //let wordsArray = [...words.map(word => word.toUpperCase())];
+      let wordsArray = [..._toUpperCases(words)];
       let wordsRemaining = noOfWordsToDisplay;
       let maxOverallAttempts = 20; // [Default = 20]Limit overall retries to prevent infinite loops
 
@@ -98,7 +126,7 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
           });
 
           _addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
-          _listAWord(selectedWord, sectionWordList);
+          _listAWord(_toLowerCases(selectedWord), sectionWordList);
 
           wordsArray.splice(index, 1); // Remove placed word
           wordsRemaining--;
@@ -109,7 +137,9 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
 
       if (wordsRemaining > 0) {
         console.warn(`Retrying fill... Attempt ${overallAttempts + 1}/${maxOverallAttempts}`);
-        setTimeout(() => _fill(wordsArray, wordsRemaining, overallAttempts + 1), 0); //[le4]
+        //setTimeout(() => _placeWords(wordsArray, wordsRemaining, overallAttempts + 1), 0); //[le4]
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        await _placeWords(wordsArray, wordsRemaining, overallAttempts + 1); //[le7]
       } else {
         console.info({
           placedWordCoordinates,
@@ -117,7 +147,10 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
       }
     }
     return {
-      fill : _fill,
+      fill: async (words, noOfWordsToDisplay) => {
+        await _placeWords(words, noOfWordsToDisplay);
+        _fillRemainingSquares();
+      }
     };
   }
   return fillingMgr();

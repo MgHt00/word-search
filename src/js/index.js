@@ -23,7 +23,7 @@ const fillingMgr = fillingManager(
   { createUL }
 );
 
-(function initialize() {
+(async function initialize() {
   layoutMgr.generateSqs();
   fillingMgr.fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
 })();

@@ -92,7 +92,7 @@ export function interactionManager(globals) {
       console.warn("BINGOOOOO!!!!");
       const squaresToFill = _placedWordData.getWordDetails(selectedWord, "squareIDs");
       _highlightCompletedWord(squaresToFill);
-      _markCompletedWord(selectedWord);
+      _markCompletedWord(selectedWord.toLowerCase()); // list is in lowercase, that's why.
       _handleGameCompletion(selectedWord);
       _removeClickListener(selectedWord);
     }

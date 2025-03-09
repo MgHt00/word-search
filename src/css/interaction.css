@@ -19,3 +19,7 @@
 .marked {
   text-decoration: line-through;
 }
+
+.temp-identifier {
+  color: rgb(255, 255, 255);
+}
