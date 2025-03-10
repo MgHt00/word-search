@@ -10,7 +10,7 @@ import { layoutManager } from "./components/layoutManager.js";
 const layoutMgr = layoutManager(globals);
 
 import { interactionManager } from "./components/interactionManager.js";
-const { addClickListener, addDummyClickListener } = interactionManager(globals);
+const { addClickListener, addTracerListener } = interactionManager(globals);
 
 import { fillingManager } from "./components/fillingManager.js";
 const { fill } = fillingManager(
@@ -25,5 +25,5 @@ const { fill } = fillingManager(
 (async function initialize() {
   layoutMgr.generateSqs();
   fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
-  addDummyClickListener();
+  addTracerListener();
 })();

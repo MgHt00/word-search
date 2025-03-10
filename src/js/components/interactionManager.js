@@ -4,7 +4,7 @@ export function interactionManager(globals) {
 
   // Object to manage the placed words data.
   const _placedWordData = { // private
-    _placedWordDetails: new Map(), //private
+    _placedWordDetails: new Map(), 
 
     setWordDetails(selectedWord, currentWordSquareIDs) {
       this._placedWordDetails.set(selectedWord, currentWordSquareIDs);
@@ -34,7 +34,8 @@ export function interactionManager(globals) {
 
   // Object to manage the endPoint state
   const _interactionState = { //private
-    _endPointFlag: null, //private
+    _endPointFlag: null, 
+    _tracerFlag: null,
 
     setEndPointFlag(value) {
       this._endPointFlag = value;
@@ -149,16 +150,16 @@ export function interactionManager(globals) {
   // Store a map to hold all the listener functions for dummy clicks.
   const _dummySquareClickListeners = new Map(); // private
 
-  function addDummyClickListener() {
+  function _addDummyClickListener() {
     const allDummySquares = document.querySelectorAll('[class|="sq"]');
     allDummySquares.forEach((squareDOMElement) => {
       const squareID = squareDOMElement.id;
       if(!_isWordSquare(squareID)){
         const listener = () => {
-          _handleDummySquareClick(squareDOMElement); // change this;
+          _handleDummySquareClick(squareDOMElement); 
         }
         squareDOMElement.addEventListener("click", listener);
-        _dummySquareClickListeners.set(squareID, listener);
+        //_dummySquareClickListeners.set(squareID, listener);
       }
     });
   }
@@ -174,15 +175,52 @@ export function interactionManager(globals) {
   }
 
   function _handleDummySquareClick(squareDOMElement) {
-    console.info("DUMMY", squareDOMElement);
     squareDOMElement.classList.add("tracer");
+    _interactionState._tracerFlag = true;
+
+    setTimeout(() => {
+      squareDOMElement.classList.remove("tracer");
+    }, 2000);
+
+    setTimeout(() => {
+      _interactionState._tracerFlag = false;
+    }, 5000);
+  }
+
+  function _addHoverListener() {
+    const allDummySquares = document.querySelectorAll('[class|="sq"]');
+    allDummySquares.forEach((squareDOMElement) => {
+      squareDOMElement.addEventListener("mouseover", () => { 
+        _handleSquareHover(squareDOMElement);
+      });
+      /*squareDOMElement.addEventListener("mouseleave", () => { 
+        _handleSquareLeave(squareDOMElement);
+      });*/
+    });
+  }
+
+  function _handleSquareHover(squareDOMElement) {
+    if (_interactionState._tracerFlag) {
+      squareDOMElement.classList.add("tracer");
+    }
+
     setTimeout(() => {
       squareDOMElement.classList.remove("tracer");
     }, 2000);
   }
 
+  /*function _handleSquareLeave(squareDOMElement) {
+    squareDOMElement.classList.remove("tracer");
+  }*/
+
+  function addTracerListener() {
+    _addDummyClickListener();
+    _addHoverListener();
+  }
+
+
   return {
     addClickListener,
-    addDummyClickListener,
+    addTracerListener,
   };
 }
