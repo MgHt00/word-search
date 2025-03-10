@@ -99,7 +99,9 @@ export function interactionManager(globals) {
   }
 
   function _handleSquareClick(selectedWord, type, squareID) { 
+    const square = document.querySelector(`#${squareID}`);
     if (type === "start") {
+      //square.classList.add("clicked");
       _handleStartSquareClick(selectedWord);
     }
     if (type === "end") {
@@ -134,7 +136,8 @@ export function interactionManager(globals) {
   function _highlightCompletedWord(squares) { 
     squares.forEach((square) => {
       const squareID = `#${square}`;
-      document.querySelector(squareID).classList.add("highlight");
+      document.querySelector(squareID).classList.remove("clicked");
+      //document.querySelector(squareID).classList.add("highlight");
     });
   }
 
@@ -143,7 +146,43 @@ export function interactionManager(globals) {
     foundWordElement.classList.add("dim", "marked");
   }
 
+  // Store a map to hold all the listener functions for dummy clicks.
+  const _dummySquareClickListeners = new Map(); // private
+
+  function addDummyClickListener() {
+    const allDummySquares = document.querySelectorAll('[class|="sq"]');
+    allDummySquares.forEach((squareDOMElement) => {
+      const squareID = squareDOMElement.id;
+      if(!_isWordSquare(squareID)){
+        const listener = () => {
+          _handleDummySquareClick(squareDOMElement); // change this;
+        }
+        squareDOMElement.addEventListener("click", listener);
+        _dummySquareClickListeners.set(squareID, listener);
+      }
+    });
+  }
+
+  function _isWordSquare(squareID) {
+    const listeners = _squareClickListeners.values();
+    for (const listener of listeners) {
+      if (squareID in listener) {
+        return true;
+      }
+    } 
+    return false;
+  }
+
+  function _handleDummySquareClick(squareDOMElement) {
+    console.info("DUMMY", squareDOMElement);
+    squareDOMElement.classList.add("tracer");
+    setTimeout(() => {
+      squareDOMElement.classList.remove("tracer");
+    }, 2000);
+  }
+
   return {
     addClickListener,
+    addDummyClickListener,
   };
 }

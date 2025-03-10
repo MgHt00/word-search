@@ -1,6 +1,8 @@
 :root {
+  --clicked-background: rgb(177, 177, 249);
   --highlight-background: antiquewhite;
   --highlight-color: black;
+  --traceBackground: rgb(210, 210, 210);
 }
 
 [class|=sq].highlight {
@@ -8,6 +10,10 @@
     background-color: var(--highlight-background);
     color: var(--highlight-color);
     font-weight: bold;
+}
+
+[class|=sq].clicked {
+  background-color: var(--clicked-background);
 }
 
 .dim {
@@ -22,4 +28,8 @@
 
 .temp-identifier {
   color: rgb(255, 255, 255);
+}
+
+.tracer {
+  background-color: var(--traceBackground);
 }
