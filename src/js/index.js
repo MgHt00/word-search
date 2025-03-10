@@ -13,8 +13,7 @@ import { interactionManager } from "./components/interactionManager.js";
 const { addClickListener } = interactionManager(globals);
 
 import { fillingManager } from "./components/fillingManager.js";
-
-const fillingMgr = fillingManager(
+const { fill } = fillingManager(
   globals,
   { random },
   { addClickListener },
@@ -25,5 +24,5 @@ const fillingMgr = fillingManager(
 
 (async function initialize() {
   layoutMgr.generateSqs();
-  fillingMgr.fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+  fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
 })();
