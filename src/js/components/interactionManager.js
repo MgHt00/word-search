@@ -3,8 +3,8 @@ export function interactionManager(globals) {
   const { squareFrame } = selectors;
 
   // Object to manage the placed words data.
-  const _placedWordData = { // private
-    _placedWordDetails: new Map(),
+  const _placedWordData = {
+    _placedWordDetails: new Map(), // Map<string(selectedWord), string[](currentWordSquareIDs)>
 
     setWordDetails(selectedWord, currentWordSquareIDs) {
       this._placedWordDetails.set(selectedWord, currentWordSquareIDs);
@@ -16,7 +16,7 @@ export function interactionManager(globals) {
 
     getWordDetails(selectedWord, type) {
       const squareIDs = this._placedWordDetails.get(selectedWord);
-      if (!squareIDs) return null; // return null instead of undefined.
+      if (!squareIDs) return null;
       if (type === "start") return squareIDs[0];
       if (type === "end") return squareIDs[squareIDs.length - 1];
       if (type === "squareIDs") return squareIDs;
@@ -32,10 +32,11 @@ export function interactionManager(globals) {
     },
   };
 
-  // Object to manage the endPoint state
-  const _interactionState = { //private
+  // Object to manage the interaction state
+  const _interactionState = {
     _endPointFlag: null,
-    _tracerFlag: false, 
+    _tracerFlag: false,
+    _endPointTimeout: null, // Add a timeout reference
 
     setEndPointFlag(value) {
       this._endPointFlag = value;
@@ -45,23 +46,31 @@ export function interactionManager(globals) {
       return this._endPointFlag;
     },
 
-    setTracerFlag(value){
+    setTracerFlag(value) {
       this._tracerFlag = value;
     },
 
-    getTracerFlag(){
+    getTracerFlag() {
       return this._tracerFlag;
-    }
+    },
+
+    setEndPointTimeout(timeout){
+      this._endPointTimeout = timeout;
+    },
+
+    getEndPointTimeout(){
+        return this._endPointTimeout;
+    },
   };
 
   // Object to hold all listeners
   const _listeners = {
-    _wordSquareClickListeners: new Map(), // to hold all the listed word's listener functions.
-    _dummySquareClickListeners: new Map(), // to hold all the listener functions for dummy clicks.
+    _wordSquareClickListeners: new Map(), // Map<string(selectedWord), object{string(squareID) : function}>.
+    _dummySquareClickListeners: new Map(), // Map<string(squareID), function>.
   };
 
   // Adds a click event listener to a specific square.
-  function addClickListener(placedWordDetails) { //exposed function
+  function addClickListener(placedWordDetails) {
     console.group("addClickListener()");
     const { selectedWord, currentWordSquareIDs } = placedWordDetails;
 
@@ -69,10 +78,9 @@ export function interactionManager(globals) {
     const startPoint = _placedWordData.getWordDetails(selectedWord, "start");
     const endPoint = _placedWordData.getWordDetails(selectedWord, "end");
 
-    // create an object for the selectedWord, that is going to include all the listeners in it.
     _listeners._wordSquareClickListeners.set(selectedWord, {});
 
-    const squareMap = new Map([
+    const squareMap = new Map([ //Map<string(type), string(squareID)>, where type can be 'start' or 'end'.
       ["start", startPoint],
       ["end", endPoint],
     ]);
@@ -95,24 +103,37 @@ export function interactionManager(globals) {
     _interactionState.setEndPointFlag(_placedWordData.getWordDetails(selectedWord, "end"));
     const squareDOMElement = document.querySelector(`#${squareID}`);
     squareDOMElement.classList.add("tracer");
-    _interactionState.setTracerFlag(true); // set tracerFlag to true when start square is clicked.
+    _interactionState.setTracerFlag(true);
 
+    // Clear any existing timeout before setting a new one
+    clearTimeout(_interactionState.getEndPointTimeout());
 
-    console.info(
-      "Start squareID Clicked, endPoint:",
-      _interactionState.getEndPointFlag()
-    );
+    // Set a timeout to reset _endPointFlag
+    const timeoutId = setTimeout(() => {
+      _interactionState.setEndPointFlag(null);
+      squareDOMElement.classList.remove("tracer");
+      _interactionState.setTracerFlag(false);
+      console.warn("Timeout: End point flag reset.");
+    }, 10000); // 10 seconds (adjust as needed)
+
+    _interactionState.setEndPointTimeout(timeoutId);
+
+    console.info("Start squareID Clicked, endPoint:", _interactionState.getEndPointFlag());
   }
 
   function _handleEndSquareClick(squareID, selectedWord) {
     if (squareID === _interactionState.getEndPointFlag()) {
       console.warn("BINGOOOOO!!!!");
+       // Clear timeout when the correct end square is clicked
+       clearTimeout(_interactionState.getEndPointTimeout());
       const squaresToFill = _placedWordData.getWordDetails(selectedWord, "squareIDs");
       _highlightCompletedWord(squaresToFill);
       _removeDummyClickListener(squaresToFill);
       _markCompletedWord(selectedWord.toLowerCase()); // frontend list is in lowercase, that's why.
       _handleGameCompletion(selectedWord);
       _removeClickListener(selectedWord);
+        _interactionState.setTracerFlag(false);
+        _interactionState.setEndPointFlag(null);
     }
   }
 
@@ -141,7 +162,7 @@ export function interactionManager(globals) {
           square.removeEventListener("click", listeners[squareID]);
         } else {
           console.warn(`Square with ID ${squareID} not found.`);
-          listeners[squareID] = null; // good practice to remove the listener reference.
+          listeners[squareID] = null;
         }
       });
       _listeners._wordSquareClickListeners.delete(selectedWord);
@@ -169,7 +190,7 @@ export function interactionManager(globals) {
       if (!_isWordSquare(squareID)) {
         const listener = () => {
           _handleDummySquareClick(squareID);
-        }
+        };
         squareDOMElement.addEventListener("click", listener);
         _listeners._dummySquareClickListeners.set(squareID, listener);
       }
@@ -189,7 +210,7 @@ export function interactionManager(globals) {
   function _handleDummySquareClick(squareID) {
     const squareDOMElement = document.querySelector(`#${squareID}`);
     squareDOMElement.classList.add("tracer");
-    _interactionState.setTracerFlag(true); 
+    _interactionState.setTracerFlag(true);
 
     setTimeout(() => {
       squareDOMElement.classList.remove("tracer");
@@ -210,25 +231,20 @@ export function interactionManager(globals) {
   }
 
   function _addHoverListener() {
-    // need to check the scope before adding the hover class, otherwise grid is messy all over the place.
-    // if only the hovering square is adjacent squres of the clicked squre, they will be hovered. 
-
-    // shall we set the endFlag to null with setTimeOut?
-
     const allSquares = document.querySelectorAll('[class|="sq"]');
     allSquares.forEach((squareDOMElement) => {
       squareDOMElement.addEventListener("mouseover", () => {
         _handleSquareHover(squareDOMElement);
       });
-        squareDOMElement.addEventListener("mouseout", () => {
-            squareDOMElement.classList.remove("tracer"); // Remove tracer on mouseout
-        });
+      squareDOMElement.addEventListener("mouseout", () => {
+        squareDOMElement.classList.remove("tracer");
+      });
     });
   }
 
   function _handleSquareHover(squareDOMElement) {
     if (_interactionState.getTracerFlag()) {
-        squareDOMElement.classList.add("tracer");
+      squareDOMElement.classList.add("tracer");
     }
   }
 
@@ -236,7 +252,6 @@ export function interactionManager(globals) {
     _addDummyClickListener();
     _addHoverListener();
   }
-
 
   return {
     addClickListener,
