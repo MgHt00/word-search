@@ -4,7 +4,7 @@ export function interactionManager(globals) {
 
   // Object to manage the placed words data.
   const _placedWordData = { // private
-    _placedWordDetails: new Map(), 
+    _placedWordDetails: new Map(),
 
     setWordDetails(selectedWord, currentWordSquareIDs) {
       this._placedWordDetails.set(selectedWord, currentWordSquareIDs);
@@ -34,8 +34,8 @@ export function interactionManager(globals) {
 
   // Object to manage the endPoint state
   const _interactionState = { //private
-    _endPointFlag: null, 
-    _tracerFlag: null,
+    _endPointFlag: null,
+    _tracerFlag: false, 
 
     setEndPointFlag(value) {
       this._endPointFlag = value;
@@ -44,13 +44,20 @@ export function interactionManager(globals) {
     getEndPointFlag() {
       return this._endPointFlag;
     },
+
+    setTracerFlag(value){
+      this._tracerFlag = value;
+    },
+
+    getTracerFlag(){
+      return this._tracerFlag;
+    }
   };
 
   // Object to hold all listeners
   const _listeners = {
-    _wordSquareClickListeners : new Map(), // to hold all the listed word's listener functions.
-    _dummySquareClickListeners : new Map(), // to hold all the listener functions for dummy clicks.
-    //_allSquareHoverListeners: new Map(), // to hold all the listener functions for hover.
+    _wordSquareClickListeners: new Map(), // to hold all the listed word's listener functions.
+    _dummySquareClickListeners: new Map(), // to hold all the listener functions for dummy clicks.
   };
 
   // Adds a click event listener to a specific square.
@@ -84,10 +91,12 @@ export function interactionManager(globals) {
     console.groupEnd();
   }
 
-  function _handleStartSquareClick(squareID, selectedWord) { 
-    const square = document.querySelector(`#${squareID}`);
-    square.classList.add("tracer");
-    _interactionState.setEndPointFlag(_placedWordData.getWordDetails(selectedWord,"end"));
+  function _handleStartSquareClick(squareID, selectedWord) {
+    _interactionState.setEndPointFlag(_placedWordData.getWordDetails(selectedWord, "end"));
+    const squareDOMElement = document.querySelector(`#${squareID}`);
+    squareDOMElement.classList.add("tracer");
+    _interactionState.setTracerFlag(true); // set tracerFlag to true when start square is clicked.
+
 
     console.info(
       "Start squareID Clicked, endPoint:",
@@ -95,19 +104,19 @@ export function interactionManager(globals) {
     );
   }
 
-  function _handleEndSquareClick(squareID, selectedWord) { 
+  function _handleEndSquareClick(squareID, selectedWord) {
     if (squareID === _interactionState.getEndPointFlag()) {
       console.warn("BINGOOOOO!!!!");
       const squaresToFill = _placedWordData.getWordDetails(selectedWord, "squareIDs");
       _highlightCompletedWord(squaresToFill);
       _removeDummyClickListener(squaresToFill);
-      _markCompletedWord(selectedWord.toLowerCase()); // list is in lowercase, that's why.
+      _markCompletedWord(selectedWord.toLowerCase()); // frontend list is in lowercase, that's why.
       _handleGameCompletion(selectedWord);
       _removeClickListener(selectedWord);
     }
   }
 
-  function _handleSquareClick(selectedWord, type, squareID) { 
+  function _handleSquareClick(selectedWord, type, squareID) {
     if (type === "start") {
       _handleStartSquareClick(squareID, selectedWord);
     }
@@ -116,14 +125,14 @@ export function interactionManager(globals) {
     }
   }
 
-  function _handleGameCompletion(selectedWord) { 
+  function _handleGameCompletion(selectedWord) {
     _placedWordData.removeWordDetails(selectedWord);
     if (_placedWordData.getWordDetailsSize() === 0) {
       squareFrame.classList.add("dim");
     }
   }
 
-  function _removeClickListener(selectedWord) { 
+  function _removeClickListener(selectedWord) {
     const listeners = _listeners._wordSquareClickListeners.get(selectedWord);
     if (listeners) {
       Object.keys(listeners).forEach((squareID) => {
@@ -140,7 +149,7 @@ export function interactionManager(globals) {
   }
 
   // Fill the squares with the highlight class.
-  function _highlightCompletedWord(squares) { 
+  function _highlightCompletedWord(squares) {
     squares.forEach((square) => {
       const squareID = `#${square}`;
       document.querySelector(squareID).classList.remove("clicked");
@@ -148,7 +157,7 @@ export function interactionManager(globals) {
     });
   }
 
-  function _markCompletedWord(id) { 
+  function _markCompletedWord(id) {
     const foundWordElement = document.querySelector(`#${id}`);
     foundWordElement.classList.add("dim", "marked");
   }
@@ -157,9 +166,9 @@ export function interactionManager(globals) {
     const allDummySquares = document.querySelectorAll('[class|="sq"]');
     allDummySquares.forEach((squareDOMElement) => {
       const squareID = squareDOMElement.id;
-      if(!_isWordSquare(squareID)){
+      if (!_isWordSquare(squareID)) {
         const listener = () => {
-          _handleDummySquareClick(squareID); 
+          _handleDummySquareClick(squareID);
         }
         squareDOMElement.addEventListener("click", listener);
         _listeners._dummySquareClickListeners.set(squareID, listener);
@@ -173,22 +182,19 @@ export function interactionManager(globals) {
       if (squareID in listener) {
         return true;
       }
-    } 
+    }
     return false;
   }
 
   function _handleDummySquareClick(squareID) {
     const squareDOMElement = document.querySelector(`#${squareID}`);
     squareDOMElement.classList.add("tracer");
-    _interactionState._tracerFlag = true;
+    _interactionState.setTracerFlag(true); 
 
     setTimeout(() => {
       squareDOMElement.classList.remove("tracer");
+      _interactionState.setTracerFlag(false);
     }, 2000);
-
-    setTimeout(() => {
-      _interactionState._tracerFlag = false;
-    }, 5000);
   }
 
   // This function removes dummy click listeners from the given square elements.
@@ -209,24 +215,21 @@ export function interactionManager(globals) {
 
     // shall we set the endFlag to null with setTimeOut?
 
-    // Bug, at the initial, when the correct word's start squre is clicked, the tracer class revoke immediately. 
-
-    const allDummySquares = document.querySelectorAll('[class|="sq"]');
-    allDummySquares.forEach((squareDOMElement) => {
-      squareDOMElement.addEventListener("mouseover", () => { 
+    const allSquares = document.querySelectorAll('[class|="sq"]');
+    allSquares.forEach((squareDOMElement) => {
+      squareDOMElement.addEventListener("mouseover", () => {
         _handleSquareHover(squareDOMElement);
       });
+        squareDOMElement.addEventListener("mouseout", () => {
+            squareDOMElement.classList.remove("tracer"); // Remove tracer on mouseout
+        });
     });
   }
 
   function _handleSquareHover(squareDOMElement) {
-    if (_interactionState._tracerFlag) {
-      squareDOMElement.classList.add("tracer");
+    if (_interactionState.getTracerFlag()) {
+        squareDOMElement.classList.add("tracer");
     }
-
-    setTimeout(() => {
-      squareDOMElement.classList.remove("tracer");
-    }, 500);
   }
 
   function addTracerListener() {
@@ -236,7 +239,7 @@ export function interactionManager(globals) {
 
 
   return {
-    addClickListener,  
+    addClickListener,
     addTracerListener,
   };
 }
