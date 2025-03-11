@@ -50,7 +50,7 @@ export function interactionManager(globals) {
   const _listeners = {
     _wordSquareClickListeners : new Map(), // to hold all the listed word's listener functions.
     _dummySquareClickListeners : new Map(), // to hold all the listener functions for dummy clicks.
-    _allSquareHoverListeners: new Map(), // to hold all the listener functions for hover.
+    //_allSquareHoverListeners: new Map(), // to hold all the listener functions for hover.
   };
 
   // Adds a click event listener to a specific square.
@@ -204,14 +204,18 @@ export function interactionManager(globals) {
   }
 
   function _addHoverListener() {
+    // need to check the scope before adding the hover class, otherwise grid is messy all over the place.
+    // if only the hovering square is adjacent squres of the clicked squre, they will be hovered. 
+
+    // shall we set the endFlag to null with setTimeOut?
+
+    // Bug, at the initial, when the correct word's start squre is clicked, the tracer class revoke immediately. 
+
     const allDummySquares = document.querySelectorAll('[class|="sq"]');
     allDummySquares.forEach((squareDOMElement) => {
       squareDOMElement.addEventListener("mouseover", () => { 
         _handleSquareHover(squareDOMElement);
       });
-      /*squareDOMElement.addEventListener("mouseleave", () => { 
-        _handleSquareLeave(squareDOMElement);
-      });*/
     });
   }
 
@@ -222,12 +226,8 @@ export function interactionManager(globals) {
 
     setTimeout(() => {
       squareDOMElement.classList.remove("tracer");
-    }, 2000);
+    }, 500);
   }
-
-  /*function _handleSquareLeave(squareDOMElement) {
-    squareDOMElement.classList.remove("tracer");
-  }*/
 
   function addTracerListener() {
     _addDummyClickListener();
