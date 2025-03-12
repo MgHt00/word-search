@@ -1,4 +1,4 @@
-import { globals } from "../services/globals";
+//import { globals } from "../services/globals";
 
 export function interactionManager(globals) {
   const { appData } = globals; 
@@ -255,7 +255,7 @@ export function interactionManager(globals) {
   }
 
   function _handleSquareHover(squareDOMElement) {
-    //_scopeMgr._getSurroundingScrope(squareDOMElement.id);
+    _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
     if (_interactionState.getTracerFlag()) {
       squareDOMElement.classList.add("tracer");
     }
@@ -272,7 +272,7 @@ export function interactionManager(globals) {
   };
 }
 
-//const _scopeMgr = _scopeFinder();
+const _scopeMgr = _scopeFinder();
 
 function _scopeFinder() {
   const _hoverScope = new Set();
@@ -327,10 +327,11 @@ function _scopeFinder() {
     // checking top right, bottom right
       _hoverScope.add(`sq-${_reduceNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
       _hoverScope.add(`sq-${_increaseNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
+
+    //console.info(_hoverScope);
   }
   
-  function _getSurroundingScrope(squareID) {
-    const gridSize = appData.gridSize;
+  function _getSurroundingScrope(squareID, gridSize) {
     const { rowNumber, columnNumber } = extractNumbers(squareID);
     _constructScope({ rowNumber, columnNumber, gridSize });
   } 
