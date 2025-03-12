@@ -81,7 +81,8 @@ export function interactionManager(globals) {
 
     _listeners._wordSquareClickListeners.set(selectedWord, {});
 
-    const squareMap = new Map([ //Map<string(type), string(squareID)>, where type can be 'start' or 'end'.
+    const squareMap = new Map([ 
+      //Map<string(type), string(squareID)>, where type can be 'start' or 'end'.
       ["start", startPoint],
       ["end", endPoint],
     ]);
@@ -102,8 +103,7 @@ export function interactionManager(globals) {
 
   function _handleStartSquareClick(squareID, selectedWord) {
     _interactionState.setEndPointFlag(_placedWordData.getWordDetails(selectedWord, "end"));
-    /*const squareDOMElement = document.querySelector(`#${squareID}`);
-    squareDOMElement.classList.add("tracer");*/
+    const squareDOMElement = document.querySelector(`#${squareID}`);
     _interactionState.setTracerFlag(true);
 
     // Clear any existing timeout before setting a new one
@@ -214,11 +214,9 @@ export function interactionManager(globals) {
     const squareDOMElement = document.querySelector(`#${squareID}`);
     squareDOMElement.classList.add("tracer");
     _interactionState.setTracerFlag(true);
-    _getSurroundingScrope(squareID);
 
     setTimeout(() => {
       _interactionState.setTracerFlag(false);
-      //squareDOMElement.classList.remove("tracer");
       _resetAllSquares();
     }, 3000); // default 2000
   }
@@ -248,11 +246,7 @@ export function interactionManager(globals) {
       squareDOMElement.addEventListener("mouseover", () => {
         _handleSquareHover(squareDOMElement);
       });
-      /*squareDOMElement.addEventListener("mouseout", () => {
-        squareDOMElement.classList.remove("tracer");
-      });*/
       setTimeout(() => {
-        //squareDOMElement.classList.remove("tracer");
         _resetAllSquares();
       }, 5000); // default 2000
     });
@@ -261,7 +255,6 @@ export function interactionManager(globals) {
   function _handleSquareHover(squareDOMElement) {
     if (_interactionState.getTracerFlag()) {
       squareDOMElement.classList.add("tracer");
-      _getSurroundingScrope(squareDOMElement.id);
     }
   }
 
