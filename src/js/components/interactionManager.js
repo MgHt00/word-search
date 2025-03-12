@@ -213,11 +213,12 @@ export function interactionManager(globals) {
     const squareDOMElement = document.querySelector(`#${squareID}`);
     squareDOMElement.classList.add("tracer");
     _interactionState.setTracerFlag(true);
+    _getSurroundingScrope(squareID);
 
     setTimeout(() => {
       squareDOMElement.classList.remove("tracer");
       _interactionState.setTracerFlag(false);
-    }, 2000);
+    }, 5000); // default 2000
   }
 
   // This function removes dummy click listeners from the given square elements.
@@ -284,7 +285,6 @@ export function interactionManager(globals) {
 
   function _constructScope(gridData) {
     const { rowNumber, columnNumber, gridSize } = gridData; 
-    console.info({rowNumber, columnNumber});
     _interactionState._hoverScope.clear();
 
     // checking left and right
@@ -308,8 +308,11 @@ export function interactionManager(globals) {
     const gridSize = appData.gridSize;
     const { rowNumber, columnNumber } = extractNumbers(squareID);
     _constructScope({ rowNumber, columnNumber, gridSize });
-    console.info(_interactionState._hoverScope);
   } 
+
+  function _isWithinHoverScope(squareID) {
+    return _interactionState._hoverScope.has(squareID);
+  }
 
   function addTracerListener() {
     _addDummyClickListener();
