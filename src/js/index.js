@@ -9,8 +9,15 @@ import { createUL } from "./utils/domHelpers.js";
 import { layoutManager } from "./components/layoutManager.js";
 const layoutMgr = layoutManager(globals);
 
+import { scopeFinder } from "./components/scopeFinder.js";
+const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
+
 import { interactionManager } from "./components/interactionManager.js";
-const { addClickListener, addTracerListener } = interactionManager(globals);
+const { addClickListener, addTracerListener } = interactionManager(
+  globals,
+  { getSurroundingScope },
+  { isWithinHoverScope }
+);
 
 import { fillingManager } from "./components/fillingManager.js";
 const { fill } = fillingManager(
