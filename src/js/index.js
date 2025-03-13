@@ -3,11 +3,14 @@ const { appData, selectors } = globals;
 
 import { random } from "./utils/mathHelpers.js";
 import { hasEnoughSq } from "./utils/gridHelpers.js";
-import { compareExistingChar } from "./utils/placementHelpers.js"; 
+import { compareExistingChar } from "./utils/placementHelpers.js";
 import { createUL } from "./utils/domHelpers.js";
 
 import { layoutManager } from "./components/layoutManager.js";
-const layoutMgr = layoutManager(globals);
+const { generateSqs } = layoutManager(globals);
+
+import { loadingManager } from "./components/loadingManager.js";
+const { freeze, unfreeze } = loadingManager(selectors);
 
 import { scopeFinder } from "./components/scopeFinder.js";
 const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
@@ -30,7 +33,9 @@ const { fill } = fillingManager(
 );
 
 (async function initialize() {
-  layoutMgr.generateSqs();
-  fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+  freeze(); // Freeze before loading the squares.
+  generateSqs();
+  await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // await for fill function to complete.
+  unfreeze(); // unfreeze when the fill is complete.
   addTracerListener();
 })();

@@ -5,6 +5,7 @@ const appData = {
 }
 
 const selectors = {
+  body : document.querySelector("body"),
   squareFrame : document.querySelector("#square-frame"),
   sectionWordList : document.querySelector("#section-word-list"),
 }
