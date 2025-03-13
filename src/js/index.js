@@ -9,12 +9,18 @@ import { createUL } from "./utils/domHelpers.js";
 import { layoutManager } from "./components/layoutManager.js";
 const layoutMgr = layoutManager(globals);
 
+import { scopeFinder } from "./components/scopeFinder.js";
+const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
+
 import { interactionManager } from "./components/interactionManager.js";
-const { addClickListener } = interactionManager(globals);
+const { addClickListener, addTracerListener } = interactionManager(
+  globals,
+  { getSurroundingScope },
+  { isWithinHoverScope }
+);
 
 import { fillingManager } from "./components/fillingManager.js";
-
-const fillingMgr = fillingManager(
+const { fill } = fillingManager(
   globals,
   { random },
   { addClickListener },
@@ -25,5 +31,6 @@ const fillingMgr = fillingManager(
 
 (async function initialize() {
   layoutMgr.generateSqs();
-  fillingMgr.fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+  fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+  addTracerListener();
 })();

@@ -1,2 +1,3 @@
 *.code*
 *bug*.js
+*_temp*.js

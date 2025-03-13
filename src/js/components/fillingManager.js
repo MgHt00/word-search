@@ -6,7 +6,7 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
   const { squareIdToChar, placedWordCoordinates } = wordPlacementData;
 
   // Data for generateRandomCoordinates()
-  const _directionMap = new Map([
+  const _directionMap = new Map([ //Map<number, string(direction)>.
     [1, "north"],
     [2, "north-east"],
     [3, "east"],
