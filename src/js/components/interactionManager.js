@@ -1,7 +1,7 @@
 //import { globals } from "../services/globals";
 
 export function interactionManager(globals) {
-  const { appData } = globals; 
+  const { appData } = globals;
   const { selectors } = globals;
   const { squareFrame } = selectors;
 
@@ -58,12 +58,12 @@ export function interactionManager(globals) {
       return this._tracerFlag;
     },
 
-    setEndPointTimeout(timeout){
+    setEndPointTimeout(timeout) {
       this._endPointTimeout = timeout;
     },
 
-    getEndPointTimeout(){
-        return this._endPointTimeout;
+    getEndPointTimeout() {
+      return this._endPointTimeout;
     },
 
     setHoverTimeout(timeout) {
@@ -92,7 +92,7 @@ export function interactionManager(globals) {
 
     _listeners._wordSquareClickListeners.set(selectedWord, {});
 
-    const squareMap = new Map([ 
+    const squareMap = new Map([
       //Map<string(type), string(squareID)>, where type can be 'start' or 'end'.
       ["start", startPoint],
       ["end", endPoint],
@@ -119,9 +119,6 @@ export function interactionManager(globals) {
     // Clear any existing timeout before setting a new one
     clearTimeout(_interactionState.getEndPointTimeout());
 
-    const squareDOMElement = document.querySelector(`#${squareID}`);
-    squareDOMElement.classList.add("tracer"); 
-
     // Set a timeout to reset _endPointFlag
     const timeoutId = setTimeout(() => {
       _interactionState.setEndPointFlag(null);
@@ -137,22 +134,24 @@ export function interactionManager(globals) {
   function _handleEndSquareClick(squareID, selectedWord) {
     if (squareID === _interactionState.getEndPointFlag()) {
       console.warn("BINGOOOOO!!!!");
-       // Clear timeout when the correct end square is clicked
-       clearTimeout(_interactionState.getEndPointTimeout());
+      const squareDOMElement = document.querySelector(`#${squareID}`); // <---- Add this line
+      squareDOMElement.classList.add("tracer"); // <---- Add this line
+      // Clear timeout when the correct end square is clicked
+      clearTimeout(_interactionState.getEndPointTimeout());
       const squaresToFill = _placedWordData.getWordDetails(selectedWord, "squareIDs");
       _highlightCompletedWord(squaresToFill);
       _removeDummyClickListener(squaresToFill);
       _markCompletedWord(selectedWord.toLowerCase()); // frontend list is in lowercase, that's why.
       _handleGameCompletion(selectedWord);
       _removeClickListener(selectedWord);
-        _interactionState.setTracerFlag(false);
-        _interactionState.setEndPointFlag(null);
+      _interactionState.setTracerFlag(false);
+      _interactionState.setEndPointFlag(null);
     }
   }
 
   function _handleSquareClick(selectedWord, type, squareID) {
-    const squareDOMElement = document.querySelector(`#${squareID}`);
-    squareDOMElement.classList.add("tracer");
+    const squareDOMElement = document.querySelector(`#${squareID}`); // <---- Add this line
+    squareDOMElement.classList.add("tracer"); // <---- Add this line
     if (type === "start") {
       _handleStartSquareClick(squareID, selectedWord);
     }
@@ -223,27 +222,23 @@ export function interactionManager(globals) {
   }
 
   function _handleDummySquareClick(squareID) {
-    clearTimeout(_interactionState.getEndPointTimeout()); 
-    clearTimeout(_interactionState._hoverTimeout); 
+    clearTimeout(_interactionState.getEndPointTimeout());
+    clearTimeout(_interactionState.getHoverTimeout());
 
     const squareDOMElement = document.querySelector(`#${squareID}`);
     squareDOMElement.classList.add("tracer");
     _interactionState.setTracerFlag(true);
     _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
-    
-    _interactionState.setHoverTimeout(setTimeout(() => {
-      _resetAllSquares();
-    }, 5000)); // default 5000
 
-    /*setTimeout(() => {
-      //_interactionState.setTracerFlag(false);
-      _resetAllSquares();
-    }, 5000); // default 2000*/
-    
+    _interactionState.setHoverTimeout(
+      setTimeout(() => {
+        _resetAllSquares();
+      }, 5000)
+    );
   }
 
   function _resetAllSquares() {
-    clearTimeout(_interactionState.getEndPointTimeout()); 
+    clearTimeout(_interactionState.getEndPointTimeout());
     clearTimeout(_interactionState.getHoverTimeout());
 
     const allSquares = document.querySelectorAll('[class|="sq"]');
@@ -283,12 +278,12 @@ export function interactionManager(globals) {
       squareDOMElement.classList.add("tracer");
       _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
     }
-    setTimeout(() => {
+    /*setTimeout(() => { //Remove the timer here
       _resetAllSquares();
-    }, 5000); // default 2000
+    }, 5000); // default 2000*/
   }
 
-  function _addEscapeListener(){
+  function _addEscapeListener() {
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" || event.key === "Esc") {
         _resetAllSquares();
@@ -314,9 +309,9 @@ function _scopeFinder() {
   const _hoverScope = new Set();
 
   function extractNumbers(squareIdString) {
-    const regex = /^sq-(\d+)-(\d+)$/; // [le7]Regular expression to match the pattern 
+    const regex = /^sq-(\d+)-(\d+)$/; // [le7]Regular expression to match the pattern
     const match = squareIdString.match(regex);
-  
+
     if (match) {
       const rowNumber = parseInt(match[1], 10); // Extract and parse the first number
       const columnNumber = parseInt(match[2], 10); // Extract and parse the second number
@@ -325,54 +320,54 @@ function _scopeFinder() {
       return null; // Return null if the string doesn't match the pattern
     }
   }
-  
+
   function _isWithinGrid(number, gridSize) {
     return number > 0 && number <= gridSize;
   }
-  
+
   function _reduceNumber(number, gridSize) {
-    if (_isWithinGrid(number-1, gridSize)) {
+    if (_isWithinGrid(number - 1, gridSize)) {
       return number - 1;
     }
     return number;
   }
-  
+
   function _increaseNumber(number, gridSize) {
-    if (_isWithinGrid(number+1, gridSize)) {
+    if (_isWithinGrid(number + 1, gridSize)) {
       return number + 1;
     }
     return number;
   }
-  
+
   function _constructScope(gridData) {
-    const { rowNumber, columnNumber, gridSize } = gridData; 
+    const { rowNumber, columnNumber, gridSize } = gridData;
     _hoverScope.clear();
-  
+
     // checking left and right
-      _hoverScope.add(`sq-${rowNumber}-${_reduceNumber(columnNumber, gridSize)}`);
-      _hoverScope.add(`sq-${rowNumber}-${_increaseNumber(columnNumber, gridSize)}`);
-  
+    _hoverScope.add(`sq-${rowNumber}-${_reduceNumber(columnNumber, gridSize)}`);
+    _hoverScope.add(`sq-${rowNumber}-${_increaseNumber(columnNumber, gridSize)}`);
+
     // checking top left, bottom left
-      _hoverScope.add(`sq-${_reduceNumber(rowNumber, gridSize)}-${_reduceNumber(columnNumber, gridSize)}`);
-      _hoverScope.add(`sq-${_increaseNumber(rowNumber, gridSize)}-${_reduceNumber(columnNumber, gridSize)}`);
-  
+    _hoverScope.add(`sq-${_reduceNumber(rowNumber, gridSize)}-${_reduceNumber(columnNumber, gridSize)}`);
+    _hoverScope.add(`sq-${_increaseNumber(rowNumber, gridSize)}-${_reduceNumber(columnNumber, gridSize)}`);
+
     // checking top, bottom
-      _hoverScope.add(`sq-${_reduceNumber(rowNumber, gridSize)}-${columnNumber}`);
-      _hoverScope.add(`sq-${_increaseNumber(rowNumber, gridSize)}-${columnNumber}`);
-  
+    _hoverScope.add(`sq-${_reduceNumber(rowNumber, gridSize)}-${columnNumber}`);
+    _hoverScope.add(`sq-${_increaseNumber(rowNumber, gridSize)}-${columnNumber}`);
+
     // checking top right, bottom right
-      _hoverScope.add(`sq-${_reduceNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
-      _hoverScope.add(`sq-${_increaseNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
+    _hoverScope.add(`sq-${_reduceNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
+    _hoverScope.add(`sq-${_increaseNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
 
     //console.info("_constructScope");
     //console.info(_hoverScope);
   }
-  
+
   function _getSurroundingScrope(squareID, gridSize) {
     const { rowNumber, columnNumber } = extractNumbers(squareID);
     _constructScope({ rowNumber, columnNumber, gridSize });
-  } 
-  
+  }
+
   function _isWithinHoverScope(squareID) {
     return _hoverScope.has(squareID);
   }
@@ -380,5 +375,5 @@ function _scopeFinder() {
   return {
     _getSurroundingScrope,
     _isWithinHoverScope,
-  }
+  };
 }
