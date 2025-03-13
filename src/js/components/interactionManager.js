@@ -216,6 +216,7 @@ export function interactionManager(globals) {
     const squareDOMElement = document.querySelector(`#${squareID}`);
     squareDOMElement.classList.add("tracer");
     _interactionState.setTracerFlag(true);
+    _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
 
     setTimeout(() => {
       _interactionState.setTracerFlag(false);
@@ -255,9 +256,9 @@ export function interactionManager(globals) {
   }
 
   function _handleSquareHover(squareDOMElement) {
-    _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
-    if (_interactionState.getTracerFlag()) {
+    if (_interactionState.getTracerFlag() && _scopeMgr._isWithinHoverScope(squareDOMElement.id)) {
       squareDOMElement.classList.add("tracer");
+      _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
     }
   }
 
@@ -328,7 +329,8 @@ function _scopeFinder() {
       _hoverScope.add(`sq-${_reduceNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
       _hoverScope.add(`sq-${_increaseNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
 
-    //console.info(_hoverScope);
+    console.info("_constructScope");
+    // console.info(_hoverScope);
   }
   
   function _getSurroundingScrope(squareID, gridSize) {
