@@ -53,8 +53,8 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
   }
 
   // To list the words underneath the square frame
-  function _listAWord(selectedWord, wordList) {
-    let ulElement = wordList.querySelector("#word-list") || createUL(); // Cache & reuse the <ul> instead of creating a new one each time.
+  function _listAWord(selectedWord, wordList, className) {
+    let ulElement = wordList.querySelector("#word-list") || createUL(className); // Cache & reuse the <ul> instead of creating a new one each time.
     let liElement = document.createElement("li");
 
     liElement.textContent = selectedWord;
@@ -126,7 +126,7 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
           });
 
           _addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
-          _listAWord(_toLowerCases(selectedWord), sectionWordList);
+          _listAWord(_toLowerCases(selectedWord), sectionWordList, "multi-column-list");
 
           wordsArray.splice(index, 1); // Remove placed word
           wordsRemaining--;

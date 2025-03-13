@@ -55,6 +55,31 @@ body {
   display: block;
 }
 
+/* Multi-Column Word List */
+#section-word-list {
+  display: flex;          /* Use flexbox for layout */
+  flex-wrap: wrap;       /* Allow items to wrap to new lines */
+  /*max-width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break));*/
+  max-width: fit-content;
+  margin-top: 20px;
+}
+
+.multi-column-list {
+  list-style: none;     /* Remove bullet points */
+  padding: 0;           /* Remove default padding */
+  display: flex;          /* Use flexbox for layout */
+  flex-wrap: wrap;       /* Allow items to wrap to new lines */
+  width: 100%;          /* Takes the full width of #section-word-list*/
+  justify-content: center;
+}
+
+.multi-column-list li {
+  flex: 1 0 30%;      /* Distribute items across columns */
+  margin: 5px;       /* Add a little space between items */
+  min-width: 50px;    /* Ensure each item has at least some width */
+  text-align: center;
+}
+
 
 #square-frame {
   display: grid;
