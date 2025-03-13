@@ -1,7 +1,5 @@
 export function loadingManager(selectors) {
-  const { body, squareFrame, sectionWordList } = selectors;
-  const overlay = document.getElementById("overlay");
-  const loadingText = document.getElementById("loading-text"); 
+  const { overlay, loadingText, squareFrame, sectionWordList } = selectors;
 
   function freeze() {
     squareFrame.classList.add("dim");
