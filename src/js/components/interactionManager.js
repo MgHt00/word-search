@@ -39,7 +39,7 @@ export function interactionManager(globals) {
   const _interactionState = {
     _endPointFlag: null,
     _tracerFlag: false,
-    _endPointTimeout: null, // Add a timeout reference
+    _endPointTimeout: null, // timeout reference
     _hoverTimeout: null,
 
     setEndPointFlag(value) {
@@ -112,7 +112,7 @@ export function interactionManager(globals) {
     console.groupEnd();
   }
 
-  function _handleStartSquareClick(squareID, selectedWord) {
+  function _handleStartSquareClick(selectedWord) {
     _interactionState.setEndPointFlag(_placedWordData.getWordDetails(selectedWord, "end"));
     _interactionState.setTracerFlag(true);
 
@@ -132,44 +132,31 @@ export function interactionManager(globals) {
   }
 
   function _handleEndSquareClick(squareID, selectedWord) {
-    if (_interactionState.getEndPointFlag() === null) {
-        _interactionState.setEndPointFlag(_placedWordData.getWordDetails(selectedWord, "start"));
-        _interactionState.setTracerFlag(true);
+    _interactionState.setTracerFlag(true);
+    const squareDOMElement = document.querySelector(`#${squareID}`); 
+    squareDOMElement.classList.add("tracer"); 
     
-        clearTimeout(_interactionState.getEndPointTimeout());
-    
-        const timeoutId = setTimeout(() => {
-          _interactionState.setEndPointFlag(null);
-          _resetAllSquares();
-          console.warn("Timeout: End point flag reset.");
-        }, 10000); // 10 seconds (adjust as needed)
-    
-        _interactionState.setEndPointTimeout(timeoutId);
-    
-        console.info("End squareID Clicked, endPoint:", _interactionState.getEndPointFlag());
-      }
-      else if (squareID === _interactionState.getEndPointFlag()) {
+    if (squareID === _interactionState.getEndPointFlag()) {
         console.warn("BINGOOOOO!!!!");
-        const squareDOMElement = document.querySelector(`#${squareID}`); // <---- Add this line
-        squareDOMElement.classList.add("tracer"); // <---- Add this line
-        // Clear timeout when the correct end square is clicked
-        clearTimeout(_interactionState.getEndPointTimeout());
+        
+        _resetAllSquares();
         const squaresToFill = _placedWordData.getWordDetails(selectedWord, "squareIDs");
         _highlightCompletedWord(squaresToFill);
+        _removeClickListener(selectedWord);
         _removeDummyClickListener(squaresToFill);
         _markCompletedWord(selectedWord.toLowerCase()); // frontend list is in lowercase, that's why.
         _handleGameCompletion(selectedWord);
-        _removeClickListener(selectedWord);
-        _interactionState.setTracerFlag(false);
-        _interactionState.setEndPointFlag(null);
       }
   }
 
   function _handleSquareClick(selectedWord, type, squareID) {
-    const squareDOMElement = document.querySelector(`#${squareID}`); // <---- Add this line
-    squareDOMElement.classList.add("tracer"); // <---- Add this line
+    const squareDOMElement = document.querySelector(`#${squareID}`); 
+    squareDOMElement.classList.add("tracer"); 
+
+    _scopeMgr._getSurroundingScrope(squareID, appData.gridSize);
+
     if (type === "start") {
-      _handleStartSquareClick(squareID, selectedWord);
+      _handleStartSquareClick(selectedWord);
     }
     if (type === "end") {
       _handleEndSquareClick(squareID, selectedWord);
