@@ -105,12 +105,13 @@ export function interactionManager(globals) {
 
   function _handleStartSquareClick(squareID, selectedWord) {
     _interactionState.setEndPointFlag(_placedWordData.getWordDetails(selectedWord, "end"));
-    const squareDOMElement = document.querySelector(`#${squareID}`);
     _interactionState.setTracerFlag(true);
 
     // Clear any existing timeout before setting a new one
     clearTimeout(_interactionState.getEndPointTimeout());
 
+    const squareDOMElement = document.querySelector(`#${squareID}`);
+    
     // Set a timeout to reset _endPointFlag
     const timeoutId = setTimeout(() => {
       _interactionState.setEndPointFlag(null);
@@ -213,22 +214,29 @@ export function interactionManager(globals) {
   }
 
   function _handleDummySquareClick(squareID) {
+    clearTimeout(_interactionState.getEndPointTimeout()); 
+
     const squareDOMElement = document.querySelector(`#${squareID}`);
     squareDOMElement.classList.add("tracer");
     _interactionState.setTracerFlag(true);
     _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
 
     setTimeout(() => {
-      _interactionState.setTracerFlag(false);
+      //_interactionState.setTracerFlag(false);
       _resetAllSquares();
-    }, 3000); // default 2000
+    }, 5000); // default 2000
   }
 
   function _resetAllSquares() {
+    clearTimeout(_interactionState.getEndPointTimeout()); 
+
     const allSquares = document.querySelectorAll('[class|="sq"]');
     allSquares.forEach((squareDOMElement) => {
       squareDOMElement.classList.remove("tracer");
     });
+
+    _interactionState.setTracerFlag(false);
+    _interactionState.setEndPointFlag(null);
   }
 
   // This function removes dummy click listeners from the given square elements.
@@ -249,9 +257,6 @@ export function interactionManager(globals) {
       squareDOMElement.addEventListener("mouseover", () => {
         _handleSquareHover(squareDOMElement);
       });
-      setTimeout(() => {
-        _resetAllSquares();
-      }, 5000); // default 2000
     });
   }
 
@@ -260,11 +265,23 @@ export function interactionManager(globals) {
       squareDOMElement.classList.add("tracer");
       _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
     }
+    setTimeout(() => {
+      _resetAllSquares();
+    }, 5000); // default 2000
+  }
+
+  function _addEscapeListener(){
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" || event.key === "Esc") {
+        _resetAllSquares();
+      }
+    });
   }
 
   function addTracerListener() {
     _addDummyClickListener();
     _addHoverListener();
+    _addEscapeListener();
   }
 
   return {
@@ -329,8 +346,8 @@ function _scopeFinder() {
       _hoverScope.add(`sq-${_reduceNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
       _hoverScope.add(`sq-${_increaseNumber(rowNumber, gridSize)}-${_increaseNumber(columnNumber, gridSize)}`);
 
-    console.info("_constructScope");
-    // console.info(_hoverScope);
+    //console.info("_constructScope");
+    //console.info(_hoverScope);
   }
   
   function _getSurroundingScrope(squareID, gridSize) {
