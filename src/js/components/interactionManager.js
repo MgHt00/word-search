@@ -40,6 +40,7 @@ export function interactionManager(globals) {
     _endPointFlag: null,
     _tracerFlag: false,
     _endPointTimeout: null, // Add a timeout reference
+    _hoverTimeout: null,
 
     setEndPointFlag(value) {
       this._endPointFlag = value;
@@ -63,6 +64,14 @@ export function interactionManager(globals) {
 
     getEndPointTimeout(){
         return this._endPointTimeout;
+    },
+
+    setHoverTimeout(timeout) {
+      this._hoverTimeout = timeout;
+    },
+
+    getHoverTimeout() {
+      return this._hoverTimeout;
     },
   };
 
@@ -111,7 +120,8 @@ export function interactionManager(globals) {
     clearTimeout(_interactionState.getEndPointTimeout());
 
     const squareDOMElement = document.querySelector(`#${squareID}`);
-    
+    squareDOMElement.classList.add("tracer"); 
+
     // Set a timeout to reset _endPointFlag
     const timeoutId = setTimeout(() => {
       _interactionState.setEndPointFlag(null);
@@ -215,20 +225,27 @@ export function interactionManager(globals) {
 
   function _handleDummySquareClick(squareID) {
     clearTimeout(_interactionState.getEndPointTimeout()); 
+    clearTimeout(_interactionState._hoverTimeout); 
 
     const squareDOMElement = document.querySelector(`#${squareID}`);
     squareDOMElement.classList.add("tracer");
     _interactionState.setTracerFlag(true);
     _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
+    
+    _interactionState.setHoverTimeout(setTimeout(() => {
+      _resetAllSquares();
+    }, 5000)); // default 5000
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       //_interactionState.setTracerFlag(false);
       _resetAllSquares();
-    }, 5000); // default 2000
+    }, 5000); // default 2000*/
+    
   }
 
   function _resetAllSquares() {
     clearTimeout(_interactionState.getEndPointTimeout()); 
+    clearTimeout(_interactionState.getHoverTimeout());
 
     const allSquares = document.querySelectorAll('[class|="sq"]');
     allSquares.forEach((squareDOMElement) => {
@@ -261,6 +278,8 @@ export function interactionManager(globals) {
   }
 
   function _handleSquareHover(squareDOMElement) {
+    clearTimeout(_interactionState.getHoverTimeout()); // Clear any existing hover timeout
+
     if (_interactionState.getTracerFlag() && _scopeMgr._isWithinHoverScope(squareDOMElement.id)) {
       squareDOMElement.classList.add("tracer");
       _scopeMgr._getSurroundingScrope(squareDOMElement.id, appData.gridSize);
