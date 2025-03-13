@@ -125,8 +125,7 @@ export function interactionManager(globals) {
     // Set a timeout to reset _endPointFlag
     const timeoutId = setTimeout(() => {
       _interactionState.setEndPointFlag(null);
-      squareDOMElement.classList.remove("tracer");
-      _interactionState.setTracerFlag(false);
+      _resetAllSquares();
       console.warn("Timeout: End point flag reset.");
     }, 10000); // 10 seconds (adjust as needed)
 
