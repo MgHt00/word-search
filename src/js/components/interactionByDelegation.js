@@ -49,16 +49,19 @@ export function interactionManager(globals) {
     return startIDAndEndID.get(key);
   }
 
-  function _getSquareIDsFromGlobal(key) {
-    
+  function _findSelectedWordInGlobal(endSquareID) {
+    for (const [word, entry] of placedWordCoordinates) { 
+      const storedEndSquareID = entry.placementData[entry.placementData.length - 1];
+      if (storedEndSquareID === endSquareID) {
+        return word; 
+      }
+    }
+    return undefined; 
   }
 
-  function _findSelectedWordInGlobal(endSquareID) {
-    placedWordCoordinates.forEach((entry, key) => {
-      console.info(entry);
-      console.info(entry.placementData[entry.placementData.length - 1]);
-      console.info(key);
-    })
+  function _getSquareIDsOfSelectedWord(key) {
+    const entry = placedWordCoordinates.get(key);
+    return entry.placementData;
   }
 
   function _handleStartSquareClick(squareID) {
@@ -83,10 +86,13 @@ export function interactionManager(globals) {
     // if end square is clicked
     if (squareID === _interactionState.getTargetEndSquare()) {
       console.warn("BINGOOOOO!!!!");
-      _findSelectedWordInGlobal(squareID);
-      //_resetAllSquares();
-      //const squaresToFill = _placedWordData.getWordDetails(selectedWord, "squareIDs");
-      //_highlightCompletedWord(squaresToFill);
+      const selectedWord = _findSelectedWordInGlobal(squareID);
+      if (selectedWord) {
+        const squaresToFill = _getSquareIDsOfSelectedWord(selectedWord);
+        _highlightCompletedWord(squaresToFill);
+      }
+
+      _resetAllSquares();
     }
   }
 
