@@ -24,7 +24,23 @@ export function interactionManager(globals) {
     },
   }
 
-  function addClickListener() {
+  const _gameState = {
+    _remainingWords: null,
+
+    setRemainingWords(value) {
+      this._remainingWords = value;
+    },
+
+    getRemainingWords() {
+      return this._remainingWords;
+    },
+
+    reduceRemainingWords() {
+      this._remainingWords--;
+    }
+  }
+
+  function _addClickListener() {
     squareFrame.addEventListener("click", (event) => {
       if (event.target.matches('[class|="sq"]')) {
         const clickedSquare = event.target.id;
@@ -37,6 +53,14 @@ export function interactionManager(globals) {
           _handleOtherSquareClick(clickedSquare);
         }        
 
+      }
+    });
+  }
+
+  function _addEscapeListener() {
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" || event.key === "Esc") {
+        _resetAllSquares();
       }
     });
   }
@@ -67,10 +91,8 @@ export function interactionManager(globals) {
   function _handleStartSquareClick(squareID) {
     const _targetEndSquare = _getEndSquareFromMap(squareID);
     _interactionState.setTargetEndSquare(_targetEndSquare);
-    console.info("_targetEndSquare", _interactionState.getTargetEndSquare());
+    console.info("_handleStartSquareClick():_targetEndSquare", _interactionState.getTargetEndSquare());
     
-    console.info("placedWordCoordinates:", placedWordCoordinates);
-
     // Set a timeout to reset _wordMatchTimeout
     const timeoutId = setTimeout(() => {
       _resetAllSquares();
@@ -81,7 +103,7 @@ export function interactionManager(globals) {
   }
 
   function _handleOtherSquareClick(squareID) {
-    console.info("Other square clicked:",squareID);
+    console.info("_handleOtherSquareClick:",squareID);
 
     // if end square is clicked
     if (squareID === _interactionState.getTargetEndSquare()) {
@@ -90,6 +112,8 @@ export function interactionManager(globals) {
       if (selectedWord) {
         const squaresToFill = _getSquareIDsOfSelectedWord(selectedWord);
         _highlightCompletedWord(squaresToFill);
+        _markCompletedWord(selectedWord.toLowerCase());
+        _handleGameCompletion();
       }
 
       _resetAllSquares();
@@ -118,7 +142,25 @@ export function interactionManager(globals) {
     });
   }
 
+  function _markCompletedWord(id) {
+    const foundWordElement = document.querySelector(`#${id}`);
+    foundWordElement.classList.add("dim", "marked");
+  }
+
+  function _handleGameCompletion() {
+    _gameState.reduceRemainingWords();
+    if (_gameState.getRemainingWords() === 0) {
+      squareFrame.classList.add("dim");
+    }
+  }
+
+  function initializeInteraction() {
+    _gameState.setRemainingWords(placedWordCoordinates.size);
+    _addClickListener();
+    _addEscapeListener();
+  }
+
   return {
-    addClickListener,
+    initializeInteraction,
   };
 }

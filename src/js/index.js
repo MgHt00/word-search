@@ -23,13 +23,13 @@ const { addClickListener, addTracerListener } = interactionManager(
 );*/
 
 import { interactionManager } from "./components/interactionByDelegation.js";
-const { addClickListener } = interactionManager(globals);
+const { initializeInteraction, _addClickListener } = interactionManager(globals);
 
 import { fillingManager } from "./components/fillingManager.js";
 const { fill } = fillingManager(
   globals,
   { random },
-  { addClickListener },
+  { _addClickListener }, // need to solve this
   { hasEnoughSq },
   { compareExistingChar },
   { createUL }
@@ -41,5 +41,5 @@ const { fill } = fillingManager(
   await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // await for fill function to complete.
   unfreeze(); // unfreeze when the fill is complete.
   //addTracerListener();
-  addClickListener();
+  initializeInteraction();
 })();
