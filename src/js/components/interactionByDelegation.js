@@ -57,39 +57,8 @@ export function interactionManager(globals) {
     });
   }
 
-  function _addEscapeListener() {
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" || event.key === "Esc") {
-        _resetAllSquares();
-      }
-    });
-  }
-
-  function _isStartSquare(squareID) {
-    return startIDAndEndID.has(squareID);
-  }
-
-  function _getEndSquareFromMap(key) {
-    return startIDAndEndID.get(key);
-  }
-
-  function _findSelectedWordInGlobal(endSquareID) {
-    for (const [word, entry] of placedWordCoordinates) { 
-      const storedEndSquareID = entry.placementData[entry.placementData.length - 1];
-      if (storedEndSquareID === endSquareID) {
-        return word; 
-      }
-    }
-    return undefined; 
-  }
-
-  function _getSquareIDsOfSelectedWord(key) {
-    const entry = placedWordCoordinates.get(key);
-    return entry.placementData;
-  }
-
   function _handleStartSquareClick(squareID) {
-    const _targetEndSquare = _getEndSquareFromMap(squareID);
+    const _targetEndSquare = _getEndSquareFromGlobal(squareID);
     _interactionState.setTargetEndSquare(_targetEndSquare);
     console.info("_handleStartSquareClick():_targetEndSquare", _interactionState.getTargetEndSquare());
     
@@ -120,6 +89,37 @@ export function interactionManager(globals) {
     }
   }
 
+  function _addEscapeListener() {
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" || event.key === "Esc") {
+        _resetAllSquares();
+      }
+    });
+  }
+
+  function _isStartSquare(squareID) {
+    return startIDAndEndID.has(squareID);
+  }
+
+  function _getEndSquareFromGlobal(key) {
+    return startIDAndEndID.get(key);
+  }
+
+  function _findSelectedWordInGlobal(endSquareID) {
+    for (const [word, entry] of placedWordCoordinates) { 
+      const storedEndSquareID = entry.placementData[entry.placementData.length - 1];
+      if (storedEndSquareID === endSquareID) {
+        return word; 
+      }
+    }
+    return undefined; 
+  }
+
+  function _getSquareIDsOfSelectedWord(key) {
+    const entry = placedWordCoordinates.get(key);
+    return entry.placementData;
+  }
+
   function _resetAllSquares() {
     clearTimeout(_interactionState.getWordMatchTimeout());
     //clearTimeout(_interactionState.getHoverTimeout());
@@ -133,7 +133,6 @@ export function interactionManager(globals) {
     _interactionState.setTargetEndSquare(null);
   }
 
-  // Fill the squares with the highlight class.
   function _highlightCompletedWord(squares) {
     squares.forEach((square) => {
       const squareID = `#${square}`;

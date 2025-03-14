@@ -15,21 +15,14 @@ const { freeze, unfreeze } = loadingManager(selectors);
 import { scopeFinder } from "./components/scopeFinder.js";
 const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
 
-/*import { interactionManager } from "./components/interactionManager.js";
-const { addClickListener, addTracerListener } = interactionManager(
-  globals,
-  { getSurroundingScope },
-  { isWithinHoverScope }
-);*/
-
 import { interactionManager } from "./components/interactionByDelegation.js";
-const { initializeInteraction, _addClickListener } = interactionManager(globals);
+const { initializeInteraction } = interactionManager(globals);
 
 import { fillingManager } from "./components/fillingManager.js";
 const { fill } = fillingManager(
   globals,
   { random },
-  { _addClickListener }, // need to solve this
+  /*{ _addClickListener },*/
   { hasEnoughSq },
   { compareExistingChar },
   { createUL }

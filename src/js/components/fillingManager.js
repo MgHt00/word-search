@@ -1,4 +1,4 @@
-export function fillingManager(globals, { random }, { addClickListener }, { hasEnoughSq }, { compareExistingChar }, { createUL }) {
+export function fillingManager(globals, { random }, /*{ addClickListener },*/ { hasEnoughSq }, { compareExistingChar }, { createUL }) {
   const { appData, selectors, wordPlacementData } = globals;
   const { gridSize } = appData;
   const { sectionWordList } = selectors;
