@@ -15,12 +15,15 @@ const { freeze, unfreeze } = loadingManager(selectors);
 import { scopeFinder } from "./components/scopeFinder.js";
 const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
 
-import { interactionManager } from "./components/interactionManager.js";
+/*import { interactionManager } from "./components/interactionManager.js";
 const { addClickListener, addTracerListener } = interactionManager(
   globals,
   { getSurroundingScope },
   { isWithinHoverScope }
-);
+);*/
+
+import { interactionManager } from "./components/interactionByDelegation.js";
+const { addClickListener } = interactionManager(globals);
 
 import { fillingManager } from "./components/fillingManager.js";
 const { fill } = fillingManager(
@@ -37,5 +40,6 @@ const { fill } = fillingManager(
   generateSqs();
   await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // await for fill function to complete.
   unfreeze(); // unfreeze when the fill is complete.
-  addTracerListener();
+  //addTracerListener();
+  addClickListener();
 })();

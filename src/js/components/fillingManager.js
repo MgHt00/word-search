@@ -86,6 +86,10 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
     });
   }
 
+  function _storeStartIDAndEndID(startSquareID, endSquareID) {
+    wordPlacementData.startIDAndEndID.set(startSquareID, endSquareID);
+  }
+
   function fillingMgr() {
     async function _placeWords(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
       //let wordsArray = [...words.map(word => word.toUpperCase())];
@@ -117,8 +121,9 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
           const entries = Object.entries(placementData);
           const currentWordSquareIDs = entries.map(([squareID]) => squareID);
           const wordData = { selectedWord, currentWordSquareIDs };
-
-          addClickListener(wordData);
+          
+          _storeStartIDAndEndID(currentWordSquareIDs[0], currentWordSquareIDs[currentWordSquareIDs.length - 1]);
+          //addClickListener(wordData);
 
           entries.forEach(([squareID, char]) => {
             _printCharOnScreen(squareID, char);
