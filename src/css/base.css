@@ -75,7 +75,7 @@ body {
 
 .multi-column-list li {
   flex: 1 0 30%;      /* Distribute items across columns */
-  margin: 5px;       /* Add a little space between items */
+  margin: 5px;        /* Add a little space between items */
   min-width: 50px;    /* Ensure each item has at least some width */
   text-align: center;
 }
