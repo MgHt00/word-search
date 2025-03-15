@@ -43,7 +43,7 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
 
   function _addClickListener() {
     squareFrame.addEventListener("click", (event) => {
-      if (event.target.matches('[class|="sq"]')) {
+      if (event.target.matches('[id|="sq"]')) {
         const clickedSquare = event.target.id;
 
         if (isStartSquare(clickedSquare)) {
@@ -82,6 +82,7 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
       if (selectedWord) {
         const squaresToFill = getSquareIDsOfSelectedWord(selectedWord);
         _highlightCompletedWord(squaresToFill);
+        _removeSquareIdentifiers(squaresToFill);
         _markCompletedWord(selectedWord.toLowerCase());
         _handleGameCompletion();
       }
@@ -116,6 +117,21 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
       const squareID = `#${square}`;
       document.querySelector(squareID).classList.remove("clicked");
       document.querySelector(squareID).classList.add("highlight");
+    });
+  }
+
+  function _removeSquareIdentifiers(squares) {
+    squares.forEach(square => {
+      const squareDOMElement = document.querySelector(`#${square}`);
+      if(squareDOMElement.id.startsWith("sq-")) {
+        squareDOMElement.removeAttribute("id");
+      }
+      /*
+      const classesToRemove = Array // [le8]
+      .from(squareDOMElement.classList) 
+      .filter(className => className.startsWith("sq"));
+      squareDOMElement.classList.remove(...classesToRemove);
+      */
     });
   }
 
