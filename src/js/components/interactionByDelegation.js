@@ -1,4 +1,4 @@
-export function interactionManager( globals, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord) {
+export function interactionManager( globals, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
 
   const { selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
@@ -32,9 +32,12 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
   function _addClickListener() {
     squareFrame.addEventListener("click", (event) => {
       if (event.target.matches('[id|="sq"]')) {
+        
         _interactionState.setTracerFlag(true);
         event.target.classList.add("tracer");
         
+        getSurroundingScope(event.target.id);
+   
         const clickedSquare = event.target.id;
         if (isStartSquare(clickedSquare)) {
           _handleStartSquareClick(clickedSquare);
@@ -101,8 +104,9 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
   }
 
   function _handleSquareHover(target) {
-    if(_interactionState.getTracerFlag()) {
+    if(_interactionState.getTracerFlag() && isWithinHoverScope(target.id)) {
       target.classList.add("tracer");
+      getSurroundingScope(target.id);
     }
 
     _interactionState.setHoverTimeout(
@@ -112,7 +116,6 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
       }, 5000));
 
   }
-
 
   function _resetAllSquares() {
     clearTimeout(_interactionState.getWordMatchTimeout());
@@ -173,7 +176,3 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
     initializeInteraction,
   };
 }
-
-// need to do 
-// remove class= sq... when word has been selected
-// word selected ဖြစ်သွားပြီးရင် squaresToFill ကို ယူပြီး class ကို ဖြုတ်ရမယ်၊ ဒါမှ သူက click event listener နဲ့ အလုပ်မလုပ်တော့မှာ

@@ -31,6 +31,8 @@ const { initializeInteraction } = interactionManager(
   getEndSquareFromGlobal,
   findSelectedWordInGlobal,
   getSquareIDsOfSelectedWord,
+  getSurroundingScope,
+  isWithinHoverScope,
 );
 
 import { fillingManager } from "./components/fillingManager.js";
