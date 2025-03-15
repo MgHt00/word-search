@@ -1,8 +1,7 @@
 export function interactionManager( globals, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
-
   const { selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
-  const { placedWordCoordinates, startIDAndEndID } = wordPlacementData;
+  const { placedWordCoordinates } = wordPlacementData;
 
   const _interactionState = {
     _targetEndSquare: null,
@@ -29,26 +28,47 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
       reduceRemainingWords() { this._remainingWords--; },
   }
 
-  function _addClickListener() {
+  function _addSquareListeners() {
     squareFrame.addEventListener("click", (event) => {
       if (event.target.matches('[id|="sq"]')) {
-        
-        _interactionState.setTracerFlag(true);
-        event.target.classList.add("tracer");
-        
-        getSurroundingScope(event.target.id);
-   
-        const clickedSquare = event.target.id;
-        if (isStartSquare(clickedSquare)) {
-          _handleStartSquareClick(clickedSquare);
-        } 
-                
-        else {
-          _handleOtherSquareClick(clickedSquare);
-        }        
-
+        _handleClick(event.target);
       }
     });
+
+    squareFrame.addEventListener("mouseover", (event) => {
+      if (event.target.matches('[id|="sq"]')) {
+        _handleHover(event.target);
+      }
+    });
+  }
+
+  function _handleClick(target) {
+    _interactionState.setTracerFlag(true);
+    target.classList.add("tracer");
+    getSurroundingScope(target.id);
+
+    const clickedSquare = target.id;
+    if (isStartSquare(clickedSquare)) {
+      _handleStartSquareClick(clickedSquare);
+    }
+    else {
+      _handleOtherSquareClick(clickedSquare);
+    }
+  }
+
+  function _handleHover(target) {
+    clearTimeout(_interactionState.getWordMatchTimeout());
+    clearTimeout(_interactionState.getHoverTimeout());
+
+    if (_interactionState.getTracerFlag() && isWithinHoverScope(target.id)) {
+      target.classList.add("tracer");
+      getSurroundingScope(target.id);
+    }
+
+    _interactionState.setHoverTimeout(
+      setTimeout(() => {
+        _resetAllSquares();
+      }, 5000));
   }
 
   function _handleStartSquareClick(squareID) {
@@ -59,8 +79,7 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
     // Set a timeout to reset _wordMatchTimeout
     const timeoutId = setTimeout(() => {
       _resetAllSquares();
-      console.warn("Timeout: Word Match reset.");
-    }, 10000);
+    }, 5000);
 
     _interactionState.setWordMatchTimeout(timeoutId);
   }
@@ -92,35 +111,9 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
     });
   }
 
-  function _addHoverListener() {
-    squareFrame.addEventListener("mouseover", (event) => {
-      clearTimeout(_interactionState.getWordMatchTimeout());
-      clearTimeout(_interactionState.getHoverTimeout());
-
-      if (event.target.matches('[id|="sq"]')) {
-        _handleSquareHover(event.target);
-      }
-    });
-  }
-
-  function _handleSquareHover(target) {
-    if(_interactionState.getTracerFlag() && isWithinHoverScope(target.id)) {
-      target.classList.add("tracer");
-      getSurroundingScope(target.id);
-    }
-
-    _interactionState.setHoverTimeout(
-      setTimeout(() => {
-        _resetAllSquares();
-        console.warn("Timeout: Hover reset.");
-      }, 5000));
-
-  }
-
   function _resetAllSquares() {
-    clearTimeout(_interactionState.getWordMatchTimeout());
-    clearTimeout(_interactionState.getHoverTimeout());
-
+    _clearAllTimeOuts();
+    
     const allSquares = document.querySelectorAll('[class|="sq"]');
     allSquares.forEach((squareDOMElement) => {
       squareDOMElement.classList.remove("tracer");
@@ -128,6 +121,13 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
 
     _interactionState.setTracerFlag(false);
     _interactionState.setTargetEndSquare(null);
+  }
+
+  function _clearAllTimeOuts() {
+    clearTimeout(_interactionState.getWordMatchTimeout());
+    console.warn("Timeout: Word Match reset.");
+    clearTimeout(_interactionState.getHoverTimeout());
+    console.warn("Timeout: Hover reset.");
   }
 
   function _highlightCompletedWord(squares) {
@@ -167,8 +167,7 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
 
   function initializeInteraction() {
     _gameState.setRemainingWords(placedWordCoordinates.size);
-    _addClickListener();
-    _addHoverListener();
+    _addSquareListeners();
     _addEscapeListener();
   }
 
