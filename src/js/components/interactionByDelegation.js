@@ -1,4 +1,5 @@
-export function interactionManager(globals) {
+export function interactionManager( globals, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord) {
+
   const { selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
   const { placedWordCoordinates, startIDAndEndID } = wordPlacementData;
@@ -45,7 +46,7 @@ export function interactionManager(globals) {
       if (event.target.matches('[class|="sq"]')) {
         const clickedSquare = event.target.id;
 
-        if (_isStartSquare(clickedSquare)) {
+        if (isStartSquare(clickedSquare)) {
           _handleStartSquareClick(clickedSquare);
         } 
                 
@@ -58,7 +59,7 @@ export function interactionManager(globals) {
   }
 
   function _handleStartSquareClick(squareID) {
-    const _targetEndSquare = _getEndSquareFromGlobal(squareID);
+    const _targetEndSquare = getEndSquareFromGlobal(squareID);
     _interactionState.setTargetEndSquare(_targetEndSquare);
     console.info("_handleStartSquareClick():_targetEndSquare", _interactionState.getTargetEndSquare());
     
@@ -77,9 +78,9 @@ export function interactionManager(globals) {
     // if end square is clicked
     if (squareID === _interactionState.getTargetEndSquare()) {
       console.warn("BINGOOOOO!!!!");
-      const selectedWord = _findSelectedWordInGlobal(squareID);
+      const selectedWord = findSelectedWordInGlobal(squareID);
       if (selectedWord) {
-        const squaresToFill = _getSquareIDsOfSelectedWord(selectedWord);
+        const squaresToFill = getSquareIDsOfSelectedWord(selectedWord);
         _highlightCompletedWord(squaresToFill);
         _markCompletedWord(selectedWord.toLowerCase());
         _handleGameCompletion();
@@ -95,29 +96,6 @@ export function interactionManager(globals) {
         _resetAllSquares();
       }
     });
-  }
-
-  function _isStartSquare(squareID) {
-    return startIDAndEndID.has(squareID);
-  }
-
-  function _getEndSquareFromGlobal(key) {
-    return startIDAndEndID.get(key);
-  }
-
-  function _findSelectedWordInGlobal(endSquareID) {
-    for (const [word, entry] of placedWordCoordinates) { 
-      const storedEndSquareID = entry.placementData[entry.placementData.length - 1];
-      if (storedEndSquareID === endSquareID) {
-        return word; 
-      }
-    }
-    return undefined; 
-  }
-
-  function _getSquareIDsOfSelectedWord(key) {
-    const entry = placedWordCoordinates.get(key);
-    return entry.placementData;
   }
 
   function _resetAllSquares() {
@@ -163,3 +141,7 @@ export function interactionManager(globals) {
     initializeInteraction,
   };
 }
+
+// need to do 
+// remove class= sq... when word has been selected
+// word selected ဖြစ်သွားပြီးရင် squaresToFill ကို ယူပြီး class ကို ဖြုတ်ရမယ်၊ ဒါမှ သူက click event listener နဲ့ အလုပ်မလုပ်တော့မှာ

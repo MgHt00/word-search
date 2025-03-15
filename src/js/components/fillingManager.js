@@ -1,4 +1,4 @@
-export function fillingManager(globals, { random }, /*{ addClickListener },*/ { hasEnoughSq }, { compareExistingChar }, { createUL }) {
+export function fillingManager(globals, random, hasEnoughSq, addPlacedWordCoordinates, addSquareIdToChar, compareExistingChar, createUL) {
   const { appData, selectors, wordPlacementData } = globals;
   const { gridSize } = appData;
   const { sectionWordList } = selectors;
@@ -24,14 +24,6 @@ export function fillingManager(globals, { random }, /*{ addClickListener },*/ { 
 
   function _printCharOnScreenDUMMY(squareID, char) { // remove this function when stable
     document.querySelector(`#${squareID}`).textContent = char;
-  }
-
-  function _addSquareIdToChar(squareID, char, charMap) {
-    charMap.set(squareID, char);
-  }
-
-  function _addPlacedWordCoordinates(word, placementData, coordinates) {
-    placedWordCoordinates.set(word, { placementData, direction: coordinates.direction });
   }
 
   function _selectRandomWord(wordsArray) {
@@ -120,17 +112,17 @@ export function fillingManager(globals, { random }, /*{ addClickListener },*/ { 
 
           const entries = Object.entries(placementData);
           const currentWordSquareIDs = entries.map(([squareID]) => squareID);
-          const wordData = { selectedWord, currentWordSquareIDs };
+          //const wordData = { selectedWord, currentWordSquareIDs };
           
           _storeStartIDAndEndID(currentWordSquareIDs[0], currentWordSquareIDs[currentWordSquareIDs.length - 1]);
           //addClickListener(wordData);
 
           entries.forEach(([squareID, char]) => {
             _printCharOnScreen(squareID, char);
-            _addSquareIdToChar(squareID, char, squareIdToChar);
+            addSquareIdToChar(squareID, char);
           });
 
-          _addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
+          addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
           _listAWord(_toLowerCases(selectedWord), sectionWordList, "multi-column-list");
 
           wordsArray.splice(index, 1); // Remove placed word
