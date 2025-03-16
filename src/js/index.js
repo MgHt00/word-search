@@ -1,36 +1,42 @@
 import { globals } from "./services/globals.js";
 const { appData, selectors } = globals;
 
+import { globalDataManager } from "./services/globalDataManager.js";
+
 import { random } from "./utils/mathHelpers.js";
 import { hasEnoughSq } from "./utils/gridHelpers.js";
-import { compareExistingChar } from "./utils/placementHelpers.js"; 
+import { compareExistingChar } from "./utils/placementHelpers.js";
 import { createUL } from "./utils/domHelpers.js";
 
 import { layoutManager } from "./components/layoutManager.js";
-const layoutMgr = layoutManager(globals);
+const { generateSqs } = layoutManager(globals);
+
+import { loadingManager } from "./components/loadingManager.js";
+const { freeze, unfreeze } = loadingManager(selectors);
 
 import { scopeFinder } from "./components/scopeFinder.js";
-const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
 
-import { interactionManager } from "./components/interactionManager.js";
-const { addClickListener, addTracerListener } = interactionManager(
-  globals,
-  { getSurroundingScope },
-  { isWithinHoverScope }
+import { interactionManager } from "./components/interactionByDelegation.js";
+const { initializeInteraction } = interactionManager(
+  globals, 
+  globalDataManager(globals),
+  scopeFinder(appData.gridSize),
 );
 
 import { fillingManager } from "./components/fillingManager.js";
 const { fill } = fillingManager(
   globals,
-  { random },
-  { addClickListener },
-  { hasEnoughSq },
-  { compareExistingChar },
-  { createUL }
+  globalDataManager(globals),
+  random,
+  hasEnoughSq,
+  compareExistingChar,
+  createUL,
 );
 
 (async function initialize() {
-  layoutMgr.generateSqs();
-  fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
-  addTracerListener();
+  freeze(); // Freeze before loading the squares.
+  generateSqs();
+  await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // await for fill function to complete.
+  unfreeze(); // unfreeze when the fill is complete.
+  initializeInteraction();
 })();

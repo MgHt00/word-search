@@ -1,12 +1,15 @@
-export function fillingManager(globals, { random }, { addClickListener }, { hasEnoughSq }, { compareExistingChar }, { createUL }) {
+export function fillingManager(globals, globalDataManager, random, hasEnoughSq, compareExistingChar, createUL) {
   const { appData, selectors, wordPlacementData } = globals;
   const { gridSize } = appData;
   const { sectionWordList } = selectors;
 
   const { squareIdToChar, placedWordCoordinates } = wordPlacementData;
 
+  const { addPlacedWordCoordinates, addSquareIdToChar } = globalDataManager;
+
   // Data for generateRandomCoordinates()
-  const _directionMap = new Map([ //Map<number, string(direction)>.
+  const _directionMap = new Map([ 
+    //Map<number, string(direction)>.
     [1, "north"],
     [2, "north-east"],
     [3, "east"],
@@ -24,14 +27,6 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
 
   function _printCharOnScreenDUMMY(squareID, char) { // remove this function when stable
     document.querySelector(`#${squareID}`).textContent = char;
-  }
-
-  function _addSquareIdToChar(squareID, char, charMap) {
-    charMap.set(squareID, char);
-  }
-
-  function _addPlacedWordCoordinates(word, placementData, coordinates) {
-    placedWordCoordinates.set(word, { placementData, direction: coordinates.direction });
   }
 
   function _selectRandomWord(wordsArray) {
@@ -53,8 +48,8 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
   }
 
   // To list the words underneath the square frame
-  function _listAWord(selectedWord, wordList) {
-    let ulElement = wordList.querySelector("#word-list") || createUL(); // Cache & reuse the <ul> instead of creating a new one each time.
+  function _listAWord(selectedWord, wordList, className) {
+    let ulElement = wordList.querySelector("#word-list") || createUL(className); // Cache & reuse the <ul> instead of creating a new one each time.
     let liElement = document.createElement("li");
 
     liElement.textContent = selectedWord;
@@ -84,6 +79,10 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
         _printCharOnScreenDUMMY(squareID, randomChar); // remove this when stable
       }
     });
+  }
+
+  function _storeStartIDAndEndID(startSquareID, endSquareID) {
+    wordPlacementData.startIDAndEndID.set(startSquareID, endSquareID);
   }
 
   function fillingMgr() {
@@ -116,17 +115,18 @@ export function fillingManager(globals, { random }, { addClickListener }, { hasE
 
           const entries = Object.entries(placementData);
           const currentWordSquareIDs = entries.map(([squareID]) => squareID);
-          const wordData = { selectedWord, currentWordSquareIDs };
-
-          addClickListener(wordData);
+          //const wordData = { selectedWord, currentWordSquareIDs };
+          
+          _storeStartIDAndEndID(currentWordSquareIDs[0], currentWordSquareIDs[currentWordSquareIDs.length - 1]);
+          //addClickListener(wordData);
 
           entries.forEach(([squareID, char]) => {
             _printCharOnScreen(squareID, char);
-            _addSquareIdToChar(squareID, char, squareIdToChar);
+            addSquareIdToChar(squareID, char);
           });
 
-          _addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
-          _listAWord(_toLowerCases(selectedWord), sectionWordList);
+          addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
+          _listAWord(_toLowerCases(selectedWord), sectionWordList, "multi-column-list");
 
           wordsArray.splice(index, 1); // Remove placed word
           wordsRemaining--;
