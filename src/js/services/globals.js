@@ -12,9 +12,14 @@ const selectors = {
 }
 
 const wordPlacementData = {
-  squareIdToChar: new Map(), // Map<string(squareID), string(char)> // Maps square numbers to characters.
-  placedWordCoordinates: new Map(), // Map<string(word), object{string[](placementData), string(direction)}>
-  startIDAndEndID: new Map(), // Map<string(squareID), string(squareID)>
+  squareIdToChar: new Map(), 
+  // Map<string(squareID), string(char)> // Maps square numbers to characters.
+  
+  placedWordCoordinates: new Map(), 
+  // Map<string(word), object{string[](placementData), string(direction)}>
+  
+  startIDAndEndID: new Map(), 
+  // Map<string(squareID), string(squareID)>
 };
 
 export const globals =  {

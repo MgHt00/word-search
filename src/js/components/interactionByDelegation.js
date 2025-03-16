@@ -1,7 +1,10 @@
-export function interactionManager( globals, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
-  const { selectors, wordPlacementData } = globals;
+export function interactionManager( globals, globalDataManager, scopeFinder) {
+  const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
+
+  const {isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord,} = globalDataManager;
+  const { getSurroundingScope, isWithinHoverScope } = scopeFinder;
 
   const _interactionState = {
     _targetEndSquare: null,
@@ -56,21 +59,6 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
     }
   }
 
-  function _handleHover(target) {
-    clearTimeout(_interactionState.getWordMatchTimeout());
-    clearTimeout(_interactionState.getHoverTimeout());
-
-    if (_interactionState.getTracerFlag() && isWithinHoverScope(target.id)) {
-      target.classList.add("tracer");
-      getSurroundingScope(target.id);
-    }
-
-    _interactionState.setHoverTimeout(
-      setTimeout(() => {
-        _resetAllSquares();
-      }, 5000));
-  }
-
   function _handleStartSquareClick(squareID) {
     const _targetEndSquare = getEndSquareFromGlobal(squareID);
     _interactionState.setTargetEndSquare(_targetEndSquare);
@@ -103,6 +91,22 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
     }
   }
 
+  function _handleHover(target) {
+    clearTimeout(_interactionState.getWordMatchTimeout());
+    clearTimeout(_interactionState.getHoverTimeout());
+
+    if (_interactionState.getTracerFlag() && isWithinHoverScope(target.id)) {
+      target.classList.add("tracer");
+      getSurroundingScope(target.id);
+    }
+
+    _interactionState.setHoverTimeout(
+      setTimeout(() => {
+        _resetAllSquares();
+      }, 5000));
+  }
+
+
   function _addEscapeListener() {
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" || event.key === "Esc") {
@@ -113,7 +117,7 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
 
   function _resetAllSquares() {
     _clearAllTimeOuts();
-    
+
     const allSquares = document.querySelectorAll('[class|="sq"]');
     allSquares.forEach((squareDOMElement) => {
       squareDOMElement.classList.remove("tracer");

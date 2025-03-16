@@ -2,13 +2,6 @@ import { globals } from "./services/globals.js";
 const { appData, selectors } = globals;
 
 import { globalDataManager } from "./services/globalDataManager.js";
-const {
-  addPlacedWordCoordinates,
-  addSquareIdToChar,
-  isStartSquare, 
-  getEndSquareFromGlobal, 
-  findSelectedWordInGlobal, 
-  getSquareIDsOfSelectedWord, } = globalDataManager(globals);
 
 import { random } from "./utils/mathHelpers.js";
 import { hasEnoughSq } from "./utils/gridHelpers.js";
@@ -22,26 +15,20 @@ import { loadingManager } from "./components/loadingManager.js";
 const { freeze, unfreeze } = loadingManager(selectors);
 
 import { scopeFinder } from "./components/scopeFinder.js";
-const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
 
 import { interactionManager } from "./components/interactionByDelegation.js";
 const { initializeInteraction } = interactionManager(
   globals, 
-  isStartSquare,
-  getEndSquareFromGlobal,
-  findSelectedWordInGlobal,
-  getSquareIDsOfSelectedWord,
-  getSurroundingScope,
-  isWithinHoverScope,
+  globalDataManager(globals),
+  scopeFinder(appData.gridSize),
 );
 
 import { fillingManager } from "./components/fillingManager.js";
 const { fill } = fillingManager(
   globals,
+  globalDataManager(globals),
   random,
   hasEnoughSq,
-  addPlacedWordCoordinates,
-  addSquareIdToChar,
   compareExistingChar,
   createUL,
 );
@@ -51,6 +38,5 @@ const { fill } = fillingManager(
   generateSqs();
   await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // await for fill function to complete.
   unfreeze(); // unfreeze when the fill is complete.
-  //addTracerListener();
   initializeInteraction();
 })();
