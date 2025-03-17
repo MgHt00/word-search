@@ -1,11 +1,9 @@
-export function fillingManager(globals, globalDataManager, random, hasEnoughSq, compareExistingChar, createUL) {
+export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToChar, random, hasEnoughSq, compareExistingChar, createUL) {
   const { appData, selectors, wordPlacementData } = globals;
   const { gridSize } = appData;
   const { sectionWordList } = selectors;
 
   const { squareIdToChar, placedWordCoordinates } = wordPlacementData;
-
-  const { addPlacedWordCoordinates, addSquareIdToChar } = globalDataManager;
 
   // Data for generateRandomCoordinates()
   const _directionMap = new Map([ 

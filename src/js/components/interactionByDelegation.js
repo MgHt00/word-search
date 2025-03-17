@@ -1,10 +1,7 @@
-export function interactionManager( globals, globalDataManager, scopeFinder) {
+export function interactionManager( globals, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
   const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
-
-  const {isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord,} = globalDataManager;
-  const { getSurroundingScope, isWithinHoverScope } = scopeFinder;
 
   const _interactionState = {
     _targetEndSquare: null,
