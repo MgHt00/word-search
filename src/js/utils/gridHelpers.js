@@ -35,6 +35,7 @@ function gridHelpers() {
   return {
     hasEnoughSq: function hasEnoughSq(randomCoordinates, selectedWord, gridDimension) {
         const { direction, startingRow, startingCol } = randomCoordinates;
+        console.info(randomCoordinates);
         const checkParameters = {
           startingRow,
           startingCol,

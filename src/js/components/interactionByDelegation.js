@@ -1,10 +1,10 @@
-export function interactionManager( globals, globalDataManager, scopeFinder) {
+export function interactionManager( globals, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
   const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
 
-  const {isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord,} = globalDataManager;
-  const { getSurroundingScope, isWithinHoverScope } = scopeFinder;
+  // testing purpose
+  //console.warn ("startIDAndEndID:",wordPlacementData.startIDAndEndID);
 
   const _interactionState = {
     _targetEndSquare: null,
@@ -33,13 +33,13 @@ export function interactionManager( globals, globalDataManager, scopeFinder) {
 
   function _addSquareListeners() {
     squareFrame.addEventListener("click", (event) => {
-      if (event.target.matches('[id|="sq"]')) {
+      if (event.target.matches('[id|="sq"]') && !event.target.classList.contains("disabled")) {
         _handleClick(event.target);
       }
     });
 
     squareFrame.addEventListener("mouseover", (event) => {
-      if (event.target.matches('[id|="sq"]')) {
+      if (event.target.matches('[id|="sq"]') && !event.target.classList.contains("disabled")) {
         _handleHover(event.target);
       }
     });
@@ -82,7 +82,7 @@ export function interactionManager( globals, globalDataManager, scopeFinder) {
       if (selectedWord) {
         const squaresToFill = getSquareIDsOfSelectedWord(selectedWord);
         _highlightCompletedWord(squaresToFill);
-        _removeSquareIdentifiers(squaresToFill); // to remove the click listeners on the completed words
+        _addDisabledClass(squaresToFill); // to remove the click listeners on the completed words
         _markCompletedWord(selectedWord.toLowerCase());
         _handleGameCompletion();
       }
@@ -142,18 +142,19 @@ export function interactionManager( globals, globalDataManager, scopeFinder) {
     });
   }
 
-  function _removeSquareIdentifiers(squares) {
-    squares.forEach(square => {
-      const squareDOMElement = document.querySelector(`#${square}`);
-      if(squareDOMElement.id.startsWith("sq-")) {
-        squareDOMElement.removeAttribute("id");
+  // id နဲ့ ဖြုတ်လိုက်တဲ့ အခါကျတော့ နောက် collapse ဖြစ်နေတဲ့ word တွေ့တဲ့အခါ highlight လုပ်ဖို့ မကျန်တော့ဘူး။
+  // ဒီအစား id ကို မဖြုတ်ပဲနဲ့ class မှာ highlight လုပ်ထားပြီးရင် click event မထည့်ဖို့ ပြောင်းရေးရမယ်။
+
+  // အပေါ် bug က အကယ်လို့ collapse ဖြစ်နေတာ အလည်စာလုံးဆိုရင် ပြေလည်သွားပြီ ၊
+  // သို့သော် အစ စာလုံး က collapse ဖြစ်နေရင် click event listener မရှိတော့တဲ့အတွက် အလုပ်မလုပ်တော့ဘူး
+
+  function _addDisabledClass(squares) {
+    squares.forEach(squareID => {
+      const squareDOMElement = document.querySelector(`#${squareID}`);
+  
+      if (squareDOMElement && squareDOMElement.classList.contains("highlight")) {
+        squareDOMElement.classList.add("disabled");
       }
-      /*
-      const classesToRemove = Array // [le8]
-      .from(squareDOMElement.classList) 
-      .filter(className => className.startsWith("sq"));
-      squareDOMElement.classList.remove(...classesToRemove);
-      */
     });
   }
 
@@ -167,6 +168,35 @@ export function interactionManager( globals, globalDataManager, scopeFinder) {
     if (_gameState.getRemainingWords() === 0) {
       squareFrame.classList.add("dim");
     }
+  }
+
+  function _removeSquareIdentifiers(squares) {
+    squares.forEach(square => {
+      const squareDOMElement = document.querySelector(`#${square}`);
+      if(squareDOMElement.id.startsWith("sq-")) {
+        squareDOMElement.removeAttribute("id");
+      }
+      
+      /*const classesToRemove = Array // [le8]
+      .from(squareDOMElement.classList) 
+      .filter(className => className.startsWith("sq"));
+      squareDOMElement.classList.remove(...classesToRemove);*/
+    });
+  }
+
+  function _cloneAndRemoveListeners(squares) {
+    squares.forEach(squareID => { // squareID is more accurate here
+      const squareDOMElement = document.querySelector(`#${squareID}`);
+  
+      if (squareDOMElement && squareDOMElement.classList.contains("highlight")) {
+        // Clone the DOM element.
+        const newSquareDOMElement = squareDOMElement.cloneNode(true);
+  
+        // Replace the original element with the cloned one.
+        // By replacing, all the event listeners are cleared.
+        squareDOMElement.parentNode.replaceChild(newSquareDOMElement, squareDOMElement);
+      }
+    });
   }
 
   function initializeInteraction() {
