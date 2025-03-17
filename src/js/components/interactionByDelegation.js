@@ -142,21 +142,6 @@ export function interactionManager( globals, globalDataManager, scopeFinder) {
     });
   }
 
-  function _cloneAndRemoveListeners(squares) {
-    squares.forEach(squareID => { // squareID is more accurate here
-      const squareDOMElement = document.querySelector(`#${squareID}`);
-  
-      if (squareDOMElement && squareDOMElement.classList.contains("highlight")) {
-        // Clone the DOM element.
-        const newSquareDOMElement = squareDOMElement.cloneNode(true);
-  
-        // Replace the original element with the cloned one.
-        // By replacing, all the event listeners are cleared.
-        squareDOMElement.parentNode.replaceChild(newSquareDOMElement, squareDOMElement);
-      }
-    });
-  }
-
   // id နဲ့ ဖြုတ်လိုက်တဲ့ အခါကျတော့ နောက် collapse ဖြစ်နေတဲ့ word တွေ့တဲ့အခါ highlight လုပ်ဖို့ မကျန်တော့ဘူး။
   // ဒီအစား id ကို မဖြုတ်ပဲနဲ့ class မှာ highlight လုပ်ထားပြီးရင် click event မထည့်ဖို့ ပြောင်းရေးရမယ်။
 
@@ -168,12 +153,22 @@ export function interactionManager( globals, globalDataManager, scopeFinder) {
       const squareDOMElement = document.querySelector(`#${squareID}`);
   
       if (squareDOMElement && squareDOMElement.classList.contains("highlight")) {
-        // Add a "disabled" class
         squareDOMElement.classList.add("disabled");
       }
     });
   }
 
+  function _markCompletedWord(id) {
+    const foundWordElement = document.querySelector(`#${id}`);
+    foundWordElement.classList.add("dim", "marked");
+  }
+
+  function _handleGameCompletion() {
+    _gameState.reduceRemainingWords();
+    if (_gameState.getRemainingWords() === 0) {
+      squareFrame.classList.add("dim");
+    }
+  }
 
   function _removeSquareIdentifiers(squares) {
     squares.forEach(square => {
@@ -189,16 +184,19 @@ export function interactionManager( globals, globalDataManager, scopeFinder) {
     });
   }
 
-  function _markCompletedWord(id) {
-    const foundWordElement = document.querySelector(`#${id}`);
-    foundWordElement.classList.add("dim", "marked");
-  }
-
-  function _handleGameCompletion() {
-    _gameState.reduceRemainingWords();
-    if (_gameState.getRemainingWords() === 0) {
-      squareFrame.classList.add("dim");
-    }
+  function _cloneAndRemoveListeners(squares) {
+    squares.forEach(squareID => { // squareID is more accurate here
+      const squareDOMElement = document.querySelector(`#${squareID}`);
+  
+      if (squareDOMElement && squareDOMElement.classList.contains("highlight")) {
+        // Clone the DOM element.
+        const newSquareDOMElement = squareDOMElement.cloneNode(true);
+  
+        // Replace the original element with the cloned one.
+        // By replacing, all the event listeners are cleared.
+        squareDOMElement.parentNode.replaceChild(newSquareDOMElement, squareDOMElement);
+      }
+    });
   }
 
   function initializeInteraction() {
