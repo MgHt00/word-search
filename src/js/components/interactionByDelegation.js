@@ -8,6 +8,14 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
       setTargetEndSquare(value) { this._targetEndSquare = value; },
       getTargetEndSquare() { return this._targetEndSquare; },
 
+    _targetEndSquares: [],
+      addTargetEndSquares(squares) {
+        squares.forEach(square => {
+          this._targetEndSquares.push(square);
+        });
+      },
+      getTargetEndSquares() { return this._targetEndSquares; },
+
     _wordMatchTimeout: null,
       setWordMatchTimeout(timeout) { this._endPointTimeout = timeout; },
       getWordMatchTimeout() { return this._endPointTimeout; },
@@ -57,11 +65,15 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
   }
 
   function _handleStartSquareClick(squareID) {
-    const _targetEndSquare = getEndSquareFromGlobal(squareID);
+/*    const _targetEndSquare = getEndSquareFromGlobal(squareID);
     console.info("_handleStartSquareClick():_targetEndSquare", _targetEndSquare);
     
     _interactionState.setTargetEndSquare(_targetEndSquare);
     console.info("_handleStartSquareClick():_targetEndSquare", _interactionState.getTargetEndSquare());
+*/
+    const _targetEndSquares = getEndSquareFromGlobal(squareID);
+    _interactionState.addTargetEndSquares(_targetEndSquares);
+    console.info("_handleStartSquareClick():_targetEndSquares", _interactionState.getTargetEndSquares());
     
     // Set a timeout to reset _wordMatchTimeout
     const timeoutId = setTimeout(() => {
