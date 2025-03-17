@@ -2,7 +2,7 @@ import { globals } from "./services/globals.js";
 const { appData, selectors } = globals;
 
 import { globalDataManager } from "./services/globalDataManager.js";
-const { addPlacedWordCoordinates, addSquareIdToChar, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = globalDataManager(globals);
+const { addPlacedWordCoordinates, addSquareIdToChar, isStartSquare, storeStartIDAndEndID, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = globalDataManager(globals);
 
 import { random } from "./utils/mathHelpers.js";
 
@@ -33,7 +33,7 @@ import { fillingManager } from "./components/fillingManager.js";
 
 const { fill } = fillingManager(
   globals,
-  addPlacedWordCoordinates, addSquareIdToChar,
+  addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID, // globalDataManager's
   testRandom(), // comment this after testing.
   //random, // uncomment for normal situation
   hasEnoughSq,

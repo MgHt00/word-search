@@ -8,13 +8,13 @@ export function testRandom() { // [le9]
 
   return (min, max) => {
     if (index >= sequence.length) {
-      console.warn("testRandom out of bounds. Using normal random instead.");
+      //console.warn("testRandom out of bounds. Using normal random instead.");
       return Math.floor(Math.random() * (max - min + 1)) + min; // Fallback to normal random.
     }
     const result = sequence[index];
     index++;
 
-    console.log(`testRandom returning: ${result} (min: ${min}, max: ${max})`);
+    //console.log(`testRandom returning: ${result} (min: ${min}, max: ${max})`);
     return result;
   };
 }

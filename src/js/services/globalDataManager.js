@@ -17,6 +17,10 @@ export function globalDataManager(globals) {
   function getEndSquareFromGlobal(key) {
     return startIDAndEndID.get(key);
   }
+
+  function storeStartIDAndEndID(startSquareID, endSquareID) {
+    wordPlacementData.startIDAndEndID.set(startSquareID, endSquareID);
+  }
   
   function findSelectedWordInGlobal(endSquareID) {
     for (const [word, entry] of placedWordCoordinates) { 
@@ -38,6 +42,7 @@ export function globalDataManager(globals) {
     addSquareIdToChar,
     isStartSquare,
     getEndSquareFromGlobal,
+    storeStartIDAndEndID,
     findSelectedWordInGlobal,
     getSquareIDsOfSelectedWord
   };

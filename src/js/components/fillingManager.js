@@ -1,4 +1,4 @@
-export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToChar, random, hasEnoughSq, compareExistingChar, createUL) {
+export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID, random, hasEnoughSq, compareExistingChar, createUL) {
   const { appData, selectors, wordPlacementData } = globals;
   const { gridSize } = appData;
   const { sectionWordList } = selectors;
@@ -29,7 +29,6 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
 
   function _selectRandomWord(wordsArray) {
     let index = random(0, (wordsArray.length - 1));
-    console.warn("wordsArray()", index);
     let selectedWord = wordsArray[index];
     return { index, selectedWord };
   }
@@ -79,10 +78,6 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
     });
   }
 
-  function _storeStartIDAndEndID(startSquareID, endSquareID) {
-    wordPlacementData.startIDAndEndID.set(startSquareID, endSquareID);
-  }
-
   function fillingMgr() {
     async function _placeWords(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
       //let wordsArray = [...words.map(word => word.toUpperCase())];
@@ -115,7 +110,7 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
           const currentWordSquareIDs = entries.map(([squareID]) => squareID);
           //const wordData = { selectedWord, currentWordSquareIDs };
           
-          _storeStartIDAndEndID(currentWordSquareIDs[0], currentWordSquareIDs[currentWordSquareIDs.length - 1]);
+          storeStartIDAndEndID(currentWordSquareIDs[0], currentWordSquareIDs[currentWordSquareIDs.length - 1]);
           //addClickListener(wordData);
 
           entries.forEach(([squareID, char]) => {
