@@ -29,6 +29,7 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
 
   function _selectRandomWord(wordsArray) {
     let index = random(0, (wordsArray.length - 1));
+    console.warn("wordsArray()", index);
     let selectedWord = wordsArray[index];
     return { index, selectedWord };
   }
@@ -37,7 +38,6 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
     let direction = _getRandomDirection();
     let startingRow = random(1, gridDimension);
     let startingCol = random(1, gridDimension);
-
     return { direction, startingRow, startingCol };
   }
 
@@ -147,7 +147,7 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
     return {
       fill: async (words, noOfWordsToDisplay) => {
         await _placeWords(words, noOfWordsToDisplay);
-        //_fillRemainingSquares();
+        _fillRemainingSquares();
       }
     };
   }

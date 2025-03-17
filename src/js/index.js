@@ -4,8 +4,7 @@ const { appData, selectors } = globals;
 import { globalDataManager } from "./services/globalDataManager.js";
 const { addPlacedWordCoordinates, addSquareIdToChar, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = globalDataManager(globals);
 
-import { random, testRandom } from "./utils/mathHelpers.js";
-const testRandomFunction = testRandom(); // Initialize the test random function
+import { random } from "./utils/mathHelpers.js";
 
 import { hasEnoughSq } from "./utils/gridHelpers.js";
 import { compareExistingChar } from "./utils/placementHelpers.js";
@@ -20,6 +19,9 @@ const { freeze, unfreeze } = loadingManager(selectors);
 import { scopeFinder } from "./components/scopeFinder.js";
 const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
 
+// Testing concerns
+import { testWordList, testRandom } from "../../tests/testHelpers.js";
+
 import { interactionManager } from "./components/interactionByDelegation.js";
 const { initializeInteraction } = interactionManager(
   globals, 
@@ -28,20 +30,22 @@ const { initializeInteraction } = interactionManager(
 );
 
 import { fillingManager } from "./components/fillingManager.js";
+
 const { fill } = fillingManager(
   globals,
   addPlacedWordCoordinates, addSquareIdToChar,
-  testRandomFunction,
-  //random,
+  testRandom(), // comment this after testing.
+  //random, // uncomment for normal situation
   hasEnoughSq,
   compareExistingChar,
   createUL,
 );
 
 (async function initialize() {
-  freeze(); // Freeze before loading the squares.
+  freeze(); 
   generateSqs();
-  await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // await for fill function to complete.
-  unfreeze(); // unfreeze when the fill is complete.
+  //await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
+  await fill([...testWordList], appData.noOfWordsToDisplay); // comment this after testing.
+  unfreeze(); 
   initializeInteraction();
 })();
