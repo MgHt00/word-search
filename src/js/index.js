@@ -4,7 +4,9 @@ const { appData, selectors } = globals;
 import { globalDataManager } from "./services/globalDataManager.js";
 const { addPlacedWordCoordinates, addSquareIdToChar, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = globalDataManager(globals);
 
-import { random } from "./utils/mathHelpers.js";
+import { random, testRandom } from "./utils/mathHelpers.js";
+const testRandomFunction = testRandom(); // Initialize the test random function
+
 import { hasEnoughSq } from "./utils/gridHelpers.js";
 import { compareExistingChar } from "./utils/placementHelpers.js";
 import { createUL } from "./utils/domHelpers.js";
@@ -29,7 +31,8 @@ import { fillingManager } from "./components/fillingManager.js";
 const { fill } = fillingManager(
   globals,
   addPlacedWordCoordinates, addSquareIdToChar,
-  random,
+  testRandomFunction,
+  //random,
   hasEnoughSq,
   compareExistingChar,
   createUL,
