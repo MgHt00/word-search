@@ -3,9 +3,6 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
   const { squareFrame } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
 
-  // testing purpose
-  //console.warn ("startIDAndEndID:",wordPlacementData.startIDAndEndID);
-
   const _interactionState = {
     _targetEndSquare: null,
       setTargetEndSquare(value) { this._targetEndSquare = value; },
@@ -61,6 +58,8 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
 
   function _handleStartSquareClick(squareID) {
     const _targetEndSquare = getEndSquareFromGlobal(squareID);
+    console.info("_handleStartSquareClick():_targetEndSquare", _targetEndSquare);
+    
     _interactionState.setTargetEndSquare(_targetEndSquare);
     console.info("_handleStartSquareClick():_targetEndSquare", _interactionState.getTargetEndSquare());
     
