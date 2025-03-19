@@ -1,7 +1,10 @@
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
 export function interactionManager( globals, isStartSquare, getEndSquaresFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
   const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
+
+  const { ALL_SQUARES, SQUARE_TRACER, SQUARE_HIGHLIGHT, WORD_DIMMED, WORD_MARKED } = CSS_CLASS_NAMES;
 
   const _interactionState = {
     _wordMatchTimeout: null,
@@ -59,9 +62,7 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
   }
 
   function _handleClick(target) {
-    _interactionState.setTracerFlag(true);
-    target.classList.add("tracer");
-    getSurroundingScope(target.id);
+    _interactionState.getTracerFlag() ? _disableTracing(target) : _enableTracing(target);
 
     const clickedSquare = target.id;
     if (isStartSquare(clickedSquare)) {
@@ -70,6 +71,24 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     else {
       _handleOtherSquareClick(clickedSquare);
     }
+  }
+
+  function _enableTracing(target) {
+    _interactionState.setTracerFlag(true);
+    target.classList.add(SQUARE_TRACER);
+    getSurroundingScope(target.id);
+  }
+
+  function _disableTracing() {
+    _interactionState.setTracerFlag(false);
+    _removeClassfromSquares(SQUARE_TRACER);
+  }
+
+  function _removeClassfromSquares(className) {
+    const allSquares = document.querySelectorAll(ALL_SQUARES);
+    allSquares.forEach((squareDOMElement) => {
+      squareDOMElement.classList.remove(className);
+    });
   }
 
   function _handleStartSquareClick(squareID) {
@@ -111,7 +130,7 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     clearTimeout(_interactionState.getHoverTimeout());
 
     if (_interactionState.getTracerFlag() && isWithinHoverScope(target.id)) {
-      target.classList.add("tracer");
+      target.classList.add(SQUARE_TRACER);
       getSurroundingScope(target.id);
     }
 
@@ -132,11 +151,7 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
 
   function _resetAllSquares() {
     _clearAllTimeOuts();
-
-    const allSquares = document.querySelectorAll('[class|="sq"]');
-    allSquares.forEach((squareDOMElement) => {
-      squareDOMElement.classList.remove("tracer");
-    });
+    _removeClassfromSquares(SQUARE_TRACER);
 
     _interactionState.setTracerFlag(false);
     _gameState.resetTargetEndSquares();
@@ -151,20 +166,19 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
   function _highlightCompletedWord(squares) {
     squares.forEach((square) => {
       const squareID = `#${square}`;
-      document.querySelector(squareID).classList.remove("clicked");
-      document.querySelector(squareID).classList.add("highlight");
+      document.querySelector(squareID).classList.add(SQUARE_HIGHLIGHT);
     });
   }
 
   function _markCompletedWord(id) {
     const foundWordElement = document.querySelector(`#${id}`);
-    foundWordElement.classList.add("dim", "marked");
+    foundWordElement.classList.add(WORD_DIMMED, WORD_MARKED);
   }
 
   function _handleGameCompletion() {
     _gameState.reduceRemainingWords();
     if (_gameState.getRemainingWords() === 0) {
-      squareFrame.classList.add("dim");
+      squareFrame.classList.add(WORD_DIMMED);
     }
   }
 
