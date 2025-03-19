@@ -4,36 +4,6 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
   const { placedWordCoordinates } = wordPlacementData;
 
   const _interactionState = {
-    _targetEndSquares: [],
-      addTargetEndSquares(squares) {
-        squares.forEach(square => {
-          this._targetEndSquares.push(square);
-        });
-        console.info("addTargetEndSquares:", this._targetEndSquares);
-      },
-
-      getTargetEndSquares() { return this._targetEndSquares; },
-
-      hasTargetEndSquares(squareIDs) {
-        squareIDs = Array.isArray(squareIDs) ? squareIDs : [squareIDs];
-        return squareIDs.some(squareID => this._targetEndSquares.includes(squareID));
-      },
-
-      removeTargetEndSquares(squareIDs) {
-        squareIDs = Array.isArray(squareIDs) ? squareIDs : [squareIDs];
-        squareIDs.forEach(squareID => {
-          const index = this._targetEndSquares.indexOf(squareID);
-          if (index !== -1) {
-            this._targetEndSquares.splice(index, 1);
-          }
-        });
-        console.info("removeTargetEndSquares:", this._targetEndSquares);
-      },
-      
-      resetTargetEndSquares(){
-        this._targetEndSquares = [];
-      },
-
     _wordMatchTimeout: null,
       setWordMatchTimeout(timeout) { this._endPointTimeout = timeout; },
       getWordMatchTimeout() { return this._endPointTimeout; },
@@ -48,10 +18,30 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
   }
 
   const _gameState = {
+    _targetEndSquares: [],
+      addTargetEndSquares(squares) {
+        squares.forEach(square => {
+          this._targetEndSquares.push(square);
+        });
+        console.info("addTargetEndSquares:", this._targetEndSquares);
+      },
+
+      hasTargetEndSquares(squareIDs) {
+        squareIDs = Array.isArray(squareIDs) ? squareIDs : [squareIDs];
+        return squareIDs.some(squareID => this._targetEndSquares.includes(squareID));
+      },
+
+      resetTargetEndSquares(){ this._targetEndSquares = []; },
+
     _remainingWords: null,
       setRemainingWords(value) { this._remainingWords = value; },
       getRemainingWords() { return this._remainingWords; },
       reduceRemainingWords() { this._remainingWords--; },
+
+    _finishedEndSquares: [],
+      addFinishedEndSquare(square) { this._finishedEndSquares.push(square); },
+      hasFinishedEndSquare(square) { return this._finishedEndSquares.includes(square); },
+      resetFinishedEndSquares() { this._finishedEndSquares = []; },
   }
 
   function _addSquareListeners() {
@@ -84,8 +74,8 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
 
   function _handleStartSquareClick(squareID) {
     const _targetEndSquares = getEndSquaresFromGlobal(squareID);
-    if (_targetEndSquares) {
-      _interactionState.addTargetEndSquares(_targetEndSquares);
+    if (_targetEndSquares) { // if it is not `null`
+      _gameState.addTargetEndSquares(_targetEndSquares);
 
       // Set a timeout to reset _wordMatchTimeout
       const timeoutId = setTimeout(() => {
@@ -100,8 +90,7 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     console.info("_handleOtherSquareClick:",squareID);
 
     // if end square is clicked
-      if (_interactionState.hasTargetEndSquares(squareID)) {
-      console.info("we are in.")
+      if (_gameState.hasTargetEndSquares(squareID) && !_gameState.hasFinishedEndSquare(squareID)) {
       const selectedWord = findSelectedWordInGlobal(squareID);
       if (selectedWord) {
         console.warn("BINGOOOOO!!!!");
@@ -109,11 +98,12 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
         _highlightCompletedWord(squaresToFill);
         _markCompletedWord(selectedWord.toLowerCase());
         _handleGameCompletion();
-
-        _interactionState.removeTargetEndSquares(squareID);
         _resetAllSquares();
+        _gameState.addFinishedEndSquare(squareID);
       }
     }
+
+    _gameState.resetTargetEndSquares();
   }
 
   function _handleHover(target) {
@@ -149,7 +139,7 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     });
 
     _interactionState.setTracerFlag(false);
-    _interactionState.resetTargetEndSquares();
+    _gameState.resetTargetEndSquares();
   }
 
   function _clearAllTimeOuts() {
@@ -166,16 +156,6 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     });
   }
 
-  function _addDisabledClass(squares) {
-    squares.forEach(squareID => {
-      const squareDOMElement = document.querySelector(`#${squareID}`);
-  
-      if (squareDOMElement && squareDOMElement.classList.contains("highlight")) {
-        squareDOMElement.classList.add("disabled");
-      }
-    });
-  }
-
   function _markCompletedWord(id) {
     const foundWordElement = document.querySelector(`#${id}`);
     foundWordElement.classList.add("dim", "marked");
@@ -186,35 +166,6 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     if (_gameState.getRemainingWords() === 0) {
       squareFrame.classList.add("dim");
     }
-  }
-
-  function _removeSquareIdentifiers(squares) {
-    squares.forEach(square => {
-      const squareDOMElement = document.querySelector(`#${square}`);
-      if(squareDOMElement.id.startsWith("sq-")) {
-        squareDOMElement.removeAttribute("id");
-      }
-      
-      /*const classesToRemove = Array // [le8]
-      .from(squareDOMElement.classList) 
-      .filter(className => className.startsWith("sq"));
-      squareDOMElement.classList.remove(...classesToRemove);*/
-    });
-  }
-
-  function _cloneAndRemoveListeners(squares) {
-    squares.forEach(squareID => { // squareID is more accurate here
-      const squareDOMElement = document.querySelector(`#${squareID}`);
-  
-      if (squareDOMElement && squareDOMElement.classList.contains("highlight")) {
-        // Clone the DOM element.
-        const newSquareDOMElement = squareDOMElement.cloneNode(true);
-  
-        // Replace the original element with the cloned one.
-        // By replacing, all the event listeners are cleared.
-        squareDOMElement.parentNode.replaceChild(newSquareDOMElement, squareDOMElement);
-      }
-    });
   }
 
   function initializeInteraction() {

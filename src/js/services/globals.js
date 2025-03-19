@@ -18,9 +18,6 @@ const wordPlacementData = {
   placedWordCoordinates: new Map(), 
   // Map<string(word), object{string[](placementData), string(direction)}>
   
-  // startIDAndEndID: new Map(), 
-  // Map<string(squareID), string(squareID)>
-
   startIDAndEndID: [], 
   // startIDAndEndID: [{"sq-1-1" : "sq-1-2"}, {"sq-1-1" : "sq-1-5"}];
   // key: startID, value: endID
