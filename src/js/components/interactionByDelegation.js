@@ -1,4 +1,4 @@
-export function interactionManager( globals, isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
+export function interactionManager( globals, isStartSquare, getEndSquaresFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
   const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
@@ -15,6 +15,15 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
         });
       },
       getTargetEndSquares() { return this._targetEndSquares; },
+      hasTargetEndSquare(squareID) {
+        return this._targetEndSquares.includes(squareID);
+      },
+      removeTargetEndSquare(squareID) {
+        const index = this._targetEndSquares.indexOf(squareID);
+        if (index !== -1) {
+          this._targetEndSquares.splice(index, 1);
+        }
+      },
 
     _wordMatchTimeout: null,
       setWordMatchTimeout(timeout) { this._endPointTimeout = timeout; },
@@ -65,15 +74,8 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
   }
 
   function _handleStartSquareClick(squareID) {
-/*    const _targetEndSquare = getEndSquareFromGlobal(squareID);
-    console.info("_handleStartSquareClick():_targetEndSquare", _targetEndSquare);
-    
-    _interactionState.setTargetEndSquare(_targetEndSquare);
-    console.info("_handleStartSquareClick():_targetEndSquare", _interactionState.getTargetEndSquare());
-*/
-    const _targetEndSquares = getEndSquareFromGlobal(squareID);
+    const _targetEndSquares = getEndSquaresFromGlobal(squareID);
     _interactionState.addTargetEndSquares(_targetEndSquares);
-    console.info("_handleStartSquareClick():_targetEndSquares", _interactionState.getTargetEndSquares());
     
     // Set a timeout to reset _wordMatchTimeout
     const timeoutId = setTimeout(() => {
@@ -87,17 +89,17 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
     console.info("_handleOtherSquareClick:",squareID);
 
     // if end square is clicked
-    if (squareID === _interactionState.getTargetEndSquare()) {
+      if (_interactionState.hasTargetEndSquare(squareID)) {
       console.warn("BINGOOOOO!!!!");
       const selectedWord = findSelectedWordInGlobal(squareID);
       if (selectedWord) {
         const squaresToFill = getSquareIDsOfSelectedWord(selectedWord);
         _highlightCompletedWord(squaresToFill);
-        _addDisabledClass(squaresToFill); // to remove the click listeners on the completed words
         _markCompletedWord(selectedWord.toLowerCase());
         _handleGameCompletion();
       }
 
+      _interactionState.removeTargetEndSquare(squareID);
       _resetAllSquares();
     }
   }
@@ -140,9 +142,8 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
 
   function _clearAllTimeOuts() {
     clearTimeout(_interactionState.getWordMatchTimeout());
-    console.warn("Timeout: Word Match reset.");
     clearTimeout(_interactionState.getHoverTimeout());
-    console.warn("Timeout: Hover reset.");
+    console.warn("Timeout: Word Match and Hover reset.")
   }
 
   function _highlightCompletedWord(squares) {
@@ -152,12 +153,6 @@ export function interactionManager( globals, isStartSquare, getEndSquareFromGlob
       document.querySelector(squareID).classList.add("highlight");
     });
   }
-
-  // id နဲ့ ဖြုတ်လိုက်တဲ့ အခါကျတော့ နောက် collapse ဖြစ်နေတဲ့ word တွေ့တဲ့အခါ highlight လုပ်ဖို့ မကျန်တော့ဘူး။
-  // ဒီအစား id ကို မဖြုတ်ပဲနဲ့ class မှာ highlight လုပ်ထားပြီးရင် click event မထည့်ဖို့ ပြောင်းရေးရမယ်။
-
-  // အပေါ် bug က အကယ်လို့ collapse ဖြစ်နေတာ အလည်စာလုံးဆိုရင် ပြေလည်သွားပြီ ၊
-  // သို့သော် အစ စာလုံး က collapse ဖြစ်နေရင် click event listener မရှိတော့တဲ့အတွက် အလုပ်မလုပ်တော့ဘူး
 
   function _addDisabledClass(squares) {
     squares.forEach(squareID => {

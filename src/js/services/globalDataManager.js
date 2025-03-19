@@ -10,25 +10,13 @@ export function globalDataManager(globals) {
     squareIdToChar.set(squareID, char);
   }
 
-  /*function isStartSquare(squareID) {
-    return startIDAndEndID.has(squareID);
-  }
-  
-  function getEndSquareFromGlobal(key) {
-    return startIDAndEndID.get(key);
-  }
-
-  function storeStartIDAndEndID(startSquareID, endSquareID) {
-    wordPlacementData.startIDAndEndID.set(startSquareID, endSquareID);
-  }*/
-
   // Check if the squareID exists as a key in any of the objects
   function isStartSquare(squareID) {
     return startIDAndEndID.some((obj) => obj.hasOwnProperty(squareID));
   }
 
   // Find all end squares associated with the given start square
-  function getEndSquareFromGlobal(squareID) {
+  function getEndSquaresFromGlobal(squareID) {
     const endSquares = startIDAndEndID
       .filter((obj) => obj.hasOwnProperty(squareID))
       .map((obj) => obj[squareID]); //extract the end square.
@@ -58,7 +46,7 @@ export function globalDataManager(globals) {
     addPlacedWordCoordinates,
     addSquareIdToChar,
     isStartSquare,
-    getEndSquareFromGlobal,
+    getEndSquaresFromGlobal,
     storeStartIDAndEndID,
     findSelectedWordInGlobal,
     getSquareIDsOfSelectedWord

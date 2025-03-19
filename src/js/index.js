@@ -2,7 +2,7 @@ import { globals } from "./services/globals.js";
 const { appData, selectors } = globals;
 
 import { globalDataManager } from "./services/globalDataManager.js";
-const { addPlacedWordCoordinates, addSquareIdToChar, isStartSquare, storeStartIDAndEndID, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = globalDataManager(globals);
+const { addPlacedWordCoordinates, addSquareIdToChar, isStartSquare, storeStartIDAndEndID, getEndSquaresFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = globalDataManager(globals);
 
 import { random } from "./utils/mathHelpers.js";
 
@@ -25,7 +25,7 @@ import { testWordList, testRandom } from "../../tests/testHelpers.js";
 import { interactionManager } from "./components/interactionByDelegation.js";
 const { initializeInteraction } = interactionManager(
   globals, 
-  isStartSquare, getEndSquareFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord,
+  isStartSquare, getEndSquaresFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord,
   getSurroundingScope, isWithinHoverScope,
 );
 

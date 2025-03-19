@@ -1,9 +1,15 @@
-export const testWordList = ["comments", "console"]; // for testing purpose
+export const testWordList = ["comments", "console", "delete"]; // for testing purpose
 
+/*
+Scenario: The words 'comments', and 'console' start from the same position, 
+... and 'delete' in random position-direction
+*/ 
 export function testRandom() { // [le9]
-  // sequence => [index of word arrary, direction, row, col ]
-  // index needs to b zero on both round, as the `testWordList` array will be spliced from fillingManager
-  const sequence = [0, 1, 9, 6, 0, 3, 9, 6];
+  const sequence = [0, 1, 9, 6, 0, 3, 9, 6]; 
+  /* sequence => [index of word arrary, direction, row, col ]
+     ... index from array sequence needs to be zero on both round, as the `testWordList` array will be spliced from fillingManager
+  */
+
   let index = 0;
 
   return (min, max) => {
