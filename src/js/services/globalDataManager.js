@@ -27,16 +27,6 @@ export function globalDataManager(globals) {
     wordPlacementData.startIDAndEndID.push({ [startSquareID]: endSquareID }); // [] is for Computed Property Names: 
   }
 
-  /*function findSelectedWordInGlobal(endSquareID) {
-    for (const [word, entry] of placedWordCoordinates) {
-      const storedEndSquareID = entry.placementData[entry.placementData.length - 1];
-      if (storedEndSquareID === endSquareID) {
-        return word; 
-      }
-    }
-    return undefined; 
-  }*/
-
   function findSelectedWordInGlobal(startSquareID, endSquareID) {
     for (const [word, entry] of placedWordCoordinates) {
       const storedStartSquareID = entry.placementData[0];
