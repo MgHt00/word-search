@@ -21,6 +21,11 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
   }
 
   const _gameState = {
+    _clickedStartSquare: null,
+      setClickedStartSquare(value) { this._clickedStartSquare = value; },
+      getClickedStartSquare() { return this._clickedStartSquare; },
+      resetClickedStartSquare() { this._clickedStartSquare = null; },
+
     _targetEndSquares: [],
       addTargetEndSquares(squares) {
         squares.forEach(square => {
@@ -69,29 +74,14 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
       _handleStartSquareClick(clickedSquare);
     }
     else {
-      _handleOtherSquareClick(clickedSquare);
+      _handleOtherSquareClick(clickedSquare, _gameState.getClickedStartSquare());
     }
   }
 
-  function _enableTracing(target) {
-    _interactionState.setTracerFlag(true);
-    target.classList.add(SQUARE_TRACER);
-    getSurroundingScope(target.id);
-  }
-
-  function _disableTracing() {
-    _interactionState.setTracerFlag(false);
-    _removeClassfromSquares(SQUARE_TRACER);
-  }
-
-  function _removeClassfromSquares(className) {
-    const allSquares = document.querySelectorAll(ALL_SQUARES);
-    allSquares.forEach((squareDOMElement) => {
-      squareDOMElement.classList.remove(className);
-    });
-  }
-
   function _handleStartSquareClick(squareID) {
+    console.info("_handleStartSquareClick:",{squareID});
+    _gameState.setClickedStartSquare(squareID);
+
     const _targetEndSquares = getEndSquaresFromGlobal(squareID);
     if (_targetEndSquares) { // if it is not `null`
       _gameState.addTargetEndSquares(_targetEndSquares);
@@ -99,18 +89,18 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
       // Set a timeout to reset _wordMatchTimeout
       const timeoutId = setTimeout(() => {
         _resetAllSquares();
-      }, 5000);
+      }, 10000);
 
       _interactionState.setWordMatchTimeout(timeoutId);
     }
   }
 
-  function _handleOtherSquareClick(squareID) {
-    console.info("_handleOtherSquareClick:",squareID);
+  function _handleOtherSquareClick(clickedSquare, startSquareID) {
+    console.info("_handleOtherSquareClick:",{clickedSquare, startSquareID});
 
     // if end square is clicked
-      if (_gameState.hasTargetEndSquares(squareID) && !_gameState.hasFinishedEndSquare(squareID)) {
-      const selectedWord = findSelectedWordInGlobal(squareID);
+      if (_gameState.hasTargetEndSquares(clickedSquare) && !_gameState.hasFinishedEndSquare(clickedSquare)) {
+      const selectedWord = findSelectedWordInGlobal(startSquareID, clickedSquare);
       if (selectedWord) {
         console.warn("BINGOOOOO!!!!");
         const squaresToFill = getSquareIDsOfSelectedWord(selectedWord);
@@ -118,7 +108,7 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
         _markCompletedWord(selectedWord.toLowerCase());
         _handleGameCompletion();
         _resetAllSquares();
-        _gameState.addFinishedEndSquare(squareID);
+        _gameState.addFinishedEndSquare(clickedSquare);
       }
     }
 
@@ -140,7 +130,6 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
       }, 5000));
   }
 
-
   function _addEscapeListener() {
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" || event.key === "Esc") {
@@ -161,6 +150,24 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     clearTimeout(_interactionState.getWordMatchTimeout());
     clearTimeout(_interactionState.getHoverTimeout());
     console.warn("Timeout: Word Match and Hover reset.")
+  }
+
+  function _enableTracing(target) {
+    _interactionState.setTracerFlag(true);
+    target.classList.add(SQUARE_TRACER);
+    getSurroundingScope(target.id);
+  }
+
+  function _disableTracing() {
+    _interactionState.setTracerFlag(false);
+    _removeClassfromSquares(SQUARE_TRACER);
+  }
+
+  function _removeClassfromSquares(className) {
+    const allSquares = document.querySelectorAll(ALL_SQUARES);
+    allSquares.forEach((squareDOMElement) => {
+      squareDOMElement.classList.remove(className);
+    });
   }
 
   function _highlightCompletedWord(squares) {

@@ -80,6 +80,7 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
 
   function fillingMgr() {
     async function _placeWords(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
+      console.groupCollapsed("fillingMgr");
       //let wordsArray = [...words.map(word => word.toUpperCase())];
       let wordsArray = [..._toUpperCases(words)];
       let wordsRemaining = noOfWordsToDisplay;
@@ -138,6 +139,7 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
           placedWordCoordinates,
         });
       }
+      console.groupEnd();
     }
     return {
       fill: async (words, noOfWordsToDisplay) => {

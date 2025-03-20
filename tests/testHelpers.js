@@ -2,10 +2,10 @@ export const testWordList = ["comments", "console", "delete"]; // for testing pu
 
 /*
 Scenario: The words 'comments', and 'console' start from the same position, 
-... and 'delete' in random position-direction
+... and 'delete' with the same ending square as 'console'
 */ 
 export function testRandom() { // [le9]
-  const sequence = [0, 1, 9, 6, 0, 3, 9, 6]; 
+  const sequence = [0, 1, 9, 6, 0, 3, 9, 6, 0, 5, 4, 12]; 
   /* sequence => [index of word arrary, direction, row, col ]
      ... index from array sequence needs to be zero on both round, as the `testWordList` array will be spliced from fillingManager
   */
