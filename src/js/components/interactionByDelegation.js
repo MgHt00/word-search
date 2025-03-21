@@ -1,5 +1,5 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-export function interactionManager( globals, isStartSquare, getEndSquaresFromGlobal, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
+export function interactionManager( globals, isStartSquare, getEndSquaresFromGlobal, getAllEndSquares, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
   const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
@@ -26,6 +26,11 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
       getClickedStartSquare() { return this._clickedStartSquare; },
       resetClickedStartSquare() { this._clickedStartSquare = null; },
 
+    _remainingEndSquares: null,
+      setRemainingEndSquares(value) { this._remainingEndSquares = value; },
+      hasRemainingEndSquare(square) { return this._remainingEndSquares.includes(square); },
+      removeRemainingEndSquare(square) { this._remainingEndSquares.splice(this._remainingEndSquares.indexOf(square), 1); },
+
     _targetEndSquares: [],
       addTargetEndSquares(squares) {
         squares.forEach(square => {
@@ -45,11 +50,6 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
       setRemainingWords(value) { this._remainingWords = value; },
       getRemainingWords() { return this._remainingWords; },
       reduceRemainingWords() { this._remainingWords--; },
-
-    _finishedEndSquares: [],
-      addFinishedEndSquare(square) { this._finishedEndSquares.push(square); },
-      hasFinishedEndSquare(square) { return this._finishedEndSquares.includes(square); },
-      resetFinishedEndSquares() { this._finishedEndSquares = []; },
   }
 
   function _addSquareListeners() {
@@ -96,10 +96,10 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
   }
 
   function _handleOtherSquareClick(clickedSquare, startSquareID) {
-    console.info("_handleOtherSquareClick:",{clickedSquare, startSquareID});
+    console.info("_handleOtherSquareClick:", { clickedSquare, startSquareID });
 
     // if end square is clicked
-      if (_gameState.hasTargetEndSquares(clickedSquare) && !_gameState.hasFinishedEndSquare(clickedSquare)) {
+    if (_gameState.hasTargetEndSquares(clickedSquare) && _gameState.hasRemainingEndSquare(clickedSquare)) {
       const selectedWord = findSelectedWordInGlobal(startSquareID, clickedSquare);
       if (selectedWord) {
         console.warn("BINGOOOOO!!!!");
@@ -108,10 +108,9 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
         _markCompletedWord(selectedWord.toLowerCase());
         _handleGameCompletion();
         _resetAllSquares("_handleOtherSquareClick");
-        _gameState.addFinishedEndSquare(clickedSquare);
+        _gameState.removeRemainingEndSquare(clickedSquare);
       }
     }
-    
     _gameState.resetTargetEndSquares();
   }
 
@@ -191,6 +190,8 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
 
   function initializeInteraction() {
     _gameState.setRemainingWords(placedWordCoordinates.size);
+    _gameState.setRemainingEndSquares(getAllEndSquares());
+
     _addSquareListeners();
     _addEscapeListener();
   }
