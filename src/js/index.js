@@ -1,3 +1,5 @@
+import '../lib/bootstrap.bundle.js';
+
 import { globals } from "./services/globals.js";
 const { appData, selectors } = globals;
 
