@@ -1,5 +1,5 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-export function interactionManager( globals, isStartSquare, getEndSquaresFromGlobal, getAllEndSquares, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
+export function interactionManager( globals, isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope) {
   const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
@@ -26,17 +26,16 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
       getClickedStartSquare() { return this._clickedStartSquare; },
       resetClickedStartSquare() { this._clickedStartSquare = null; },
 
-    _remainingEndSquares: null,
-      setRemainingEndSquares(value) { this._remainingEndSquares = value; },
-      hasRemainingEndSquare(square) { return this._remainingEndSquares.includes(square); },
-      removeRemainingEndSquare(square) { this._remainingEndSquares.splice(this._remainingEndSquares.indexOf(square), 1); },
+    _remainingPlacedWords: null,
+      setRemainingPlacedWords(value) { this._remainingPlacedWords = value; },
+      hasRemainingPlacedWords(word) { return this._remainingPlacedWords.includes(word); },
+      removeRemainingPlacedWord(word) { this._remainingPlacedWords.splice(this._remainingPlacedWords.indexOf(word), 1) },
 
     _targetEndSquares: [],
       addTargetEndSquares(squares) {
         squares.forEach(square => {
           this._targetEndSquares.push(square);
         });
-        console.info("addTargetEndSquares:", this._targetEndSquares);
       },
 
       hasTargetEndSquares(squareIDs) {
@@ -46,10 +45,10 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
 
       resetTargetEndSquares(){ this._targetEndSquares = []; },
 
-    _remainingWords: null,
-      setRemainingWords(value) { this._remainingWords = value; },
-      getRemainingWords() { return this._remainingWords; },
-      reduceRemainingWords() { this._remainingWords--; },
+    _remainingWordsCount: null, // Number<placedWordCoordinates.size>
+      setRemainingWordsCount(value) { this._remainingWordsCount = value; },
+      getRemainingWordsCount() { return this._remainingWordsCount; },
+      reduceRemainingWordsCount() { this._remainingWordsCount--; },
   }
 
   function _addSquareListeners() {
@@ -99,16 +98,16 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     console.info("_handleOtherSquareClick:", { clickedSquare, startSquareID });
 
     // if end square is clicked
-    if (_gameState.hasTargetEndSquares(clickedSquare) && _gameState.hasRemainingEndSquare(clickedSquare)) {
+    if (_gameState.hasTargetEndSquares(clickedSquare)) {
       const selectedWord = findSelectedWordInGlobal(startSquareID, clickedSquare);
-      if (selectedWord) {
+      if (_gameState.hasRemainingPlacedWords(selectedWord)) {
         console.warn("BINGOOOOO!!!!");
         const squaresToFill = getSquareIDsOfSelectedWord(selectedWord);
         _highlightCompletedWord(squaresToFill);
         _markCompletedWord(selectedWord.toLowerCase());
         _handleGameCompletion();
         _resetAllSquares("_handleOtherSquareClick");
-        _gameState.removeRemainingEndSquare(clickedSquare);
+        _gameState.removeRemainingPlacedWord(selectedWord);
       }
     }
     _gameState.resetTargetEndSquares();
@@ -126,7 +125,7 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     _interactionState.setHoverTimeout(
       setTimeout(() => {
         _resetAllSquares("_handleHover");
-      }, 5000));
+      }, 10000));
   }
 
   function _addEscapeListener() {
@@ -182,15 +181,15 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
   }
 
   function _handleGameCompletion() {
-    _gameState.reduceRemainingWords();
-    if (_gameState.getRemainingWords() === 0) {
+    _gameState.reduceRemainingWordsCount();
+    if (_gameState.getRemainingWordsCount() === 0) {
       squareFrame.classList.add(WORD_DIMMED);
     }
   }
 
   function initializeInteraction() {
-    _gameState.setRemainingWords(placedWordCoordinates.size);
-    _gameState.setRemainingEndSquares(getAllEndSquares());
+    _gameState.setRemainingWordsCount(placedWordCoordinates.size);
+    _gameState.setRemainingPlacedWords(getAllPlacedWords());
 
     _addSquareListeners();
     _addEscapeListener();

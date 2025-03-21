@@ -30,6 +30,11 @@ export function globalDataManager(globals) {
     return allEndSquares;
   }
 
+  function getAllPlacedWords() {
+    return Array.from(placedWordCoordinates.keys());
+  }
+  
+
   function storeStartIDAndEndID(startSquareID, endSquareID) {
     wordPlacementData.startIDAndEndID.push({ [startSquareID]: endSquareID }); // [] is for Computed Property Names: 
   }
@@ -56,6 +61,7 @@ export function globalDataManager(globals) {
     isStartSquare,
     getEndSquaresFromGlobal,
     getAllEndSquares,
+    getAllPlacedWords,
     storeStartIDAndEndID,
     findSelectedWordInGlobal,
     getSquareIDsOfSelectedWord
