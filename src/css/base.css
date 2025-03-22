@@ -57,25 +57,30 @@ body {
 
 /* Multi-Column Word List */
 #section-word-list {
-  display: flex;          /* Use flexbox for layout */
-  flex-wrap: wrap;       /* Allow items to wrap to new lines */
-  /*max-width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break));*/
-  max-width: fit-content;
+  display: flex;          
+  flex-wrap: wrap;       
   margin-top: 20px;
+  padding-top: 20px;
+  justify-content: center;
+  gap: 5px;
+  /*width: 100%;*/
+  max-width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break));
+  margin: 0 auto;
 }
 
 .multi-column-list {
-  list-style: none;     /* Remove bullet points */
-  padding: 0;           /* Remove default padding */
-  display: flex;          /* Use flexbox for layout */
-  flex-wrap: wrap;       /* Allow items to wrap to new lines */
-  width: 100%;          /* Takes the full width of #section-word-list*/
+  list-style: none;     
+  padding: 0;           
+  display: flex;         
+  flex-wrap: wrap;
+  width: fit-content;
   justify-content: center;
+  align-content: center;
+  gap: 5px;
 }
 
 .multi-column-list li {
   flex: 1 0 30%;      /* Distribute items across columns */
-  margin: 5px;        /* Add a little space between items */
   min-width: 50px;    /* Ensure each item has at least some width */
   text-align: center;
 }
@@ -83,6 +88,7 @@ body {
 
 #square-frame {
   display: grid;
+  justify-content: center;
   grid-template-columns: repeat(var(--sq-row-break), var(--sq-size));
   gap: var(--sq-margin);
 }
