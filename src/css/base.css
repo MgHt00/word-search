@@ -82,9 +82,8 @@ body {
 .multi-column-list li {
   flex: 1 0 30%;      /* Distribute items across columns */
   min-width: 50px;    /* Ensure each item has at least some width */
-  text-align: center;
+  text-align: left;
 }
-
 
 #square-frame {
   display: grid;
@@ -104,4 +103,14 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+
+#square-frame-column,
+#title-column {
+  max-width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break));
+  margin: 0 auto;
+}
+
+#title-column{
+  padding: 10px 0 5px;
 }
