@@ -57,6 +57,13 @@ body {
   display: block;
 }*/
 
+#title-column {
+  font-family: "Boldonse", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px
+}
+
 /* Multi-Column Word List */
 #section-word-list {
   display: flex;          
@@ -85,6 +92,12 @@ body {
   flex: 1 0 30%;      /* Distribute items across columns */
   min-width: 50px;    /* Ensure each item has at least some width */
   text-align: left;
+
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
 }
 
 #square-frame {
@@ -105,6 +118,10 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 #square-frame-column,
