@@ -57,15 +57,10 @@ body {
   display: block;
 }*/
 
-#title-column {
+#title-row {
   max-width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break));
   margin: 0 auto;
   padding: 10px 0 5px;
-
-  font-family: "Boldonse", system-ui;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 20px;
 }
 
 .title {
