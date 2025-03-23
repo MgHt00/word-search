@@ -4,9 +4,9 @@ export function loadingManager(selectors) {
   function freeze() {
     squareFrame.classList.add("dim");
     sectionWordList.classList.add("dim");
-    overlay.classList.remove("hidden");
+    overlay.classList.remove("invisible"); // bootstrap class
     overlay.classList.add("visible");
-    loadingText.classList.remove("hidden");
+    loadingText.classList.remove("invisible");
     loadingText.classList.add("visible");
   }
 
@@ -14,9 +14,9 @@ export function loadingManager(selectors) {
     squareFrame.classList.remove("dim");
     sectionWordList.classList.remove("dim");
     overlay.classList.remove("visible");
-    overlay.classList.add("hidden");
+    overlay.classList.add("invisible");
     loadingText.classList.remove("visible");
-    loadingText.classList.add("hidden");
+    loadingText.classList.add("invisible");
   }
 
   return {
