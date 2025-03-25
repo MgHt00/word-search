@@ -6,7 +6,8 @@ const appData = {
 
 const selectors = {
   overlay : document.getElementById("overlay"),
-  loadingText : document.getElementById("loading-text"),
+  loadingDIV : document.querySelector("#loading-div"),
+  reloadDIV : document.querySelector("#reload-div"),
   squareFrame : document.querySelector("#square-frame"),
   sectionWordList : document.querySelector("#section-word-list"),
 }

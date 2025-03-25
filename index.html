@@ -43,13 +43,16 @@
   <div class="d-flex p-2 justify-content-center" id="word-list-row">
     <section id="section-word-list"></section>
   </div>
-
-  <div id="overlay" class="hidden"></div>
-  <!--<div id="loading-text" class="row hidden">Loading...</div>-->
-  <div id="loading-text" class="row hidden">
+  
+  <!--Game Interactive Elements-->
+  <div id="overlay" class="invisible"></div>
+  <div id="loading-div">
     <div class="spinner-grow" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="invisible">Loading...</span>
     </div>
+  </div>
+  <div id="reload-div" class="invisible">
+    <button type="button" class="btn btn-success">Reload</button>
   </div>
 
   <script type="module" src="src/js/index.js"></script>

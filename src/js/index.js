@@ -16,7 +16,7 @@ import { layoutManager } from "./components/layoutManager.js";
 const { generateSqs } = layoutManager(globals);
 
 import { loadingManager } from "./components/loadingManager.js";
-const { freeze, unfreeze } = loadingManager(selectors);
+const { freeze, unfreeze, reload } = loadingManager(selectors);
 
 import { scopeFinder } from "./components/scopeFinder.js";
 const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
@@ -49,5 +49,6 @@ const { fill } = fillingManager(
   await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
   //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
   unfreeze(); 
+
   initializeInteraction();
 })();
