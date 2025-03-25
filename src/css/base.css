@@ -1,10 +1,15 @@
 :root {
   --no-of-sqs: 14;
   --sq-row-break: 14;
-  --sq-size: 25px; /* default 30px */
+  --sq-size: 25px; /* default size for small screens */
   --sq-margin: 1px;
-  /*--sq-bg-color: aliceblue;*/
   --sq-bg-color: #8b8b8b;
+}
+
+@media (min-width: 576px) {
+  :root {
+    --sq-size: 30px; 
+  }
 }
 
 * {
