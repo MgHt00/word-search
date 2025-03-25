@@ -1,3 +1,5 @@
+import '../lib/bootstrap.bundle.js';
+
 import { globals } from "./services/globals.js";
 const { appData, selectors } = globals;
 
@@ -34,8 +36,8 @@ import { fillingManager } from "./components/fillingManager.js";
 const { fill } = fillingManager(
   globals,
   addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID, // globalDataManager's
-  testRandom(), // comment this after testing.
-  //random, // uncomment for normal situation
+  //testRandom(), // comment this after testing.
+  random, // uncomment for normal situation
   hasEnoughSq,
   compareExistingChar,
   createUL,
@@ -44,8 +46,8 @@ const { fill } = fillingManager(
 (async function initialize() {
   freeze(); 
   generateSqs();
-  //await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
-  await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
+  await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
+  //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
   unfreeze(); 
   initializeInteraction();
 })();

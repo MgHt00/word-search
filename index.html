@@ -1,19 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="src/css/index.css">
+  <link rel="stylesheet" href="src/lib/bootstrap.min.css">  
+  <link rel="stylesheet" href="src/css/index.css">  
   <title>Word Search</title>
 </head>
 <body>
-  <div id="overlay" class="hidden"></div>
-  <div id="loading-text" class="hidden">Loading...</div>
-  <h3>Word Search</h3>
-  <section id="square-frame">
+  <nav class="navbar bg-body-tertiary fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"><!--Word Search--></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <!--<span class="navbar-toggler-icon"></span>-->
+        <i class="bi bi-gear-fill"></i>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Game Settings</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          Here comes the sun!
+      </div>
+    </div>
+  </nav>
 
-  </section>
-  <section id="section-word-list"></section>
+  <div class="d-flex p-2 justify-content-between flex-row" id="title-row">
+    <div><h3 class="title">Word Search</h3></div>
+    <div>
+      <div class="d-flex flex-row align-items-center">
+        <div class="pe-2"><i class="bi bi-stopwatch-fill"></i></div>
+        <div id="timer">0:00</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center" id="square-frame-row">
+    <section id="square-frame"></section>
+  </div>
+
+  <div class="d-flex p-2 justify-content-center" id="word-list-row">
+    <section id="section-word-list"></section>
+  </div>
+
+  <div id="overlay" class="hidden"></div>
+  <!--<div id="loading-text" class="row hidden">Loading...</div>-->
+  <div id="loading-text" class="row hidden">
+    <div class="spinner-grow" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <script type="module" src="src/js/index.js"></script>
 </body>
-<script type="module" src="src/js/index.js"></script>
 </html>

@@ -1,7 +1,7 @@
 :root {
   --no-of-sqs: 14;
   --sq-row-break: 14;
-  --sq-size: 30px;
+  --sq-size: 25px; /* default 30px */
   --sq-margin: 1px;
   /*--sq-bg-color: aliceblue;*/
   --sq-bg-color: #8b8b8b;
@@ -15,7 +15,7 @@
 
 body {
   background-color: #222222;
-  font-family: "Inter", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
@@ -27,62 +27,40 @@ body {
   align-items: center;
 }
 
-#overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-  z-index: 10; /* Ensure it's on top */
+#title-row,
+#square-frame-row,
+#word-list-row {
+  width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break));
+  margin: 0 auto;
 }
 
-#loading-text {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Center the text */
-  color: white;
-  font-size: 24px;
-  z-index: 11; /* Ensure it's above the overlay */
+#title-row {
+  margin: 0 auto;
+  padding: 10px 0 5px;
 }
 
-.hidden {
-  display: none;
+.title {
+  font-family: "Boldonse", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
 }
 
-.visible {
-  display: block;
+#timer {
+  font-family: "Audiowide", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
 }
 
-/* Multi-Column Word List */
-#section-word-list {
-  display: flex;          /* Use flexbox for layout */
-  flex-wrap: wrap;       /* Allow items to wrap to new lines */
-  /*max-width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break));*/
-  max-width: fit-content;
-  margin-top: 20px;
+#square-frame-row {
+  padding: 0px;
+  margin: 0 auto;
 }
-
-.multi-column-list {
-  list-style: none;     /* Remove bullet points */
-  padding: 0;           /* Remove default padding */
-  display: flex;          /* Use flexbox for layout */
-  flex-wrap: wrap;       /* Allow items to wrap to new lines */
-  width: 100%;          /* Takes the full width of #section-word-list*/
-  justify-content: center;
-}
-
-.multi-column-list li {
-  flex: 1 0 30%;      /* Distribute items across columns */
-  margin: 5px;        /* Add a little space between items */
-  min-width: 50px;    /* Ensure each item has at least some width */
-  text-align: center;
-}
-
 
 #square-frame {
   display: grid;
+  justify-content: center;
   grid-template-columns: repeat(var(--sq-row-break), var(--sq-size));
   gap: var(--sq-margin);
 }
@@ -98,4 +76,71 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
+
+#section-word-list {
+  display: flex;          
+  flex-wrap: wrap;       
+  margin-top: 20px;
+  padding-top: 20px;
+  justify-content: center;
+  gap: 5px;
+  margin: 0 auto;
+}
+
+.multi-column-list {
+  list-style: none;     
+  padding: 0;           
+  display: flex;         
+  flex-wrap: wrap;
+  width: fit-content;
+  justify-content: center;
+  align-content: center;
+  gap: 5px;
+}
+
+.multi-column-list li {
+  flex: 1 0 30%;      /* Distribute items across columns */
+  min-width: 50px;    /* Ensure each item has at least some width */
+  text-align: left;
+
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 10; /* Ensure it's on top */
+}
+
+#loading-text {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the text */
+  color: white;
+  font-size: 24px;
+  z-index: 11; /* Ensure it's above the overlay */
+  display: flex; /* Use Flexbox to align columns side by side */
+  max-width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break));
+}
+
+/*.hidden { // using bootstrap utility classes instead
+  display: none;
+}
+
+.visible {
+  display: block;
+}*/
