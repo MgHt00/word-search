@@ -128,14 +128,21 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
       }, 10000));
   }
 
-  function _addEscapeListener() {
+  function _addEscapeAndDocumentClickListener() {
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" || event.key === "Esc") {
-        _resetAllSquares("_addEscapeListener");
+        _resetAllSquares("_documentEscapeListener");
+      }
+    });
+  
+    document.addEventListener("click", (event) => {
+      // Check if the click is outside of the squareFrame
+      if (!squareFrame.contains(event.target)) { // [sn4]
+        _resetAllSquares("_documentClickListener");
       }
     });
   }
-
+  
   function _resetAllSquares(callerFn) {
     _clearAllTimeOuts(callerFn);
     _removeClassfromSquares(SQUARE_TRACER);
@@ -192,7 +199,7 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
     _gameState.setRemainingPlacedWords(getAllPlacedWords());
 
     _addSquareListeners();
-    _addEscapeListener();
+    _addEscapeAndDocumentClickListener();
   }
 
   return {
