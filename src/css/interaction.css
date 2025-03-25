@@ -9,7 +9,7 @@
     margin: -5px;
     background-color: var(--highlight-background);
     color: var(--highlight-color);
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 [class|=sq].clicked {
