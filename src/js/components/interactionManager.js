@@ -1,5 +1,5 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-export function interactionManager( globals, isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope, enableRestart) {
+export function interactionManager( globals, isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope, enableRestart, restart) {
   const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame, restartDIV } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
@@ -69,7 +69,7 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
   function _addRestartClickListener() {
     restartDIV.addEventListener("click", () => {
       console.info("RELOADDDDDDDDD");
-      
+      restart();
     });
   }
 

@@ -24,7 +24,20 @@ import { layoutManager } from "./components/layoutManager.js";
 const { generateSqs } = layoutManager(globals);
 
 import { loadingManager } from "./components/loadingManager.js";
-const { freeze, unfreeze, enableRestart } = loadingManager(selectors);
+
+// Define a function to handle the restart logic
+async function handleRestart() {
+  console.log("Restarting the game...");
+  freeze();
+  // Reset any game state variables here if needed
+  // ...
+  generateSqs();
+  await fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+  unfreeze();
+  initializeInteraction();
+}
+
+const { freeze, unfreeze, enableRestart, restart} = loadingManager(selectors, handleRestart);
 
 import { scopeFinder } from "./components/scopeFinder.js";
 const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
@@ -46,6 +59,7 @@ const { initializeInteraction } = interactionManager(
   isWithinHoverScope,
 
   enableRestart,
+  restart,
 );
 
 import { fillingManager } from "./components/fillingManager.js";

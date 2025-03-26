@@ -1,5 +1,7 @@
-export function loadingManager(selectors) {
+export function loadingManager(selectors, restartCallback) { 
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
+
+  let _restartCallback = restartCallback; // Store the callback
 
   function _dim() {
     squareFrame.classList.add("dim");
@@ -42,9 +44,18 @@ export function loadingManager(selectors) {
     _showRestart();
   }
 
+  function restart() {
+    if (_restartCallback) { // Check if the callback is set
+      _restartCallback(); // Call the callback
+    } else {
+      console.error("restartCallback is not set!");
+    }
+  }
+
   return {
     freeze,
     unfreeze,
     enableRestart,
+    restart, // Expose the restart function
   };
 }
