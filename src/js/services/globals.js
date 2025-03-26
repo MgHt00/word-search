@@ -1,13 +1,13 @@
 const appData = {
   wordList : ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"],
-  noOfWordsToDisplay : 10,
+  noOfWordsToDisplay : 2, // default: 10
   gridSize: 14,
 }
 
 const selectors = {
   overlay : document.getElementById("overlay"),
   loadingDIV : document.querySelector("#loading-div"),
-  reloadDIV : document.querySelector("#reload-div"),
+  restartDIV : document.querySelector("#restart-div"),
   squareFrame : document.querySelector("#square-frame"),
   sectionWordList : document.querySelector("#section-word-list"),
 }

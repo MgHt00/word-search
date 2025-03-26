@@ -130,7 +130,7 @@ body {
   z-index: 10; /* Ensure it's on top */
 }
 
-#reload-div {
+#restart-div {
   position: fixed;
   top: 50%;
   left: 50%;

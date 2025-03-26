@@ -1,5 +1,5 @@
 export function loadingManager(selectors) {
-  const { overlay, loadingDIV, reloadDIV, squareFrame, sectionWordList } = selectors;
+  const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
 
   function _dim() {
     squareFrame.classList.add("dim");
@@ -15,24 +15,36 @@ export function loadingManager(selectors) {
     overlay.classList.add("invisible");
   }
 
+  function _showLoader() {
+    loadingDIV.classList.remove("invisible");
+  }
+
+  function _hideLoader() {
+    loadingDIV.classList.add("invisible");
+  }
+
+  function _showRestart() {
+    restartDIV.classList.remove("invisible");
+  }
+
   function freeze() {
     _dim();
-    loadingDIV.classList.remove("invisible");
+    _showLoader();
   }
 
   function unfreeze() {
     _unDim();
-    loadingDIV.classList.add("invisible");
+    _hideLoader();
   }
 
-  function reload() {
+  function enableRestart() {
     _dim();
-    reloadDIV.classList.remove("invisible");
+    _showRestart();
   }
 
   return {
     freeze,
     unfreeze,
-    reload,
+    enableRestart,
   };
 }

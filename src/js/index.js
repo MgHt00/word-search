@@ -4,7 +4,15 @@ import { globals } from "./services/globals.js";
 const { appData, selectors } = globals;
 
 import { globalDataManager } from "./services/globalDataManager.js";
-const { addPlacedWordCoordinates, addSquareIdToChar, isStartSquare, storeStartIDAndEndID, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = globalDataManager(globals);
+const { 
+  addPlacedWordCoordinates, 
+  addSquareIdToChar, 
+  isStartSquare, 
+  storeStartIDAndEndID, 
+  getEndSquaresFromGlobal, 
+  getAllPlacedWords, 
+  findSelectedWordInGlobal, 
+  getSquareIDsOfSelectedWord } = globalDataManager(globals);
 
 import { random } from "./utils/mathHelpers.js";
 
@@ -16,7 +24,7 @@ import { layoutManager } from "./components/layoutManager.js";
 const { generateSqs } = layoutManager(globals);
 
 import { loadingManager } from "./components/loadingManager.js";
-const { freeze, unfreeze, reload } = loadingManager(selectors);
+const { freeze, unfreeze, enableRestart } = loadingManager(selectors);
 
 import { scopeFinder } from "./components/scopeFinder.js";
 const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
@@ -24,18 +32,31 @@ const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize
 // Testing concerns
 import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHelpers.js";
 
-import { interactionManager } from "./components/interactionByDelegation.js";
+import { interactionManager } from "./components/interactionManager.js";
 const { initializeInteraction } = interactionManager(
   globals, 
-  isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord,
-  getSurroundingScope, isWithinHoverScope,
+  isStartSquare, 
+
+  getEndSquaresFromGlobal, 
+  getAllPlacedWords, 
+  findSelectedWordInGlobal, 
+  getSquareIDsOfSelectedWord,
+
+  getSurroundingScope, 
+  isWithinHoverScope,
+
+  enableRestart,
 );
 
 import { fillingManager } from "./components/fillingManager.js";
 
 const { fill } = fillingManager(
   globals,
-  addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID, // globalDataManager's
+
+  addPlacedWordCoordinates, 
+  addSquareIdToChar, 
+  storeStartIDAndEndID, // globalDataManager's
+
   //testRandom(), // comment this after testing.
   random, // uncomment for normal situation
   hasEnoughSq,
