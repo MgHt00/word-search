@@ -1,5 +1,23 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-export function interactionManager( globals, isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord, getSurroundingScope, isWithinHoverScope, enableRestart, restart) {
+export function interactionManager( globals, dataDependencies, scopeDependencies, controlDependencies) {
+  const {
+    isStartSquare,
+    getEndSquaresFromGlobal,
+    getAllPlacedWords,
+    findSelectedWordInGlobal,
+    getSquareIDsOfSelectedWord,
+  } = dataDependencies;
+  
+  const {
+    isWithinHoverScope,
+    getSurroundingScope,
+  } = scopeDependencies;
+
+  const {
+    restart,
+    enableRestart,
+  } = controlDependencies;
+  
   const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame, restartDIV } = selectors;
   const { placedWordCoordinates } = wordPlacementData;
