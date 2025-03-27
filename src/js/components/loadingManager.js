@@ -1,7 +1,9 @@
-export function loadingManager(globals, generateSqs, fill) { 
+export function loadingManager(globals, generateSqs, fill, initializeCallback) { 
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
 
+  let _initializeInteraction = initializeCallback;
+  
   function _dim() {
     squareFrame.classList.add("dim");
     sectionWordList.classList.add("dim");
@@ -38,6 +40,10 @@ export function loadingManager(globals, generateSqs, fill) {
     _hideLoader();
   }
 
+  function setInitializeCallback(callback) {
+    _initializeInteraction = callback;
+  }
+
   function enableRestart() {
     _dim();
     _showRestart();
@@ -49,6 +55,7 @@ export function loadingManager(globals, generateSqs, fill) {
     await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
     //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
     _unfreeze();
+    _initializeInteraction();
   }
 
   async function restart() {
@@ -59,5 +66,6 @@ export function loadingManager(globals, generateSqs, fill) {
     start,
     enableRestart,
     restart,
+    setInitializeCallback,
   };
 }

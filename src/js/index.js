@@ -45,8 +45,12 @@ const { fill } = fillingManager(
   createUL,
 );
 
+let initializeCallback = null;
 import { loadingManager } from "./components/loadingManager.js";
-const { start, enableRestart, restart} = loadingManager(globals, generateSqs, fill);
+const { start, 
+  enableRestart, 
+  restart, 
+  setInitializeCallback} = loadingManager(globals, generateSqs, fill, initializeCallback);
 
 import { interactionManager } from "./components/interactionManager.js";
 const { initializeInteraction } = interactionManager(
@@ -65,7 +69,8 @@ const { initializeInteraction } = interactionManager(
   restart,
 );
 
+setInitializeCallback(initializeInteraction);
+
 (async function initialize() {
-  await start();
-  initializeInteraction();
+  start();
 })()
