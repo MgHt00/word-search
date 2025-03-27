@@ -1,7 +1,6 @@
-export function loadingManager(selectors, restartCallback) { 
+export function loadingManager(globals, generateSqs, fill) { 
+  const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
-
-  let _restartCallback = restartCallback; // Store the callback
 
   function _dim() {
     squareFrame.classList.add("dim");
@@ -29,12 +28,12 @@ export function loadingManager(selectors, restartCallback) {
     restartDIV.classList.remove("invisible");
   }
 
-  function freeze() {
+  function _freeze() {
     _dim();
     _showLoader();
   }
 
-  function unfreeze() {
+  function _unfreeze() {
     _unDim();
     _hideLoader();
   }
@@ -44,18 +43,21 @@ export function loadingManager(selectors, restartCallback) {
     _showRestart();
   }
 
-  function restart() {
-    if (_restartCallback) { // Check if the callback is set
-      _restartCallback(); // Call the callback
-    } else {
-      console.error("restartCallback is not set!");
-    }
+  async function start() {
+    _freeze();
+    generateSqs();
+    await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
+    //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
+    _unfreeze();
+  }
+
+  async function restart() {
+    console.info("RESTART");
   }
 
   return {
-    freeze,
-    unfreeze,
+    start,
     enableRestart,
-    restart, // Expose the restart function
+    restart,
   };
 }

@@ -23,27 +23,30 @@ import { createUL } from "./utils/domHelpers.js";
 import { layoutManager } from "./components/layoutManager.js";
 const { generateSqs } = layoutManager(globals);
 
-import { loadingManager } from "./components/loadingManager.js";
-
-// Define a function to handle the restart logic
-async function handleRestart() {
-  console.log("Restarting the game...");
-  freeze();
-  // Reset any game state variables here if needed
-  // ...
-  generateSqs();
-  await fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
-  unfreeze();
-  initializeInteraction();
-}
-
-const { freeze, unfreeze, enableRestart, restart} = loadingManager(selectors, handleRestart);
-
 import { scopeFinder } from "./components/scopeFinder.js";
 const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
 
 // Testing concerns
 import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHelpers.js";
+
+import { fillingManager } from "./components/fillingManager.js";
+
+const { fill } = fillingManager(
+  globals,
+
+  addPlacedWordCoordinates, 
+  addSquareIdToChar, 
+  storeStartIDAndEndID, // globalDataManager's
+
+  //testRandom(), // comment this after testing.
+  random, // uncomment for normal situation
+  hasEnoughSq,
+  compareExistingChar,
+  createUL,
+);
+
+import { loadingManager } from "./components/loadingManager.js";
+const { start, enableRestart, restart} = loadingManager(globals, generateSqs, fill);
 
 import { interactionManager } from "./components/interactionManager.js";
 const { initializeInteraction } = interactionManager(
@@ -62,28 +65,7 @@ const { initializeInteraction } = interactionManager(
   restart,
 );
 
-import { fillingManager } from "./components/fillingManager.js";
-
-const { fill } = fillingManager(
-  globals,
-
-  addPlacedWordCoordinates, 
-  addSquareIdToChar, 
-  storeStartIDAndEndID, // globalDataManager's
-
-  //testRandom(), // comment this after testing.
-  random, // uncomment for normal situation
-  hasEnoughSq,
-  compareExistingChar,
-  createUL,
-);
-
 (async function initialize() {
-  freeze(); 
-  generateSqs();
-  await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
-  //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
-  unfreeze(); 
-
+  await start();
   initializeInteraction();
-})();
+})()
