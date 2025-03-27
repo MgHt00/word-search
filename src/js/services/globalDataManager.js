@@ -55,6 +55,13 @@ export function globalDataManager(globals) {
     return entry.placementData;
   }
 
+  function reset_wordPlacementData() {
+    squareIdToChar.clear();
+    placedWordCoordinates.clear();
+    startIDAndEndID.length = 0;
+  }
+  
+
   return {
     addPlacedWordCoordinates,
     addSquareIdToChar,
@@ -64,6 +71,7 @@ export function globalDataManager(globals) {
     getAllPlacedWords,
     storeStartIDAndEndID,
     findSelectedWordInGlobal,
-    getSquareIDsOfSelectedWord
+    getSquareIDsOfSelectedWord,
+    reset_wordPlacementData,
   };
 }

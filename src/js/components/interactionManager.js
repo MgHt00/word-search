@@ -68,7 +68,6 @@ export function interactionManager( globals, isStartSquare, getEndSquaresFromGlo
 
   function _addRestartClickListener() {
     restartDIV.addEventListener("click", () => {
-      console.info("RELOADDDDDDDDD");
       restart();
     });
   }

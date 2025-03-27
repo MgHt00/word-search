@@ -1,4 +1,4 @@
-export function loadingManager(globals, generateSqs, fill, initializeCallback) { 
+export function loadingManager(globals, generateSqs, fill, reset_wordPlacementData, initializeCallback) { 
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
 
@@ -18,48 +18,67 @@ export function loadingManager(globals, generateSqs, fill, initializeCallback) {
     overlay.classList.add("invisible");
   }
 
-  function _showLoader() {
+  function _showspinner() {
     loadingDIV.classList.remove("invisible");
   }
 
-  function _hideLoader() {
+  function _hidespinner() {
     loadingDIV.classList.add("invisible");
   }
 
-  function _showRestart() {
+  function _showRestartButton() {
     restartDIV.classList.remove("invisible");
   }
 
-  function _freeze() {
-    _dim();
-    _showLoader();
+  function _hideRestartButton() {
+    restartDIV.classList.add("invisible");
   }
 
-  function _unfreeze() {
-    _unDim();
-    _hideLoader();
+  function _emptySqaureFrame() {
+    squareFrame.innerHTML = "";
   }
 
+  function _emptySectionWordList() {
+    sectionWordList.innerHTML = "";
+  }
+  
   function setInitializeCallback(callback) {
     _initializeInteraction = callback;
   }
 
   function enableRestart() {
     _dim();
-    _showRestart();
+    _showRestartButton();
+  }
+
+  function _disableRestart() {
+    _unDim();
+    _hideRestartButton();
   }
 
   async function start() {
-    _freeze();
+    _dim();
+    _showspinner();
     generateSqs();
     await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
     //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
-    _unfreeze();
+    _unDim();
+    _hidespinner();
     _initializeInteraction();
   }
 
   async function restart() {
     console.info("RESTART");
+    _dim();
+    reset_wordPlacementData();
+    _showspinner();
+    _emptySqaureFrame();
+    _emptySectionWordList();
+    generateSqs();
+    await fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+    _hidespinner();
+    _disableRestart(); 
+    _initializeInteraction();
   }
 
   return {

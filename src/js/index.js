@@ -12,7 +12,8 @@ const {
   getEndSquaresFromGlobal, 
   getAllPlacedWords, 
   findSelectedWordInGlobal, 
-  getSquareIDsOfSelectedWord } = globalDataManager(globals);
+  getSquareIDsOfSelectedWord,
+  reset_wordPlacementData } = globalDataManager(globals);
 
 import { random } from "./utils/mathHelpers.js";
 
@@ -47,10 +48,18 @@ const { fill } = fillingManager(
 
 let initializeCallback = null;
 import { loadingManager } from "./components/loadingManager.js";
-const { start, 
-  enableRestart, 
-  restart, 
-  setInitializeCallback} = loadingManager(globals, generateSqs, fill, initializeCallback);
+const { 
+  start,
+  enableRestart,
+  restart,
+  setInitializeCallback
+} = loadingManager(
+  globals,
+  generateSqs,
+  fill,
+  reset_wordPlacementData,
+  initializeCallback,
+);
 
 import { interactionManager } from "./components/interactionManager.js";
 const { initializeInteraction } = interactionManager(
