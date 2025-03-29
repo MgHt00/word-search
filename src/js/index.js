@@ -1,53 +1,98 @@
 import '../lib/bootstrap.bundle.js';
 
 import { globals } from "./services/globals.js";
-const { appData, selectors } = globals;
-
 import { globalDataManager } from "./services/globalDataManager.js";
-const { addPlacedWordCoordinates, addSquareIdToChar, isStartSquare, storeStartIDAndEndID, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = globalDataManager(globals);
-
 import { random } from "./utils/mathHelpers.js";
-
 import { hasEnoughSq } from "./utils/gridHelpers.js";
 import { compareExistingChar } from "./utils/placementHelpers.js";
 import { createUL } from "./utils/domHelpers.js";
-
 import { layoutManager } from "./components/layoutManager.js";
-const { generateSqs } = layoutManager(globals);
-
-import { loadingManager } from "./components/loadingManager.js";
-const { freeze, unfreeze } = loadingManager(selectors);
-
 import { scopeFinder } from "./components/scopeFinder.js";
-const { getSurroundingScope, isWithinHoverScope } = scopeFinder(appData.gridSize);
+import { fillingManager } from "./components/fillingManager.js";
+import { loadingManager } from "./components/loadingManager.js";
+import { interactionManager } from "./components/interactionManager.js";
 
 // Testing concerns
 import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHelpers.js";
 
-import { interactionManager } from "./components/interactionByDelegation.js";
-const { initializeInteraction } = interactionManager(
-  globals, 
-  isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord,
-  getSurroundingScope, isWithinHoverScope,
-);
+// Global Data Manager
+const dataManager = globalDataManager(globals);
+const { 
+  addPlacedWordCoordinates, 
+  addSquareIdToChar, 
+  isStartSquare, 
+  storeStartIDAndEndID, 
+  getEndSquaresFromGlobal, 
+  getAllPlacedWords, 
+  findSelectedWordInGlobal, 
+  getSquareIDsOfSelectedWord,
+  reset_wordPlacementData } = dataManager;
 
-import { fillingManager } from "./components/fillingManager.js";
+// Layout Manager
+const layout = layoutManager(globals);
+const { generateSqs } = layout;
 
-const { fill } = fillingManager(
+// Scope Finder
+const scope = scopeFinder(globals.appData.gridSize);
+const { 
+  getSurroundingScope, 
+  isWithinHoverScope } = scope;
+
+// Filling Manager
+const filling = fillingManager(
   globals,
-  addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID, // globalDataManager's
+  addPlacedWordCoordinates,
+  addSquareIdToChar,
+  storeStartIDAndEndID,
   //testRandom(), // comment this after testing.
   random, // uncomment for normal situation
   hasEnoughSq,
   compareExistingChar,
   createUL,
+); 
+const { fill } = filling;
+
+// Loading Manager
+let initializeCallbackObj = {};
+const loading = loadingManager(
+  globals,
+  generateSqs,
+  fill,
+  reset_wordPlacementData,
+  initializeCallbackObj,
+);
+const { start, enableRestart, restart, setInitializeCallback } = loading;
+
+// Interaction Manager
+const dataDependencies = {
+  isStartSquare,
+  getEndSquaresFromGlobal,
+  getAllPlacedWords,
+  findSelectedWordInGlobal,
+  getSquareIDsOfSelectedWord,
+};
+
+const scopeDependencies = {
+  getSurroundingScope,
+  isWithinHoverScope,
+};
+
+const controlDependencies = {
+  enableRestart,
+  restart,
+};
+
+const interaction = interactionManager(
+  globals,
+  dataDependencies,
+  scopeDependencies,
+  controlDependencies,
 );
 
+const { initializeGameWords, initializeInteraction } = interaction;
+
+setInitializeCallback({ initializeGameWords, initializeInteraction });
+
 (async function initialize() {
-  freeze(); 
-  generateSqs();
-  await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
-  //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
-  unfreeze(); 
-  initializeInteraction();
-})();
+  start();
+})()
