@@ -88,7 +88,7 @@ export function interactionManager( globals, dataDependencies, scopeDependencies
     restartDIV.addEventListener("click", () => {
       restart();
       _resetAllSquares();
-    }, {once: true,}); // adds listener for only once.
+    });
   }
 
   function _addSquareListeners() {
@@ -118,7 +118,7 @@ export function interactionManager( globals, dataDependencies, scopeDependencies
   }
 
   function _handleStartSquareClick(squareID) {
-    console.info("_handleStartSquareClick:",{squareID});
+    console.info("_handleStartSquareClick:",{squareID, _targetEndSquares: _gameState._targetEndSquares});
     _gameState.setClickedStartSquare(squareID);
 
     const _targetEndSquares = getEndSquaresFromGlobal(squareID);
@@ -135,7 +135,7 @@ export function interactionManager( globals, dataDependencies, scopeDependencies
   }
 
   function _handleOtherSquareClick(clickedSquare, startSquareID) {
-    console.info("_handleOtherSquareClick:", { clickedSquare, startSquareID });
+    console.info("_handleOtherSquareClick:", { clickedSquare, startSquareID, _targetEndSquares: _gameState._targetEndSquares });
 
     // if end square is clicked
     if (_gameState.hasTargetEndSquares(clickedSquare)) {
@@ -220,16 +220,20 @@ export function interactionManager( globals, dataDependencies, scopeDependencies
     }
   }
 
-  function initializeInteraction() {
+  function initializeGameWords() {
     _gameState.setRemainingWordsCount(placedWordCoordinates.size);
     _gameState.setRemainingPlacedWords(getAllPlacedWords());
+  }
 
+  function initializeInteraction() {
+    //initializeGameWords();
     _addSquareListeners();
     _addEscapeAndDocumentClickListener();
     _addRestartClickListener();
   }
 
   return {
+    initializeGameWords,
     initializeInteraction,
   };
 }

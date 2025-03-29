@@ -1,8 +1,8 @@
-export function loadingManager(globals, generateSqs, fill, reset_wordPlacementData, initializeCallback) { 
+export function loadingManager(globals, generateSqs, fill, reset_wordPlacementData, initializeCallbackObj) { 
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
 
-  let _initializeInteraction = initializeCallback;
+  let {_initializeGameWords, _initializeInteraction} = initializeCallbackObj;
   
   function _dim() {
     squareFrame.classList.add("dim");
@@ -34,7 +34,7 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     restartDIV.classList.add("invisible");
   }
 
-  function _emptySqaureFrame() {
+  function _emptySquareFrame() {
     squareFrame.innerHTML = "";
   }
 
@@ -42,8 +42,9 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     sectionWordList.innerHTML = "";
   }
   
-  function setInitializeCallback(callback) {
-    _initializeInteraction = callback;
+  function setInitializeCallback(callbackObj) {
+    _initializeGameWords = callbackObj.initializeGameWords;
+    _initializeInteraction = callbackObj.initializeInteraction;
   }
 
   function enableRestart() {
@@ -64,6 +65,7 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
     _unDim();
     _hidespinner();
+    _initializeGameWords();
     _initializeInteraction();
   }
 
@@ -72,13 +74,14 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     _dim();
     reset_wordPlacementData();
     _showspinner();
-    _emptySqaureFrame();
+    _emptySquareFrame();
     _emptySectionWordList();
     generateSqs();
     await fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
     _hidespinner();
     _disableRestart(); 
-    _initializeInteraction();
+    _initializeGameWords();
+    //_initializeInteraction();
   }
 
   return {

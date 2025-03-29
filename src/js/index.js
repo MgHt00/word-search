@@ -53,13 +53,13 @@ const filling = fillingManager(
 const { fill } = filling;
 
 // Loading Manager
-let initializeCallback = null;
+let initializeCallbackObj = {};
 const loading = loadingManager(
   globals,
   generateSqs,
   fill,
   reset_wordPlacementData,
-  initializeCallback,
+  initializeCallbackObj,
 );
 const { start, enableRestart, restart, setInitializeCallback } = loading;
 
@@ -89,9 +89,9 @@ const interaction = interactionManager(
   controlDependencies,
 );
 
-const { initializeInteraction } = interaction;
+const { initializeGameWords, initializeInteraction } = interaction;
 
-setInitializeCallback(initializeInteraction);
+setInitializeCallback({ initializeGameWords, initializeInteraction });
 
 (async function initialize() {
   start();
