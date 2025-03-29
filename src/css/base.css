@@ -91,7 +91,7 @@ body {
   display: flex;          
   flex-wrap: wrap;       
   margin-top: 20px;
-  padding-top: 20px;
+  padding-top: 10px;
   justify-content: center;
   gap: 5px;
   margin: 0 auto;
@@ -102,7 +102,8 @@ body {
   padding: 0;           
   display: flex;         
   flex-wrap: wrap;
-  width: fit-content;
+  /*width: fit-content;*/
+  width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break) - 16px);
   justify-content: center;
   align-content: center;
   gap: 5px;
