@@ -42,9 +42,9 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     sectionWordList.innerHTML = "";
   }
   
-  function setInitializeCallback(callbackObj) {
-    _initializeGameWords = callbackObj.initializeGameWords;
-    _initializeInteraction = callbackObj.initializeInteraction;
+  function setInitializeCallback({ initializeGameWords, initializeInteraction }) {
+    _initializeGameWords = initializeGameWords;
+    _initializeInteraction = initializeInteraction;
   }
 
   function enableRestart() {
