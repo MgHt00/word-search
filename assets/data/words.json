@@ -1,0 +1,9 @@
+{
+  "3": ["CAT", "DOG", "SUN", "RUN"],
+  "4": ["TREE", "BOOK", "STAR", "FISH"],
+  "5": ["HOUSE", "TABLE", "CLOUD", "MOUSE"],
+  "6": ["DELETE", "BRANCH", "SUPRESS"],
+  "7": ["NOTHING", "PRESENT", "CONSOLE"],
+  "8": ["UNTRACKED", "BACKGROUND", "FETCHED"],
+  "9": ["COMMENTS", "INSERTION", "DELETION"]
+}
