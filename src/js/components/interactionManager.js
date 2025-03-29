@@ -87,7 +87,8 @@ export function interactionManager( globals, dataDependencies, scopeDependencies
   function _addRestartClickListener() {
     restartDIV.addEventListener("click", () => {
       restart();
-    });
+      _resetAllSquares();
+    }, {once: true,}); // adds listener for only once.
   }
 
   function _addSquareListeners() {

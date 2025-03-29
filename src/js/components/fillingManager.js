@@ -143,6 +143,7 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
     }
     return {
       fill: async (words, noOfWordsToDisplay) => {
+        console.warn({words, noOfWordsToDisplay});
         await _placeWords(words, noOfWordsToDisplay);
         _fillRemainingSquares();
       }
