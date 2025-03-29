@@ -2,6 +2,7 @@ import '../lib/bootstrap.bundle.js';
 
 import { globals } from "./services/globals.js";
 import { globalDataManager } from "./services/globalDataManager.js";
+import { wordManager } from "./services/wordManager.js";
 import { random } from "./utils/mathHelpers.js";
 import { hasEnoughSq } from "./utils/gridHelpers.js";
 import { compareExistingChar } from "./utils/placementHelpers.js";
@@ -27,6 +28,10 @@ const {
   findSelectedWordInGlobal, 
   getSquareIDsOfSelectedWord,
   reset_wordPlacementData } = dataManager;
+
+// Word Manager
+const words = wordManager();
+const { loadWords, getWordsByLength } = words;
 
 // Layout Manager
 const layout = layoutManager(globals);
@@ -94,5 +99,9 @@ const { initializeGameWords, initializeInteraction } = interaction;
 setInitializeCallback({ initializeGameWords, initializeInteraction });
 
 (async function initialize() {
+  const words = await loadWords();
+  console.log(words);
+  /*const wordsByLength = await getWordsByLength(3);
+  console.log(wordsByLength);*/
   start();
 })()

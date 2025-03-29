@@ -1,7 +1,9 @@
+import { WORDS_DATA_PATH } from '../constants/filePaths.js';
+
 export function wordManager() {
   async function loadWords() {
     try {
-      const response = await fetch('../../assets/data/words.json'); // Adjust the path if needed
+      const response = await fetch(WORDS_DATA_PATH); 
       const data = await response.json();
       return data;
     } catch (error) {

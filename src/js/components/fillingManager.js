@@ -147,6 +147,13 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
         await _placeWords(words, noOfWordsToDisplay);
         _fillRemainingSquares();
       }
+
+      /*fill: async (noOfWordsToDisplay, wordLength) => {
+        console.warn({noOfWordsToDisplay, wordLength});
+        const words = await getWordsByLength(wordLength);
+        await _placeWords(words, noOfWordsToDisplay);
+        _fillRemainingSquares();
+      }*/
     };
   }
   return fillingMgr();

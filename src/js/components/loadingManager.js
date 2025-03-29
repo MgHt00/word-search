@@ -61,6 +61,7 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     _dim();
     _showspinner();
     generateSqs();
+    //await fill(appData.noOfWordsToDisplay, 3); // uncomment for normal situation
     await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
     //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
     _unDim();
@@ -77,6 +78,7 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     _emptySquareFrame();
     _emptySectionWordList();
     generateSqs();
+    //await fill(appData.noOfWordsToDisplay, 3);
     await fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
     _hidespinner();
     _disableRestart(); 
