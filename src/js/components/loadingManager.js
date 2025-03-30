@@ -58,10 +58,16 @@ export function loadingManager(globals, generateSqs, getWordsByLength, fill, res
     _hideRestartButton();
   }
 
+  // To prevent infinite loop when fill
+  function _capWordsToDisplay(wordsArray, noOfWordsToDisplay) {
+    return (wordsArray.length < noOfWordsToDisplay) ? wordsArray.length : noOfWordsToDisplay;
+  }
+
   async function _getWordsAndFill() {
-    const words = await getWordsByLength(wordsByLength);
-    await fill(words, noOfWordsToDisplay); // uncomment for normal situation
-    //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
+    const wordsArray = await getWordsByLength(wordsByLength);
+    const validatedWordCount = _capWordsToDisplay(wordsArray, noOfWordsToDisplay);
+    await fill(wordsArray, validatedWordCount); // uncomment for normal situation
+    //await fill([...testWordList], validatedWordCount); // comment this after testing.
   }
 
   async function start() {
