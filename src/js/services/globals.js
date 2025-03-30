@@ -1,7 +1,7 @@
 const appData = {
   wordList : ["delete", "suppress", "untracked", "nothing", "present", "branch", "background", "fetched", "comments", "console", "insertion", "deletion"],
   noOfWordsToDisplay : 2, // default: 10
-  wordsByLength: 3, 
+  wordsByLength: 4, 
   gridSize: 14,
 }
 

@@ -31,7 +31,7 @@ const {
 
 // Word Manager
 const words = wordManager();
-const { loadWords, getWordsByLength } = words;
+const { getWordsUpToLength } = words;
 
 // Layout Manager
 const layout = layoutManager(globals);
@@ -62,7 +62,7 @@ let initializeCallbackObj = {};
 const loading = loadingManager(
   globals,
   generateSqs,
-  getWordsByLength,
+  getWordsUpToLength,
   fill,
   reset_wordPlacementData,
   initializeCallbackObj,

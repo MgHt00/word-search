@@ -1,4 +1,4 @@
-export function loadingManager(globals, generateSqs, getWordsByLength, fill, reset_wordPlacementData, initializeCallbackObj) { 
+export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, initializeCallbackObj) { 
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
   const { noOfWordsToDisplay, wordsByLength } = appData;
@@ -63,8 +63,13 @@ export function loadingManager(globals, generateSqs, getWordsByLength, fill, res
     return (wordsArray.length < noOfWordsToDisplay) ? wordsArray.length : noOfWordsToDisplay;
   }
 
+
   async function _getWordsAndFill() {
-    const wordsArray = await getWordsByLength(wordsByLength);
+    const wordsArray = await getWordsUpToLength(wordsByLength);
+    if (!wordsArray) {
+      console.error("Failed to load words. Cannot proceed.");
+      return;
+    }
     const validatedWordCount = _capWordsToDisplay(wordsArray, noOfWordsToDisplay);
     await fill(wordsArray, validatedWordCount); // uncomment for normal situation
     //await fill([...testWordList], validatedWordCount); // comment this after testing.
