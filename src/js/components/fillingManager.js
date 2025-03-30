@@ -1,4 +1,4 @@
-export function fillingManager(globals, getWordsByLength, addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID, random, hasEnoughSq, compareExistingChar, createUL) {
+export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID, random, hasEnoughSq, compareExistingChar, createUL) {
   const { appData, selectors, wordPlacementData } = globals;
   const { wordsByLength, gridSize } = appData;
   const { sectionWordList } = selectors;
@@ -142,9 +142,8 @@ export function fillingManager(globals, getWordsByLength, addPlacedWordCoordinat
       console.groupEnd();
     }
     return {
-      fill: async (noOfWordsToDisplay, wordLength) => {
-        console.warn("fill:", {noOfWordsToDisplay, wordLength});
-        const words = await getWordsByLength(wordLength);
+      fill: async (words, noOfWordsToDisplay) => {
+        console.warn("fill JSON Data:", { words, noOfWordsToDisplay });
         await _placeWords(words, noOfWordsToDisplay);
         _fillRemainingSquares();
       }

@@ -46,7 +46,6 @@ const {
 // Filling Manager
 const filling = fillingManager(
   globals,
-  getWordsByLength,
   addPlacedWordCoordinates,
   addSquareIdToChar,
   storeStartIDAndEndID,
@@ -63,6 +62,7 @@ let initializeCallbackObj = {};
 const loading = loadingManager(
   globals,
   generateSqs,
+  getWordsByLength,
   fill,
   reset_wordPlacementData,
   initializeCallbackObj,
