@@ -46,6 +46,7 @@ const {
 // Filling Manager
 const filling = fillingManager(
   globals,
+  getWordsByLength,
   addPlacedWordCoordinates,
   addSquareIdToChar,
   storeStartIDAndEndID,
@@ -99,9 +100,5 @@ const { initializeGameWords, initializeInteraction } = interaction;
 setInitializeCallback({ initializeGameWords, initializeInteraction });
 
 (async function initialize() {
-  const words = await loadWords();
-  console.log(words);
-  /*const wordsByLength = await getWordsByLength(3);
-  console.log(wordsByLength);*/
   start();
 })()

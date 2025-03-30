@@ -1,6 +1,7 @@
 export function loadingManager(globals, generateSqs, fill, reset_wordPlacementData, initializeCallbackObj) { 
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
+  const { noOfWordsToDisplay, wordsByLength } = appData;
 
   let {_initializeGameWords, _initializeInteraction} = initializeCallbackObj;
   
@@ -61,8 +62,7 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     _dim();
     _showspinner();
     generateSqs();
-    //await fill(appData.noOfWordsToDisplay, 3); // uncomment for normal situation
-    await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
+    await fill(noOfWordsToDisplay, wordsByLength); // uncomment for normal situation
     //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
     _unDim();
     _hidespinner();
@@ -78,12 +78,10 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     _emptySquareFrame();
     _emptySectionWordList();
     generateSqs();
-    //await fill(appData.noOfWordsToDisplay, 3);
-    await fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+    await fill(noOfWordsToDisplay, wordsByLength);
     _hidespinner();
     _disableRestart(); 
     _initializeGameWords();
-    //_initializeInteraction();
   }
 
   return {
