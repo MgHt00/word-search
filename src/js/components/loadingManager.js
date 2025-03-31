@@ -1,7 +1,7 @@
 export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, initializeCallbackObj) { 
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
-  const { noOfWordsToDisplay, wordsByLength } = appData;
+  const { noOfWordsToDisplay, wordsMaxLength } = appData;
 
   let {_initializeGameWords, _initializeInteraction} = initializeCallbackObj;
   
@@ -65,7 +65,7 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
 
 
   async function _getWordsAndFill() {
-    const wordsArray = await getWordsUpToLength(wordsByLength);
+    const wordsArray = await getWordsUpToLength(wordsMaxLength);
     if (!wordsArray) {
       console.error("Failed to load words. Cannot proceed.");
       return;

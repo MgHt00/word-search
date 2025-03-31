@@ -1,6 +1,6 @@
 const appData = {
   noOfWordsToDisplay : 2, // default: 10
-  wordsByLength: 4, 
+  wordsMaxLength: 4, 
   gridSize: 14,
 }
 
