@@ -1,6 +1,7 @@
-export function loadingManager(globals, generateSqs, fill, reset_wordPlacementData, initializeCallbackObj) { 
+export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, initializeCallbackObj) { 
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
+  const { noOfWordsToDisplay, wordsMaxLength } = appData;
 
   let {_initializeGameWords, _initializeInteraction} = initializeCallbackObj;
   
@@ -42,9 +43,9 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     sectionWordList.innerHTML = "";
   }
   
-  function setInitializeCallback(callbackObj) {
-    _initializeGameWords = callbackObj.initializeGameWords;
-    _initializeInteraction = callbackObj.initializeInteraction;
+  function setInitializeCallback({ initializeGameWords, initializeInteraction }) {
+    _initializeGameWords = initializeGameWords;
+    _initializeInteraction = initializeInteraction;
   }
 
   function enableRestart() {
@@ -57,12 +58,28 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     _hideRestartButton();
   }
 
+  // To prevent infinite loop when fill
+  function _capWordsToDisplay(wordsArray, noOfWordsToDisplay) {
+    return (wordsArray.length < noOfWordsToDisplay) ? wordsArray.length : noOfWordsToDisplay;
+  }
+
+
+  async function _getWordsAndFill() {
+    const wordsArray = await getWordsUpToLength(wordsMaxLength);
+    if (!wordsArray) {
+      console.error("Failed to load words. Cannot proceed.");
+      return;
+    }
+    const validatedWordCount = _capWordsToDisplay(wordsArray, noOfWordsToDisplay);
+    await fill(wordsArray, validatedWordCount); // uncomment for normal situation
+    //await fill([...testWordList], validatedWordCount); // comment this after testing.
+  }
+
   async function start() {
     _dim();
     _showspinner();
     generateSqs();
-    await fill([...globals.appData.wordList], appData.noOfWordsToDisplay); // uncomment for normal situation
-    //await fill([...testWordList], noOfWordsToDisplay); // comment this after testing.
+    await _getWordsAndFill();
     _unDim();
     _hidespinner();
     _initializeGameWords();
@@ -77,11 +94,10 @@ export function loadingManager(globals, generateSqs, fill, reset_wordPlacementDa
     _emptySquareFrame();
     _emptySectionWordList();
     generateSqs();
-    await fill([...globals.appData.wordList], appData.noOfWordsToDisplay);
+    await _getWordsAndFill();
     _hidespinner();
     _disableRestart(); 
     _initializeGameWords();
-    //_initializeInteraction();
   }
 
   return {

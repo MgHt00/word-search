@@ -1,0 +1,1 @@
+export const WORDS_DATA_PATH = 'assets/data/words.json';
