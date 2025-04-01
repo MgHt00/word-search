@@ -21,7 +21,15 @@
           <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-          Here comes the sun!
+          <form action="" class="row align-items-center">
+            <div class="col-9">
+              <label for="customRange2" class="form-label">Words' Max Length:</label>
+              <input type="range" class="form-range" min="3" max="9" id="wordsMaxLengthRange">
+            </div>
+            <div class="col mt-4">
+              <input type="text" readonly class="form-control-plaintext" id="wordsMaxLengthLabel" value="00">
+            </div>
+          </form>
       </div>
     </div>
   </nav>
