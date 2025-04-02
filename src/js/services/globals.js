@@ -1,3 +1,5 @@
+import { SELECTORS } from "../constants/selectors.js";
+
 const appData = {
   wordCount : 2, // default: 10 
   wordsMaxLength: 4, 
@@ -5,20 +7,19 @@ const appData = {
 }
 
 const selectors = {
-  overlay : document.getElementById("overlay"),
-  loadingDIV : document.querySelector("#loading-div"),
-  restartDIV : document.querySelector("#restart-div"),
-  squareFrame : document.querySelector("#square-frame"),
-  sectionWordList : document.querySelector("#section-word-list"),
-  wordCountInput : document.querySelector("#range-word-count"),
-  wordCountDisplay : document.querySelector("#label-word-count"),
-  maxLengthInput : document.querySelector("#range-max-length"),
-  maxLengthDisplay : document.querySelector("#label-max-length"),
-  timerInput : document.querySelector("#range-timer"),
-  timerDisplay : document.querySelector("#label-timer"),
+  overlay: document.querySelector(SELECTORS.OVERLAY),
+  loadingDIV: document.querySelector(SELECTORS.LOADING_DIV),
+  restartDIV: document.querySelector(SELECTORS.RESTART_DIV),
+  squareFrame: document.querySelector(SELECTORS.SQUARE_FRAME),
+  sectionWordList: document.querySelector(SELECTORS.SECTION_WORD_LIST),
+  wordCountInput: document.querySelector(SELECTORS.WORD_COUNT_INPUT),
+  wordCountDisplay: document.querySelector(SELECTORS.WORD_COUNT_DISPLAY),
+  maxLengthInput: document.querySelector(SELECTORS.MAX_LENGTH_INPUT),
+  maxLengthDisplay: document.querySelector(SELECTORS.MAX_LENGTH_DISPLAY),
+  timerInput: document.querySelector(SELECTORS.TIMER_INPUT),
+  timerDisplay: document.querySelector(SELECTORS.TIMER_DISPLAY),
+  offcanvasElement: document.querySelector(SELECTORS.OFFCANVAS_ELEMENT),
 }
-
-console.log("settingForm in globals.js:", selectors.settingForm);
 
 const wordPlacementData = {
   squareIdToChar: new Map(), 
