@@ -1,4 +1,4 @@
-export const SELECTORS = {
+export const ELEMENTIDS = {
   // ID Selectors
   OVERLAY: "#overlay",
   LOADING_DIV: "#loading-div",

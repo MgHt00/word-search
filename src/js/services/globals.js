@@ -1,4 +1,4 @@
-import { SELECTORS } from "../constants/selectors.js";
+import { ELEMENTIDS } from "../constants/selectors.js";
 
 const appData = {
   wordCount : 2, // default: 10 
@@ -7,18 +7,17 @@ const appData = {
 }
 
 const selectors = {
-  overlay: document.querySelector(SELECTORS.OVERLAY),
-  loadingDIV: document.querySelector(SELECTORS.LOADING_DIV),
-  restartDIV: document.querySelector(SELECTORS.RESTART_DIV),
-  squareFrame: document.querySelector(SELECTORS.SQUARE_FRAME),
-  sectionWordList: document.querySelector(SELECTORS.SECTION_WORD_LIST),
-  wordCountInput: document.querySelector(SELECTORS.WORD_COUNT_INPUT),
-  wordCountDisplay: document.querySelector(SELECTORS.WORD_COUNT_DISPLAY),
-  maxLengthInput: document.querySelector(SELECTORS.MAX_LENGTH_INPUT),
-  maxLengthDisplay: document.querySelector(SELECTORS.MAX_LENGTH_DISPLAY),
-  timerInput: document.querySelector(SELECTORS.TIMER_INPUT),
-  timerDisplay: document.querySelector(SELECTORS.TIMER_DISPLAY),
-  offcanvasElement: document.querySelector(SELECTORS.OFFCANVAS_ELEMENT),
+  overlay: document.querySelector(ELEMENTIDS.OVERLAY),
+  loadingDIV: document.querySelector(ELEMENTIDS.LOADING_DIV),
+  restartDIV: document.querySelector(ELEMENTIDS.RESTART_DIV),
+  squareFrame: document.querySelector(ELEMENTIDS.SQUARE_FRAME),
+  sectionWordList: document.querySelector(ELEMENTIDS.SECTION_WORD_LIST),
+  wordCountInput: document.querySelector(ELEMENTIDS.WORD_COUNT_INPUT),
+  wordCountDisplay: document.querySelector(ELEMENTIDS.WORD_COUNT_DISPLAY),
+  maxLengthInput: document.querySelector(ELEMENTIDS.MAX_LENGTH_INPUT),
+  maxLengthDisplay: document.querySelector(ELEMENTIDS.MAX_LENGTH_DISPLAY),
+  timerInput: document.querySelector(ELEMENTIDS.TIMER_INPUT),
+  timerDisplay: document.querySelector(ELEMENTIDS.TIMER_DISPLAY),
 }
 
 const wordPlacementData = {

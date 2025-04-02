@@ -1,7 +1,8 @@
+import { ELEMENTIDS } from "../constants/selectors.js";
+
 export function inputManager(globals) {
   const { selectors } = globals;
-  const { offcanvasElement, wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay } = selectors;
-  let settingForm = null;
+  const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay } = selectors;
 
   function _addRangeListener() {
     wordCountInput.addEventListener("input", () => {
@@ -13,18 +14,21 @@ export function inputManager(globals) {
     });
   }
 
-  function _querySettingForm() {
-    settingForm = document.querySelector("#setting-form");
-    return settingForm;
+  function _queryOffcanvasElement() {
+    const offcanvasElement = document.querySelector(ELEMENTIDS.OFFCANVAS_ELEMENT);
+    if (!offcanvasElement) {
+      console.error("Offcanvas element not found.");
+      return null;
+    } 
+      return offcanvasElement;
   }
 
   function _addOffcanvasListener() {
-    //const offcanvasElement = document.getElementById('offcanvasNavbar'); // Replace 'offcanvasScrolling' with the actual ID of your offcanvas element
+    const offcanvasElement = _queryOffcanvasElement();
+    
     if (offcanvasElement) {
       offcanvasElement.addEventListener('show.bs.offcanvas', () => {
         console.log("Offcanvas is about to be shown.");
-        _querySettingForm();
-        console.info("Setting form:", settingForm);
       });
 
       offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
@@ -45,7 +49,6 @@ export function inputManager(globals) {
 
   function initializeInput() {
     _addOffcanvasListener();
-    console.info("Setting form:", settingForm);
     _addRangeListener();
   }
 
