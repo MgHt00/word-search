@@ -1,6 +1,7 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-export function interactionManager( globals, wordPlacementQuery, scopeDependencies, controlDependencies) {
+export function interactionManager( globals, wordPlacementQuery, settingFormState, scopeDependencies, controlDependencies) {
   const { isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = wordPlacementQuery;
+  const { isSettingFormOpen } = settingFormState;
   
   const {
     isWithinHoverScope,
@@ -72,7 +73,7 @@ export function interactionManager( globals, wordPlacementQuery, scopeDependenci
   
     document.addEventListener("click", (event) => {
       // Check if the click is outside of the squareFrame
-      if (!squareFrame.contains(event.target)) /*&& !settingForm.contains(event.target))*/ { // [sn4]
+      if ((!squareFrame.contains(event.target)) && !isSettingFormOpen()) { // [sn4]
         _resetAllSquares("_documentClickListener");
       }
     });

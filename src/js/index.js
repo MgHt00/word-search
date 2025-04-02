@@ -73,6 +73,7 @@ const controlDependencies = {
 const interaction = interactionManager(
   globals,
   wordPlacementQuery,
+  settingFormState,
   scopeDependencies,
   controlDependencies,
 );

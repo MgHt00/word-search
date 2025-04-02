@@ -7,11 +7,12 @@ export function inputManager(globals, settingFormState) {
 
   function _addRangeListener() {
     wordCountInput.addEventListener("input", () => {
-      wordCountDisplay.textContent = wordCountInput.value;
+      console.info(wordCountInput.value);
+      wordCountDisplay.value = wordCountInput.value;
     });
 
     maxLengthInput.addEventListener("input", () => {
-      maxLengthDisplay.textContent = maxLengthInput.value;
+      maxLengthDisplay.value = maxLengthInput.value;
     });
   }
 
