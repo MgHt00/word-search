@@ -10,7 +10,15 @@ const selectors = {
   restartDIV : document.querySelector("#restart-div"),
   squareFrame : document.querySelector("#square-frame"),
   sectionWordList : document.querySelector("#section-word-list"),
+  wordCountInput : document.querySelector("#range-word-count"),
+  wordCountDisplay : document.querySelector("#label-word-count"),
+  maxLengthInput : document.querySelector("#range-max-length"),
+  maxLengthDisplay : document.querySelector("#label-max-length"),
+  timerInput : document.querySelector("#range-timer"),
+  timerDisplay : document.querySelector("#label-timer"),
 }
+
+console.log("settingForm in globals.js:", selectors.settingForm);
 
 const wordPlacementData = {
   squareIdToChar: new Map(), 

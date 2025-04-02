@@ -12,6 +12,7 @@ import { scopeFinder } from "./components/scopeFinder.js";
 import { fillingManager } from "./components/fillingManager.js";
 import { loadingManager } from "./components/loadingManager.js";
 import { interactionManager } from "./components/interactionManager.js";
+import { inputManager } from './components/inputManager.js';
 
 // Testing concerns
 import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHelpers.js";
@@ -99,6 +100,11 @@ const { initializeGameWords, initializeInteraction } = interaction;
 
 setInitializeCallback({ initializeGameWords, initializeInteraction });
 
+const input = inputManager(globals);
+const { initializeInput } = input;
+
+
 (async function initialize() {
   start();
+  initializeInput();
 })()

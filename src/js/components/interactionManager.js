@@ -78,7 +78,7 @@ export function interactionManager( globals, dataDependencies, scopeDependencies
   
     document.addEventListener("click", (event) => {
       // Check if the click is outside of the squareFrame
-      if (!squareFrame.contains(event.target)) { // [sn4]
+      if (!squareFrame.contains(event.target)) /*&& !settingForm.contains(event.target))*/ { // [sn4]
         _resetAllSquares("_documentClickListener");
       }
     });
