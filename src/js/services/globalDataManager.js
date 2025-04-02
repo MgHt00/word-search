@@ -1,5 +1,5 @@
 export function globalDataManager(globals) {
-  const { appData, selectors, wordPlacementData, appState } = globals;
+  const { appData, appState, selectors, wordPlacementData } = globals;
   const { squareIdToChar, startIDAndEndID, placedWordCoordinates } = wordPlacementData;
 
   // --- Word Placement Data Management ---

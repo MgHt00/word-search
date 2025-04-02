@@ -38,6 +38,7 @@ const wordPlacementData = {
 
 export const globals =  {
   appData,
+  appState,
   selectors,
   wordPlacementData,
 }

@@ -1,8 +1,9 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals) {
+export function inputManager(globals, settingFormState) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay } = selectors;
+  const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormState;
 
   function _addRangeListener() {
     wordCountInput.addEventListener("input", () => {
@@ -27,20 +28,22 @@ export function inputManager(globals) {
     const offcanvasElement = _queryOffcanvasElement();
     
     if (offcanvasElement) {
-      offcanvasElement.addEventListener('show.bs.offcanvas', () => {
+      /*offcanvasElement.addEventListener('show.bs.offcanvas', () => {
         console.log("Offcanvas is about to be shown.");
-      });
+      });*/
 
       offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
-        console.log("Offcanvas is fully shown.");
+        setSettingFormOpen();
+        console.log("Offcanvas is fully shown.", isSettingFormOpen());
       });
 
-      offcanvasElement.addEventListener('hide.bs.offcanvas', () => {
+      /*offcanvasElement.addEventListener('hide.bs.offcanvas', () => {
         console.log("Offcanvas is about to be hidden.");
-      });
+      });*/
 
       offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
-        console.log("Offcanvas is fully hidden.");
+        setSettingFormClosed();
+        console.log("Offcanvas is fully hidden.", isSettingFormOpen());
       });
     } else {
       console.error("Offcanvas element not found.");

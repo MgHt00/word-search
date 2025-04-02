@@ -81,9 +81,8 @@ const { initializeGameWords, initializeInteraction } = interaction;
 
 setInitializeCallback({ initializeGameWords, initializeInteraction });
 
-const input = inputManager(globals);
+const input = inputManager(globals, settingFormState);
 const { initializeInput } = input;
-
 
 (async function initialize() {
   start();
