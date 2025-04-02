@@ -60,8 +60,19 @@ export function globalDataManager(globals) {
     placedWordCoordinates.clear();
     startIDAndEndID.length = 0;
   }
-  
 
+  function isSettingFormOpen() {
+    return appState.isSettingFormOpen;
+  }
+
+  function setSettingFormOpen() {
+    appState.isSettingFormOpen = true;
+  }
+
+  function setSettingFormClosed() {
+    appState.isSettingFormOpen = false;
+  }
+  
   return {
     addPlacedWordCoordinates,
     addSquareIdToChar,
@@ -73,5 +84,8 @@ export function globalDataManager(globals) {
     findSelectedWordInGlobal,
     getSquareIDsOfSelectedWord,
     reset_wordPlacementData,
+    isSettingFormOpen,
+    setSettingFormOpen,
+    setSettingFormClosed,
   };
 }

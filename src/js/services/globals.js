@@ -6,6 +6,10 @@ const appData = {
   gridSize: 14,
 }
 
+const appState = {
+  isSettingFormOpen: false,
+}
+
 const selectors = {
   overlay: document.querySelector(ELEMENTIDS.OVERLAY),
   loadingDIV: document.querySelector(ELEMENTIDS.LOADING_DIV),
