@@ -1,12 +1,6 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-export function interactionManager( globals, dataDependencies, scopeDependencies, controlDependencies) {
-  const {
-    isStartSquare,
-    getEndSquaresFromGlobal,
-    getAllPlacedWords,
-    findSelectedWordInGlobal,
-    getSquareIDsOfSelectedWord,
-  } = dataDependencies;
+export function interactionManager( globals, wordPlacementQuery, scopeDependencies, controlDependencies) {
+  const { isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = wordPlacementQuery;
   
   const {
     isWithinHoverScope,

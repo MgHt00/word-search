@@ -1,91 +1,85 @@
 export function globalDataManager(globals) {
-  const { appData, selectors, wordPlacementData } = globals; 
-  const { squareIdToChar, startIDAndEndID, placedWordCoordinates } = wordPlacementData; 
+  const { appData, selectors, wordPlacementData, appState } = globals;
+  const { squareIdToChar, startIDAndEndID, placedWordCoordinates } = wordPlacementData;
 
-  function addPlacedWordCoordinates(word, placementData, coordinates) {
-    placedWordCoordinates.set(word, { placementData, direction: coordinates.direction });
-  }
+  // --- Word Placement Data Management ---
+  const wordPlacement = {
+    addPlacedWordCoordinates(word, placementData, coordinates) {
+      placedWordCoordinates.set(word, { placementData, direction: coordinates.direction });
+    },
 
-  function addSquareIdToChar(squareID, char) {
-    squareIdToChar.set(squareID, char);
-  }
+    addSquareIdToChar(squareID, char) {
+      squareIdToChar.set(squareID, char);
+    },
 
-  // Check if the squareID exists as a key in any of the objects
-  function isStartSquare(squareID) {
-    return startIDAndEndID.some((obj) => obj.hasOwnProperty(squareID));
-  }
+    storeStartIDAndEndID(startSquareID, endSquareID) {
+      startIDAndEndID.push({ [startSquareID]: endSquareID });
+    },
 
-  // Find all end squares associated with the given start square
-  function getEndSquaresFromGlobal(squareID) {
-    const endSquares = startIDAndEndID
-      .filter((obj) => obj.hasOwnProperty(squareID))
-      .map((obj) => obj[squareID]); //extract the end square.
-    return endSquares.length > 0 ? endSquares : null;
-  }
+    reset_wordPlacementData() {
+      squareIdToChar.clear();
+      placedWordCoordinates.clear();
+      startIDAndEndID.length = 0;
+    },
+  };
 
-  function getAllEndSquares() {
-    const allEndSquares = startIDAndEndID
-      .map(obj => Object.values(obj))
-      .flat();
-    return allEndSquares;
-  }
+  // --- Word Placement Data Querying ---
+  const wordPlacementQuery = {
+    isStartSquare(squareID) {
+      return startIDAndEndID.some((obj) => obj.hasOwnProperty(squareID));
+    },
 
-  function getAllPlacedWords() {
-    return Array.from(placedWordCoordinates.keys());
-  }
-  
+    getEndSquaresFromGlobal(squareID) {
+      const endSquares = startIDAndEndID
+        .filter((obj) => obj.hasOwnProperty(squareID))
+        .map((obj) => obj[squareID]);
+      return endSquares.length > 0 ? endSquares : null;
+    },
 
-  function storeStartIDAndEndID(startSquareID, endSquareID) {
-    wordPlacementData.startIDAndEndID.push({ [startSquareID]: endSquareID }); // [] is for Computed Property Names: 
-  }
+    getAllEndSquares() {
+      const allEndSquares = startIDAndEndID.map((obj) => Object.values(obj)).flat();
+      return allEndSquares;
+    },
 
-  function findSelectedWordInGlobal(startSquareID, endSquareID) {
-    for (const [word, entry] of placedWordCoordinates) {
-      const storedStartSquareID = entry.placementData[0];
-      const storedEndSquareID = entry.placementData[entry.placementData.length - 1];
-      if (storedStartSquareID === startSquareID && storedEndSquareID === endSquareID) {
-        return word; 
+    getAllPlacedWords() {
+      return Array.from(placedWordCoordinates.keys());
+    },
+
+    findSelectedWordInGlobal(startSquareID, endSquareID) {
+      for (const [word, entry] of placedWordCoordinates) {
+        const storedStartSquareID = entry.placementData[0];
+        const storedEndSquareID = entry.placementData[entry.placementData.length - 1];
+        if (storedStartSquareID === startSquareID && storedEndSquareID === endSquareID) {
+          return word;
+        }
       }
-    }
-    return undefined; 
-  }
-  
-  function getSquareIDsOfSelectedWord(key) {
-    const entry = placedWordCoordinates.get(key);
-    return entry.placementData;
-  }
+      return undefined;
+    },
 
-  function reset_wordPlacementData() {
-    squareIdToChar.clear();
-    placedWordCoordinates.clear();
-    startIDAndEndID.length = 0;
-  }
+    getSquareIDsOfSelectedWord(key) {
+      const entry = placedWordCoordinates.get(key);
+      return entry.placementData;
+    },
+  };
 
-  function isSettingFormOpen() {
-    return appState.isSettingFormOpen;
-  }
+  // --- Setting Form State Management ---
+  const settingFormState = {
+    isSettingFormOpen() {
+      return appState.isSettingFormOpen;
+    },
 
-  function setSettingFormOpen() {
-    appState.isSettingFormOpen = true;
-  }
+    setSettingFormOpen() {
+      appState.isSettingFormOpen = true;
+    },
 
-  function setSettingFormClosed() {
-    appState.isSettingFormOpen = false;
-  }
-  
+    setSettingFormClosed() {
+      appState.isSettingFormOpen = false;
+    },
+  };
+
   return {
-    addPlacedWordCoordinates,
-    addSquareIdToChar,
-    isStartSquare,
-    getEndSquaresFromGlobal,
-    getAllEndSquares,
-    getAllPlacedWords,
-    storeStartIDAndEndID,
-    findSelectedWordInGlobal,
-    getSquareIDsOfSelectedWord,
-    reset_wordPlacementData,
-    isSettingFormOpen,
-    setSettingFormOpen,
-    setSettingFormClosed,
+    wordPlacement,
+    wordPlacementQuery,
+    settingFormState,
   };
 }

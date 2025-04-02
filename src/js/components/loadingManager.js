@@ -2,6 +2,7 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
   const { wordCount, wordsMaxLength } = appData;
+  //const { reset_wordPlacementData } = wordPlacementQuery;
 
   let {_initializeGameWords, _initializeInteraction} = initializeCallbackObj;
   

@@ -19,16 +19,7 @@ import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHe
 
 // Global Data Manager
 const dataManager = globalDataManager(globals);
-const { 
-  addPlacedWordCoordinates, 
-  addSquareIdToChar, 
-  isStartSquare, 
-  storeStartIDAndEndID, 
-  getEndSquaresFromGlobal, 
-  getAllPlacedWords, 
-  findSelectedWordInGlobal, 
-  getSquareIDsOfSelectedWord,
-  reset_wordPlacementData } = dataManager;
+const { wordPlacement, wordPlacementQuery, settingFormState } = dataManager;
 
 // Word Manager
 const words = wordManager();
@@ -47,9 +38,7 @@ const {
 // Filling Manager
 const filling = fillingManager(
   globals,
-  addPlacedWordCoordinates,
-  addSquareIdToChar,
-  storeStartIDAndEndID,
+  wordPlacement,
   //testRandom(), // comment this after testing.
   random, // uncomment for normal situation
   hasEnoughSq,
@@ -65,20 +54,12 @@ const loading = loadingManager(
   generateSqs,
   getWordsUpToLength,
   fill,
-  reset_wordPlacementData,
+  wordPlacement.reset_wordPlacementData,
   initializeCallbackObj,
 );
 const { start, enableRestart, restart, setInitializeCallback } = loading;
 
 // Interaction Manager
-const dataDependencies = {
-  isStartSquare,
-  getEndSquaresFromGlobal,
-  getAllPlacedWords,
-  findSelectedWordInGlobal,
-  getSquareIDsOfSelectedWord,
-};
-
 const scopeDependencies = {
   getSurroundingScope,
   isWithinHoverScope,
@@ -91,7 +72,7 @@ const controlDependencies = {
 
 const interaction = interactionManager(
   globals,
-  dataDependencies,
+  wordPlacementQuery,
   scopeDependencies,
   controlDependencies,
 );
