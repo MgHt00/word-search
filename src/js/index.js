@@ -19,7 +19,7 @@ import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHe
 
 // Global Data Manager
 const dataManager = globalDataManager(globals);
-const { wordPlacement, wordPlacementQuery, settingFormState } = dataManager;
+const { appSettings, wordPlacement, wordPlacementQuery, settingFormState } = dataManager;
 
 // Word Manager
 const words = wordManager();
@@ -82,7 +82,7 @@ const { initializeGameWords, initializeInteraction } = interaction;
 
 setInitializeCallback({ initializeGameWords, initializeInteraction });
 
-const input = inputManager(globals, settingFormState);
+const input = inputManager(globals, appSettings, settingFormState);
 const { initializeInput } = input;
 
 (async function initialize() {

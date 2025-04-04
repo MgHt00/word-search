@@ -2,6 +2,41 @@ export function globalDataManager(globals) {
   const { appData, appState, selectors, wordPlacementData } = globals;
   const { squareIdToChar, startIDAndEndID, placedWordCoordinates } = wordPlacementData;
 
+  // --- App Settings Management ---
+  const appSettings = {
+    setWordCount(count) {
+      appData.wordCount = count;
+    },
+
+    setWordsMaxLength(length) {
+      appData.wordsMaxLength = length;
+    },
+
+    setTimer(time) {
+      appData.timer = time;
+    },
+
+    setGridSize(size) {
+      appData.gridSize = size;
+    },
+
+    getWordCount(){
+      return appData.wordCount;
+    },
+
+    getWordsMaxLength(){
+      return appData.wordsMaxLength;
+    },
+
+    getTimer(){
+      return appData.timer;
+    },
+
+    getGridSize(){
+      return appData.gridSize;
+    }
+  };
+
   // --- Word Placement Data Management ---
   const wordPlacement = {
     addPlacedWordCoordinates(word, placementData, coordinates) {
@@ -78,6 +113,7 @@ export function globalDataManager(globals) {
   };
 
   return {
+    appSettings,
     wordPlacement,
     wordPlacementQuery,
     settingFormState,

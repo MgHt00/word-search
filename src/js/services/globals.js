@@ -2,7 +2,8 @@ import { ELEMENTIDS } from "../constants/selectors.js";
 
 const appData = {
   wordCount : 2, // default: 10 
-  wordsMaxLength: 4, 
+  wordsMaxLength: 4,
+  timer: 0,
   gridSize: 14,
 }
 

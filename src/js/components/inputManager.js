@@ -1,11 +1,27 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, settingFormState) {
+export function inputManager(globals, appSettings, settingFormState) {
   const { selectors } = globals;
-  const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay } = selectors;
+  const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, timerInput, timerDisplay } = selectors;
+  const { setWordCount, setWordsMaxLength, setTimer, getWordCount, getWordsMaxLength, getTimer } = appSettings;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormState;
 
-  function _addRangeListener() {
+  function _setWordCount(count) {  
+    wordCountInput.value = count;
+    wordCountDisplay.value = count;
+  }
+
+  function _setMaxLength(length) {
+    maxLengthInput.value = length;
+    maxLengthDisplay.value = length;
+  }
+
+  function _setTimer(time) {
+    timerInput.value = time;
+    timerDisplay.value = time;
+  }
+  
+  function _addRangeListeners() {
     wordCountInput.addEventListener("input", () => {
       console.info(wordCountInput.value);
       wordCountDisplay.value = wordCountInput.value;
@@ -52,8 +68,12 @@ export function inputManager(globals, settingFormState) {
   }
 
   function initializeInput() {
+    _setWordCount(getWordCount());
+    _setMaxLength(getWordsMaxLength());
+    _setTimer(getTimer());
+
     _addOffcanvasListener();
-    _addRangeListener();
+    _addRangeListeners();
   }
 
   return {
