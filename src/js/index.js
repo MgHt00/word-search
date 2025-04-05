@@ -58,7 +58,7 @@ const loading = loadingManager(
   wordPlacementFns.reset_wordPlacementData,
   initializeCallbackObj,
 );
-const { start, enableRestart, restart, setInitializeCallback } = loading;
+const { start, enableRestart, enableGameOver, restart, setInitializeCallback } = loading;
 
 // Interaction Manager
 const scopeDependencies = {
@@ -82,7 +82,7 @@ const interaction = interactionManager(
 const { initializeGameWords, initializeInteraction } = interaction;
 setInitializeCallback({ initializeGameWords, initializeInteraction });
 
-const time = timerManager(globals, appSettingsFns);
+const time = timerManager(globals, appSettingsFns, enableGameOver);
 const { initializeTimer } = time;
 
 const input = inputManager(globals, appSettingsFns, settingFormStateFns);

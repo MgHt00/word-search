@@ -25,6 +25,7 @@ const selectors = {
   timerDisplay: document.querySelector(ELEMENTIDS.TIMER_DISPLAY),
   timerContainer: document.querySelector(ELEMENTIDS.TIMER_CONTAINER),
   countdown: document.querySelector(ELEMENTIDS.COUNTDOWN),
+  restartMessage: document.querySelector(ELEMENTIDS.RESTART_MSG),
 }
 
 const wordPlacementData = {

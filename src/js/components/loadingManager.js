@@ -1,6 +1,6 @@
 export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, initializeCallbackObj) { 
   const { selectors, appData } = globals;
-  const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
+  const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList, restartMessage } = selectors;
   const { wordCount, wordsMaxLength } = appData;
   //const { reset_wordPlacementData } = wordPlacementQuery;
 
@@ -49,18 +49,28 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     _initializeInteraction = initializeInteraction;
   }
 
+  function _updateRestartMessage(message) {
+    restartMessage.textContent = message;
+  }
+
+  function _clearRestartMessage() {
+    restartMessage.textContent = "";
+  }
+
   function enableRestart() {
     _dim();
     _showRestartButton();
   }
 
   function _disableRestart() {
+    _clearRestartMessage();
     _unDim();
     _hideRestartButton();
   }
 
   function enableGameOver() {
     _dim();
+    _updateRestartMessage("Game Over!");
     _showRestartButton();
   }
 
