@@ -1,10 +1,9 @@
-export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, initializeCallbackObj) { 
+export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData) { 
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList, restartMessage } = selectors;
   const { wordCount, wordsMaxLength } = appData;
-  //const { reset_wordPlacementData } = wordPlacementQuery;
 
-  let {_initializeGameWords, _initializeInteraction} = initializeCallbackObj;
+  let _initializeGameWords, _initializeInteraction, _initializeInput, _initializeCountdown;
   
   function _dim() {
     squareFrame.classList.add("dim");
@@ -44,9 +43,11 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     sectionWordList.innerHTML = "";
   }
   
-  function setInitializeCallback({ initializeGameWords, initializeInteraction }) {
+  function setInitializeCallback({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown }) {
     _initializeGameWords = initializeGameWords;
     _initializeInteraction = initializeInteraction;
+    _initializeInput = initializeInput;
+    _initializeCountdown = initializeCountdown;
   }
 
   function _updateRestartMessage(message) {
@@ -100,6 +101,8 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     _hidespinner();
     _initializeGameWords();
     _initializeInteraction();
+    _initializeInput();
+    _initializeCountdown();
   }
 
   async function restart() {
@@ -112,8 +115,10 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     generateSqs();
     await _getWordsAndFill();
     _hidespinner();
-    _disableRestart(); 
+    _initializeInput();
+    _initializeCountdown();
     _initializeGameWords();
+    _disableRestart(); 
   }
 
   return {

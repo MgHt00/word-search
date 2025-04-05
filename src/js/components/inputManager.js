@@ -1,6 +1,6 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, appSettingsFns, settingFormStateFns) {
+export function inputManager(globals, appSettingsFns, settingFormStateFns, initializeCountdown) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, timerInput, timerDisplay } = selectors;
   const { setWordCount, setWordsMaxLength, setTimer, getWordCount, getWordsMaxLength, getTimer } = appSettingsFns;

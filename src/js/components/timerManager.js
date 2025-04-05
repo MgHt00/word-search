@@ -2,6 +2,7 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   const { timerContainer, countdown } = globals.selectors;
   const { setTimer, getTimer } = appSettingsFns;
 
+  const initialTime = getTimer();
   let remainingTime;
 
   function _showCountdown() {
@@ -16,6 +17,10 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
     countdown.textContent = time;
   }
 
+  function _resetCountdown() {
+    setTimer(initialTime);
+  }
+
   function _startCountdown(time) {
     remainingTime = time;
     const countdownInterval = setInterval(() => {
@@ -24,19 +29,20 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
       if (remainingTime <= 0) {
         _hideCountdown();
         enableGameOver();
+        _resetCountdown();
         clearInterval(countdownInterval);
       }
       remainingTime--;
     }, 1000); // Update every 1 second
   }
 
-  function initializeTimer() {
+  function initializeCountdown() {
     if(getTimer() > 0){
       _startCountdown(getTimer());
     }
   }
 
   return {
-    initializeTimer,
+    initializeCountdown,
   };
 }

@@ -14,6 +14,7 @@ export function globalDataManager(globals) {
 
     setTimer(time) {
       appData.timer = time;
+      console.info("setTimer() called, Countdown: ", appData.timer, "seconds");
     },
 
     setGridSize(size) {
