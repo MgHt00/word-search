@@ -1,7 +1,7 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-export function interactionManager( globals, wordPlacementQuery, settingFormState, scopeDependencies, controlDependencies) {
-  const { isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = wordPlacementQuery;
-  const { isSettingFormOpen } = settingFormState;
+export function interactionManager( globals, wordPlacementQueryFns, settingFormStateFns, scopeDependencies, controlDependencies) {
+  const { isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = wordPlacementQueryFns;
+  const { isSettingFormOpen } = settingFormStateFns;
   
   const {
     isWithinHoverScope,

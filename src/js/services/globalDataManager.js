@@ -3,7 +3,7 @@ export function globalDataManager(globals) {
   const { squareIdToChar, startIDAndEndID, placedWordCoordinates } = wordPlacementData;
 
   // --- App Settings Management ---
-  const appSettings = {
+  const appSettingsFns = {
     setWordCount(count) {
       appData.wordCount = count;
     },
@@ -38,7 +38,7 @@ export function globalDataManager(globals) {
   };
 
   // --- Word Placement Data Management ---
-  const wordPlacement = {
+  const wordPlacementFns = {
     addPlacedWordCoordinates(word, placementData, coordinates) {
       placedWordCoordinates.set(word, { placementData, direction: coordinates.direction });
     },
@@ -59,7 +59,7 @@ export function globalDataManager(globals) {
   };
 
   // --- Word Placement Data Querying ---
-  const wordPlacementQuery = {
+  const wordPlacementQueryFns = {
     isStartSquare(squareID) {
       return startIDAndEndID.some((obj) => obj.hasOwnProperty(squareID));
     },
@@ -98,7 +98,7 @@ export function globalDataManager(globals) {
   };
 
   // --- Setting Form State Management ---
-  const settingFormState = {
+  const settingFormStateFns = {
     isSettingFormOpen() {
       return appState.isSettingFormOpen;
     },
@@ -113,9 +113,9 @@ export function globalDataManager(globals) {
   };
 
   return {
-    appSettings,
-    wordPlacement,
-    wordPlacementQuery,
-    settingFormState,
+    appSettingsFns,
+    wordPlacementFns,
+    wordPlacementQueryFns,
+    settingFormStateFns,
   };
 }

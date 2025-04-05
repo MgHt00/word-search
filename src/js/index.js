@@ -20,7 +20,7 @@ import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHe
 
 // Global Data Manager
 const dataManager = globalDataManager(globals);
-const { appSettings, wordPlacement, wordPlacementQuery, settingFormState } = dataManager;
+const { appSettingsFns, wordPlacementFns, wordPlacementQueryFns, settingFormStateFns } = dataManager;
 
 // Word Manager
 const words = wordManager();
@@ -39,7 +39,7 @@ const {
 // Filling Manager
 const filling = fillingManager(
   globals,
-  wordPlacement,
+  wordPlacementFns,
   //testRandom(), // comment this after testing.
   random, // uncomment for normal situation
   hasEnoughSq,
@@ -55,7 +55,7 @@ const loading = loadingManager(
   generateSqs,
   getWordsUpToLength,
   fill,
-  wordPlacement.reset_wordPlacementData,
+  wordPlacementFns.reset_wordPlacementData,
   initializeCallbackObj,
 );
 const { start, enableRestart, restart, setInitializeCallback } = loading;
@@ -73,8 +73,8 @@ const controlDependencies = {
 
 const interaction = interactionManager(
   globals,
-  wordPlacementQuery,
-  settingFormState,
+  wordPlacementQueryFns,
+  settingFormStateFns,
   scopeDependencies,
   controlDependencies,
 );
@@ -85,7 +85,7 @@ setInitializeCallback({ initializeGameWords, initializeInteraction });
 const time = timerManager(globals);
 const { initializeTimer } = time;
 
-const input = inputManager(globals, appSettings, settingFormState);
+const input = inputManager(globals, appSettingsFns, settingFormStateFns);
 const { initializeInput } = input;
 
 (async function initialize() {

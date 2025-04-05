@@ -4,6 +4,7 @@ export function timerManager(globals) {
   function _hideTimer() {
     timerContainer.classList.add("invisible");
   }
+
   
 
   function initializeTimer() {

@@ -1,10 +1,10 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, appSettings, settingFormState) {
+export function inputManager(globals, appSettingsFns, settingFormStateFns) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, timerInput, timerDisplay } = selectors;
-  const { setWordCount, setWordsMaxLength, setTimer, getWordCount, getWordsMaxLength, getTimer } = appSettings;
-  const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormState;
+  const { setWordCount, setWordsMaxLength, setTimer, getWordCount, getWordsMaxLength, getTimer } = appSettingsFns;
+  const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
 
   function _setWordCount(count) {  
     wordCountInput.value = count;
