@@ -96,27 +96,51 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     _dim();
     _showspinner();
     generateSqs();
+    _initializeCountdown();
     await _getWordsAndFill();
     _unDim();
     _hidespinner();
     _initializeGameWords();
     _initializeInteraction();
     _initializeInput();
-    _initializeCountdown();
   }
+
+  /*async function start() {
+    _dim();
+    _showspinner();
+
+    // Start the countdown immediately
+    _initializeCountdown();
+
+    // Run other tasks in parallel
+    await Promise.all([
+      (async () => {
+        generateSqs();
+        await _getWordsAndFill();
+      })(),
+      (async () => {
+        _initializeGameWords();
+        _initializeInteraction();
+        _initializeInput();
+      })(),
+    ]);
+
+    _unDim();
+    _hidespinner();
+  }*/
 
   async function restart() {
     console.info("RESTART");
     _dim();
     reset_wordPlacementData();
     _showspinner();
+    _initializeCountdown();
     _emptySquareFrame();
     _emptySectionWordList();
     generateSqs();
     await _getWordsAndFill();
     _hidespinner();
     _initializeInput();
-    _initializeCountdown();
     _initializeGameWords();
     _disableRestart(); 
   }
