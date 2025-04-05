@@ -32,17 +32,22 @@ export function inputManager(globals, appSettings, settingFormState) {
     });
   }
 
-  function _queryOffcanvasElement() {
+  function _queryOffcanvasElements() {
     const offcanvasElement = document.querySelector(ELEMENTIDS.OFFCANVAS_ELEMENT);
+    const reloadBtn = document.querySelector(ELEMENTIDS.RELOAD_BTN);
+
     if (!offcanvasElement) {
-      console.error("Offcanvas element not found.");
+      console.error("Offcanvas elements not found.");
       return null;
-    } 
-      return offcanvasElement;
+    } else if (!reloadBtn) {
+      console.error("Reload Button not found");
+      return null;
+    }
+      return { offcanvasElement, reloadBtn };
   }
 
   function _addOffcanvasListener() {
-    const offcanvasElement = _queryOffcanvasElement();
+    const { offcanvasElement, reloadBtn } = _queryOffcanvasElements();
     
     if (offcanvasElement) {
       /*offcanvasElement.addEventListener('show.bs.offcanvas', () => {
@@ -51,6 +56,7 @@ export function inputManager(globals, appSettings, settingFormState) {
 
       offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
         setSettingFormOpen();
+        reloadBtn.addEventListener("click", _handleSettingFormSubmit);
         console.log("Offcanvas is fully shown.", isSettingFormOpen());
       });
 
@@ -60,11 +66,17 @@ export function inputManager(globals, appSettings, settingFormState) {
 
       offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
         setSettingFormClosed();
+        reloadBtn.removeEventListener("click", _handleSettingFormSubmit);
         console.log("Offcanvas is fully hidden.", isSettingFormOpen());
       });
     } else {
       console.error("Offcanvas element not found.");
     }
+  }
+
+  function _handleSettingFormSubmit(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    console.info("RELOAD BUTTON CLICKED!"); 
   }
 
   function initializeInput() {

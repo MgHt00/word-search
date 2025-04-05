@@ -13,4 +13,5 @@ export const ELEMENTIDS = {
   TIMER_INPUT: "#range-timer",
   TIMER_DISPLAY: "#label-timer",
   OFFCANVAS_ELEMENT: "#offcanvasNavbar",
+  RELOAD_BTN: "#btn-reload",
 };
