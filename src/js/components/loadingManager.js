@@ -59,6 +59,11 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     _hideRestartButton();
   }
 
+  function enableGameOver() {
+    _dim();
+    _showRestartButton();
+  }
+
   // To prevent infinite loop when fill
   function _capWordsToDisplay(wordsArray, wordCount) {
     return (wordsArray.length < wordCount) ? wordsArray.length : wordCount;
@@ -104,6 +109,7 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
   return {
     start,
     enableRestart,
+    enableGameOver,
     restart,
     setInitializeCallback,
   };

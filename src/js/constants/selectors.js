@@ -14,5 +14,6 @@ export const ELEMENTIDS = {
   TIMER_DISPLAY: "#label-timer",
   OFFCANVAS_ELEMENT: "#offcanvasNavbar",
   RELOAD_BTN: "#btn-reload",
-  TIMER_CONTAINER: "#timer-container"
+  TIMER_CONTAINER: "#timer-container",
+  COUNTDOWN: "#countdown",
 };

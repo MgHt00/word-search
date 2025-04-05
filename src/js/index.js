@@ -82,7 +82,7 @@ const interaction = interactionManager(
 const { initializeGameWords, initializeInteraction } = interaction;
 setInitializeCallback({ initializeGameWords, initializeInteraction });
 
-const time = timerManager(globals);
+const time = timerManager(globals, appSettingsFns);
 const { initializeTimer } = time;
 
 const input = inputManager(globals, appSettingsFns, settingFormStateFns);

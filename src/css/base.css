@@ -151,6 +151,10 @@ body {
   max-width: calc((var(--sq-size) + (var(--sq-margin) * 2)) * var(--sq-row-break));
 }
 
+#countdown{
+  width: 30px;
+}
+
 /*.hidden { // using bootstrap utility classes instead
   display: none;
 }
