@@ -23,6 +23,7 @@ const selectors = {
   maxLengthDisplay: document.querySelector(ELEMENTIDS.MAX_LENGTH_DISPLAY),
   timerInput: document.querySelector(ELEMENTIDS.TIMER_INPUT),
   timerDisplay: document.querySelector(ELEMENTIDS.TIMER_DISPLAY),
+  timerContainer: document.querySelector(ELEMENTIDS.TIMER_CONTAINER),
 }
 
 const wordPlacementData = {

@@ -12,6 +12,7 @@ import { scopeFinder } from "./components/scopeFinder.js";
 import { fillingManager } from "./components/fillingManager.js";
 import { loadingManager } from "./components/loadingManager.js";
 import { interactionManager } from "./components/interactionManager.js";
+import { timerManager } from "./components/timerManager.js";
 import { inputManager } from './components/inputManager.js';
 
 // Testing concerns
@@ -79,13 +80,16 @@ const interaction = interactionManager(
 );
 
 const { initializeGameWords, initializeInteraction } = interaction;
-
 setInitializeCallback({ initializeGameWords, initializeInteraction });
+
+const time = timerManager(globals);
+const { initializeTimer } = time;
 
 const input = inputManager(globals, appSettings, settingFormState);
 const { initializeInput } = input;
 
 (async function initialize() {
   start();
+  initializeTimer();
   initializeInput();
 })()

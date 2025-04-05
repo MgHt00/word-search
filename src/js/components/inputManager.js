@@ -30,6 +30,10 @@ export function inputManager(globals, appSettings, settingFormState) {
     maxLengthInput.addEventListener("input", () => {
       maxLengthDisplay.value = maxLengthInput.value;
     });
+
+    timerInput.addEventListener("input", () => {
+      timerDisplay.value = timerInput.value;
+    });
   }
 
   function _queryOffcanvasElements() {
