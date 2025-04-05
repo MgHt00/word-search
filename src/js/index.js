@@ -12,22 +12,15 @@ import { scopeFinder } from "./components/scopeFinder.js";
 import { fillingManager } from "./components/fillingManager.js";
 import { loadingManager } from "./components/loadingManager.js";
 import { interactionManager } from "./components/interactionManager.js";
+import { timerManager } from "./components/timerManager.js";
+import { inputManager } from './components/inputManager.js';
 
 // Testing concerns
 import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHelpers.js";
 
 // Global Data Manager
 const dataManager = globalDataManager(globals);
-const { 
-  addPlacedWordCoordinates, 
-  addSquareIdToChar, 
-  isStartSquare, 
-  storeStartIDAndEndID, 
-  getEndSquaresFromGlobal, 
-  getAllPlacedWords, 
-  findSelectedWordInGlobal, 
-  getSquareIDsOfSelectedWord,
-  reset_wordPlacementData } = dataManager;
+const { appSettingsFns, wordPlacementFns, wordPlacementQueryFns, settingFormStateFns } = dataManager;
 
 // Word Manager
 const words = wordManager();
@@ -46,9 +39,7 @@ const {
 // Filling Manager
 const filling = fillingManager(
   globals,
-  addPlacedWordCoordinates,
-  addSquareIdToChar,
-  storeStartIDAndEndID,
+  wordPlacementFns,
   //testRandom(), // comment this after testing.
   random, // uncomment for normal situation
   hasEnoughSq,
@@ -64,20 +55,12 @@ const loading = loadingManager(
   generateSqs,
   getWordsUpToLength,
   fill,
-  reset_wordPlacementData,
+  wordPlacementFns.reset_wordPlacementData,
   initializeCallbackObj,
 );
 const { start, enableRestart, restart, setInitializeCallback } = loading;
 
 // Interaction Manager
-const dataDependencies = {
-  isStartSquare,
-  getEndSquaresFromGlobal,
-  getAllPlacedWords,
-  findSelectedWordInGlobal,
-  getSquareIDsOfSelectedWord,
-};
-
 const scopeDependencies = {
   getSurroundingScope,
   isWithinHoverScope,
@@ -90,15 +73,23 @@ const controlDependencies = {
 
 const interaction = interactionManager(
   globals,
-  dataDependencies,
+  wordPlacementQueryFns,
+  settingFormStateFns,
   scopeDependencies,
   controlDependencies,
 );
 
 const { initializeGameWords, initializeInteraction } = interaction;
-
 setInitializeCallback({ initializeGameWords, initializeInteraction });
+
+const time = timerManager(globals, appSettingsFns);
+const { initializeTimer } = time;
+
+const input = inputManager(globals, appSettingsFns, settingFormStateFns);
+const { initializeInput } = input;
 
 (async function initialize() {
   start();
+  initializeTimer();
+  initializeInput();
 })()

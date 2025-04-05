@@ -1,7 +1,8 @@
 export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, initializeCallbackObj) { 
   const { selectors, appData } = globals;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList } = selectors;
-  const { noOfWordsToDisplay, wordsMaxLength } = appData;
+  const { wordCount, wordsMaxLength } = appData;
+  //const { reset_wordPlacementData } = wordPlacementQuery;
 
   let {_initializeGameWords, _initializeInteraction} = initializeCallbackObj;
   
@@ -58,9 +59,14 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     _hideRestartButton();
   }
 
+  function enableGameOver() {
+    _dim();
+    _showRestartButton();
+  }
+
   // To prevent infinite loop when fill
-  function _capWordsToDisplay(wordsArray, noOfWordsToDisplay) {
-    return (wordsArray.length < noOfWordsToDisplay) ? wordsArray.length : noOfWordsToDisplay;
+  function _capWordsToDisplay(wordsArray, wordCount) {
+    return (wordsArray.length < wordCount) ? wordsArray.length : wordCount;
   }
 
 
@@ -70,7 +76,7 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
       console.error("Failed to load words. Cannot proceed.");
       return;
     }
-    const validatedWordCount = _capWordsToDisplay(wordsArray, noOfWordsToDisplay);
+    const validatedWordCount = _capWordsToDisplay(wordsArray, wordCount);
     await fill(wordsArray, validatedWordCount); // uncomment for normal situation
     //await fill([...testWordList], validatedWordCount); // comment this after testing.
   }
@@ -103,6 +109,7 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
   return {
     start,
     enableRestart,
+    enableGameOver,
     restart,
     setInitializeCallback,
   };

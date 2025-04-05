@@ -1,5 +1,6 @@
-export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID, random, hasEnoughSq, compareExistingChar, createUL) {
+export function fillingManager(globals, wordPlacementFns, random, hasEnoughSq, compareExistingChar, createUL) {
   const { appData, selectors, wordPlacementData } = globals;
+  const { addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID } = wordPlacementFns;
   const { wordsMaxLength, gridSize } = appData;
   const { sectionWordList } = selectors;
 
@@ -79,11 +80,11 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
   }
 
   function fillingMgr() {
-    async function _placeWords(words, noOfWordsToDisplay, overallAttempts = 0) { //[le5]
+    async function _placeWords(words, wordCount, overallAttempts = 0) { //[le5]
       console.groupCollapsed("fillingMgr");
       //let wordsArray = [...words.map(word => word.toUpperCase())];
       let wordsArray = [..._toUpperCases(words)];
-      let wordsRemaining = noOfWordsToDisplay;
+      let wordsRemaining = wordCount;
       let maxOverallAttempts = 20; // [Default = 20]Limit overall retries to prevent infinite loops
 
       if (overallAttempts >= maxOverallAttempts) {
@@ -142,9 +143,9 @@ export function fillingManager(globals, addPlacedWordCoordinates, addSquareIdToC
       console.groupEnd();
     }
     return {
-      fill: async (words, noOfWordsToDisplay) => {
-        console.warn("fill JSON Data:", { words, noOfWordsToDisplay });
-        await _placeWords(words, noOfWordsToDisplay);
+      fill: async (words, wordCount) => {
+        console.warn("fill JSON Data:", { words, wordCount });
+        await _placeWords(words, wordCount);
         _fillRemainingSquares();
       }
     };

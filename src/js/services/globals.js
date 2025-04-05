@@ -1,15 +1,30 @@
+import { ELEMENTIDS } from "../constants/selectors.js";
+
 const appData = {
-  noOfWordsToDisplay : 2, // default: 10
-  wordsMaxLength: 4, 
+  wordCount : 2, // default: 10 
+  wordsMaxLength: 4,
+  timer: 10,
   gridSize: 14,
 }
 
+const appState = {
+  isSettingFormOpen: false,
+}
+
 const selectors = {
-  overlay : document.getElementById("overlay"),
-  loadingDIV : document.querySelector("#loading-div"),
-  restartDIV : document.querySelector("#restart-div"),
-  squareFrame : document.querySelector("#square-frame"),
-  sectionWordList : document.querySelector("#section-word-list"),
+  overlay: document.querySelector(ELEMENTIDS.OVERLAY),
+  loadingDIV: document.querySelector(ELEMENTIDS.LOADING_DIV),
+  restartDIV: document.querySelector(ELEMENTIDS.RESTART_DIV),
+  squareFrame: document.querySelector(ELEMENTIDS.SQUARE_FRAME),
+  sectionWordList: document.querySelector(ELEMENTIDS.SECTION_WORD_LIST),
+  wordCountInput: document.querySelector(ELEMENTIDS.WORD_COUNT_INPUT),
+  wordCountDisplay: document.querySelector(ELEMENTIDS.WORD_COUNT_DISPLAY),
+  maxLengthInput: document.querySelector(ELEMENTIDS.MAX_LENGTH_INPUT),
+  maxLengthDisplay: document.querySelector(ELEMENTIDS.MAX_LENGTH_DISPLAY),
+  timerInput: document.querySelector(ELEMENTIDS.TIMER_INPUT),
+  timerDisplay: document.querySelector(ELEMENTIDS.TIMER_DISPLAY),
+  timerContainer: document.querySelector(ELEMENTIDS.TIMER_CONTAINER),
+  countdown: document.querySelector(ELEMENTIDS.COUNTDOWN),
 }
 
 const wordPlacementData = {
@@ -26,6 +41,7 @@ const wordPlacementData = {
 
 export const globals =  {
   appData,
+  appState,
   selectors,
   wordPlacementData,
 }
