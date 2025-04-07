@@ -20,7 +20,6 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
     const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     countdown.textContent = formattedTime;
   }
-  
 
   function _resetCountdown() {
     setTimer(initialTime);
@@ -42,6 +41,11 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
     }, 1000); 
   }
 
+  function pauseCountdown() {
+    //_hideCountdown();
+    clearInterval(countdownInterval);
+  }
+
   function initializeCountdown() {
     if(getTimer() > 0){
       _startCountdown(getTimer());
@@ -50,5 +54,6 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
 
   return {
     initializeCountdown,
+    pauseCountdown,
   };
 }

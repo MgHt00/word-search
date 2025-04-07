@@ -5,6 +5,13 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
 
   let _initializeGameWords, _initializeInteraction, _initializeInput, _initializeCountdown;
   
+  function setLoadingManagerCallbacks({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown }) {
+    _initializeGameWords = initializeGameWords;
+    _initializeInteraction = initializeInteraction;
+    _initializeInput = initializeInput;
+    _initializeCountdown = initializeCountdown;
+  }
+
   function _dim() {
     squareFrame.classList.add("dim");
     sectionWordList.classList.add("dim");
@@ -42,13 +49,6 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
   function _emptySectionWordList() {
     sectionWordList.innerHTML = "";
   }
-  
-  function setInitializeCallback({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown }) {
-    _initializeGameWords = initializeGameWords;
-    _initializeInteraction = initializeInteraction;
-    _initializeInput = initializeInput;
-    _initializeCountdown = initializeCountdown;
-  }
 
   function _updateRestartMessage(message) {
     restartMessage.textContent = message;
@@ -61,6 +61,7 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
   function enableRestart() {
     _dim();
     _showRestartButton();
+    // call pauseCountdown() here
   }
 
   function _disableRestart() {
@@ -105,30 +106,6 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     _initializeInput();
   }
 
-  /*async function start() {
-    _dim();
-    _showspinner();
-
-    // Start the countdown immediately
-    _initializeCountdown();
-
-    // Run other tasks in parallel
-    await Promise.all([
-      (async () => {
-        generateSqs();
-        await _getWordsAndFill();
-      })(),
-      (async () => {
-        _initializeGameWords();
-        _initializeInteraction();
-        _initializeInput();
-      })(),
-    ]);
-
-    _unDim();
-    _hidespinner();
-  }*/
-
   async function restart() {
     console.info("RESTART");
     _dim();
@@ -150,6 +127,6 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     enableRestart,
     enableGameOver,
     restart,
-    setInitializeCallback,
+    setLoadingManagerCallbacks,
   };
 }
