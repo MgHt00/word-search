@@ -38,6 +38,7 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
 
   function enableRestart() {
     _dim();
+    _updateRestartMessage("Well done! Restart?");
     _showRestartButton();
     _pauseCountdown();
   }
