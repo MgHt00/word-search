@@ -6,16 +6,33 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   let remainingTime;
   let countdownInterval;
 
+  const timeUtils = {
+    formatTimeMMSS(seconds) { // [sn5]
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    },
+
+    formatTimeToSeconds(timeString) {
+      const parts = timeString.split(':');
+      const mins = parseInt(parts[0], 10);
+      const secs = parseInt(parts[1], 10);
+      return mins * 60 + secs;
+    },
+
+    convertMinutesToSeconds(minutes) {
+      return minutes * 60;
+    },
+
+    convertSecondsToMinutes(seconds) {
+      return seconds * 60;
+    },
+  }
+
   function _showCountdown() { timerContainer.classList.remove("invisible"); }
   function _hideCountdown() { timerContainer.classList.add("invisible"); }
-  function _updateCountdownDisplay(time) { countdown.textContent = formatTimeMMSS(time); }
-
-  function formatTimeMMSS(seconds) { // [sn5]
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  }  
-
+  function _updateCountdownDisplay(time) { countdown.textContent = timeUtils.formatTimeMMSS(time); }
+  
   function _resetCountdown() {
     setCountdown(initialTime);
   }
@@ -49,6 +66,6 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   return {
     initializeCountdown,
     pauseCountdown,
-    formatTimeMMSS,
+    timeUtils,
   };
 }

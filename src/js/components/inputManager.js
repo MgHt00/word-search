@@ -1,22 +1,23 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, appSettingsFns, settingFormStateFns, initializeCountdown) {
+export function inputManager(globals, appSettingsFns, settingFormStateFns, timeUtils) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, timerInput, timerDisplay } = selectors;
   const { setWordCount, setWordsMaxLength, setCountdown, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
+  const { formatTimeMMSS } = timeUtils;
 
-  function _setWordCount(count) {  
+  function _setWordCountRange(count) {  
     wordCountInput.value = count;
     wordCountDisplay.value = count;
   }
 
-  function _setMaxLength(length) {
+  function _setMaxLengthRange(length) {
     maxLengthInput.value = length;
     maxLengthDisplay.value = length;
   }
 
-  function _setTimer(time) {
+  function _setCountdownRange(time) {
     timerInput.value = time;
     timerDisplay.value = time;
   }
@@ -84,9 +85,9 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, initi
   }
 
   function initializeInput() {
-    _setWordCount(getWordCount());
-    _setMaxLength(getWordsMaxLength());
-    _setTimer(getCountdown());
+    _setWordCountRange(getWordCount());
+    _setMaxLengthRange(getWordsMaxLength());
+    _setCountdownRange(formatTimeMMSS(getCountdown()));
 
     _addOffcanvasListener();
     _addRangeListeners();

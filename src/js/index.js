@@ -81,10 +81,10 @@ const { initializeGameWords, initializeInteraction } = interaction;
 
 // --- Timer Manager ---
 const time = timerManager(globals, appSettingsFns, enableGameOver);
-const { initializeCountdown, pauseCountdown } = time;
+const { initializeCountdown, pauseCountdown, timeUtils } = time;
 
 // --- Input Manager ---
-const input = inputManager(globals, appSettingsFns, settingFormStateFns, initializeCountdown);
+const input = inputManager(globals, appSettingsFns, settingFormStateFns, timeUtils);
 const { initializeInput } = input;
 
 // --- Set Callbacks for Loading Manager ---
