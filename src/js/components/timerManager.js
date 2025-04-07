@@ -6,29 +6,15 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   let remainingTime;
   let countdownInterval;
 
-  function _showCountdown() {
-    timerContainer.classList.remove("invisible");
-  }
+  function _showCountdown() { timerContainer.classList.remove("invisible"); }
+  function _hideCountdown() { timerContainer.classList.add("invisible"); }
+  function _updateCountdownDisplay(time) { countdown.textContent = formatTimeMMSS(time); }
 
-  function _hideCountdown() {
-    timerContainer.classList.add("invisible");
-  }
-
-  /*function _convertTimeFormat(time) { // [sn5]
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  }*/
-
-  function _updateCountdown(time) { 
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-  
-    const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    countdown.textContent = formattedTime;
-
-    //countdown.textContent = _convertTimeFormat(time);
-  }
+  function formatTimeMMSS(seconds) { // [sn5]
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }  
 
   function _resetCountdown() {
     setCountdown(initialTime);
@@ -37,9 +23,9 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   function _startCountdown(time) {
     remainingTime = time;
     _showCountdown();
-    _updateCountdown(remainingTime);
+    _updateCountdownDisplay(remainingTime);
     countdownInterval = setInterval(() => {
-      _updateCountdown(remainingTime);
+      _updateCountdownDisplay(remainingTime);
       if (remainingTime <= 0) {
         _hideCountdown();
         enableGameOver();
@@ -63,5 +49,6 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   return {
     initializeCountdown,
     pauseCountdown,
+    formatTimeMMSS,
   };
 }
