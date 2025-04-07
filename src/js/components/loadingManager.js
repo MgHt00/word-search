@@ -3,13 +3,14 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList, restartMessage } = selectors;
   const { wordCount, wordsMaxLength } = appData;
 
-  let _initializeGameWords, _initializeInteraction, _initializeInput, _initializeCountdown;
+  let _initializeGameWords, _initializeInteraction, _initializeInput, _initializeCountdown, _pauseCountdown;
   
-  function setLoadingManagerCallbacks({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown }) {
+  function setLoadingManagerCallbacks({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown, pauseCountdown }) {
     _initializeGameWords = initializeGameWords;
     _initializeInteraction = initializeInteraction;
     _initializeInput = initializeInput;
     _initializeCountdown = initializeCountdown;
+    _pauseCountdown = pauseCountdown;
   }
 
   function _dim() {
@@ -26,42 +27,19 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     overlay.classList.add("invisible");
   }
 
-  function _showspinner() {
-    loadingDIV.classList.remove("invisible");
-  }
-
-  function _hidespinner() {
-    loadingDIV.classList.add("invisible");
-  }
-
-  function _showRestartButton() {
-    restartDIV.classList.remove("invisible");
-  }
-
-  function _hideRestartButton() {
-    restartDIV.classList.add("invisible");
-  }
-
-  function _emptySquareFrame() {
-    squareFrame.innerHTML = "";
-  }
-
-  function _emptySectionWordList() {
-    sectionWordList.innerHTML = "";
-  }
-
-  function _updateRestartMessage(message) {
-    restartMessage.textContent = message;
-  }
-
-  function _clearRestartMessage() {
-    restartMessage.textContent = "";
-  }
+  function _showspinner() { loadingDIV.classList.remove("invisible"); }
+  function _hidespinner() { loadingDIV.classList.add("invisible"); }
+  function _showRestartButton() { restartDIV.classList.remove("invisible"); }
+  function _hideRestartButton() { restartDIV.classList.add("invisible"); }
+  function _emptySquareFrame() { squareFrame.innerHTML = ""; }
+  function _emptySectionWordList() { sectionWordList.innerHTML = ""; }
+  function _updateRestartMessage(message) { restartMessage.textContent = message; }
+  function _clearRestartMessage() { restartMessage.textContent = ""; }
 
   function enableRestart() {
     _dim();
     _showRestartButton();
-    // call pauseCountdown() here
+    _pauseCountdown();
   }
 
   function _disableRestart() {

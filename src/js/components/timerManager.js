@@ -4,6 +4,7 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
 
   const initialTime = getTimer();
   let remainingTime;
+  let countdownInterval;
 
   function _showCountdown() {
     timerContainer.classList.remove("invisible");
@@ -29,7 +30,7 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
     remainingTime = time;
     _showCountdown();
     _updateCountdown(remainingTime);
-    const countdownInterval = setInterval(() => {
+    countdownInterval = setInterval(() => {
       _updateCountdown(remainingTime);
       if (remainingTime <= 0) {
         _hideCountdown();
@@ -42,7 +43,6 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   }
 
   function pauseCountdown() {
-    //_hideCountdown();
     clearInterval(countdownInterval);
   }
 

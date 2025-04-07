@@ -88,7 +88,7 @@ const input = inputManager(globals, appSettingsFns, settingFormStateFns, initial
 const { initializeInput } = input;
 
 // --- Set Callbacks for Loading Manager ---
-setLoadingManagerCallbacks({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown });
+setLoadingManagerCallbacks({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown, pauseCountdown });
 
 // --- Start the Game ---
 (async function initialize() {
