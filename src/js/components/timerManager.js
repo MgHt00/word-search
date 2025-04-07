@@ -13,10 +13,14 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
     timerContainer.classList.add("invisible");
   }
 
-  function _updateCountdown(time) {
-    countdown.textContent = time;
-    // if one digit, need to add zero at the start.
+  function _updateCountdown(time) { // [sn5]
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+  
+    const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    countdown.textContent = formattedTime;
   }
+  
 
   function _resetCountdown() {
     setTimer(initialTime);
@@ -25,7 +29,7 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   function _startCountdown(time) {
     remainingTime = time;
     _showCountdown();
-    _updateCountdown("--");
+    _updateCountdown(remainingTime);
     const countdownInterval = setInterval(() => {
       _updateCountdown(remainingTime);
       if (remainingTime <= 0) {
