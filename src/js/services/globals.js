@@ -3,7 +3,7 @@ import { ELEMENTIDS } from "../constants/selectors.js";
 const appData = {
   wordCount : 2, // default: 10 
   wordsMaxLength: 4,
-  timer: 75,
+  countdown: 75, // countdown in seconds
   gridSize: 14,
 }
 

@@ -12,9 +12,9 @@ export function globalDataManager(globals) {
       appData.wordsMaxLength = length;
     },
 
-    setTimer(time) {
-      appData.timer = time;
-      console.info("setTimer() called, Countdown: ", appData.timer, "seconds");
+    setCountdown(time) {
+      appData.countdown = time;
+      console.info("setCountdown() called, Countdown: ", appData.countdown, "seconds");
     },
 
     setGridSize(size) {
@@ -29,8 +29,8 @@ export function globalDataManager(globals) {
       return appData.wordsMaxLength;
     },
 
-    getTimer(){
-      return appData.timer;
+    getCountdown(){
+      return appData.countdown;
     },
 
     getGridSize(){

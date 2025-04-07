@@ -3,7 +3,7 @@ import { ELEMENTIDS } from "../constants/selectors.js";
 export function inputManager(globals, appSettingsFns, settingFormStateFns, initializeCountdown) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, timerInput, timerDisplay } = selectors;
-  const { setWordCount, setWordsMaxLength, setTimer, getWordCount, getWordsMaxLength, getTimer } = appSettingsFns;
+  const { setWordCount, setWordsMaxLength, setCountdown, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
 
   function _setWordCount(count) {  
@@ -86,7 +86,7 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, initi
   function initializeInput() {
     _setWordCount(getWordCount());
     _setMaxLength(getWordsMaxLength());
-    _setTimer(getTimer());
+    _setTimer(getCountdown());
 
     _addOffcanvasListener();
     _addRangeListeners();

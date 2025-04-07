@@ -1,8 +1,8 @@
 export function timerManager( globals, appSettingsFns, enableGameOver ) {
   const { timerContainer, countdown } = globals.selectors;
-  const { setTimer, getTimer } = appSettingsFns;
+  const { setCountdown, getCountdown } = appSettingsFns;
 
-  const initialTime = getTimer();
+  const initialTime = getCountdown();
   let remainingTime;
   let countdownInterval;
 
@@ -14,16 +14,24 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
     timerContainer.classList.add("invisible");
   }
 
-  function _updateCountdown(time) { // [sn5]
+  /*function _convertTimeFormat(time) { // [sn5]
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }*/
+
+  function _updateCountdown(time) { 
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
   
     const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     countdown.textContent = formattedTime;
+
+    //countdown.textContent = _convertTimeFormat(time);
   }
 
   function _resetCountdown() {
-    setTimer(initialTime);
+    setCountdown(initialTime);
   }
 
   function _startCountdown(time) {
@@ -47,8 +55,8 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   }
 
   function initializeCountdown() {
-    if(getTimer() > 0){
-      _startCountdown(getTimer());
+    if(getCountdown() > 0){
+      _startCountdown(getCountdown());
     }
   }
 
