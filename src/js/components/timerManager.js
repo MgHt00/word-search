@@ -1,4 +1,9 @@
-export function timerManager( globals, appSettingsFns, enableGameOver ) {
+export function timerManager( globals, appSettingsFns ) {
+  let _enableGameOver;
+  function setCoundownManagerCallbacks(enableGameOver) {
+    _enableGameOver = enableGameOver;
+  }
+  
   const { countdownContainer, countdown } = globals.selectors;
   const { setCountdown, getCountdown } = appSettingsFns;
 
@@ -45,7 +50,7 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
       _updateCountdownDisplay(remainingTime);
       if (remainingTime <= 0) {
         _hideCountdown();
-        enableGameOver();
+        _enableGameOver();
         _resetCountdown();
         clearInterval(countdownInterval);
       }
@@ -64,6 +69,7 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
   }
 
   return {
+    setCoundownManagerCallbacks,
     initializeCountdown,
     pauseCountdown,
     timeUtils,

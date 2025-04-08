@@ -1,17 +1,8 @@
-export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData) { 
+export function loadingManager(globals, gameInitializers, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, pauseCountdown) { 
   const { selectors, appData } = globals;
+  const { initializeGameWords, initializeInteraction, initializeInput, initializeCountdown } = gameInitializers;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList, restartMessage } = selectors;
   const { wordCount, wordsMaxLength } = appData;
-
-  let _initializeGameWords, _initializeInteraction, _initializeInput, _initializeCountdown, _pauseCountdown;
-  
-  function setLoadingManagerCallbacks({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown, pauseCountdown }) {
-    _initializeGameWords = initializeGameWords;
-    _initializeInteraction = initializeInteraction;
-    _initializeInput = initializeInput;
-    _initializeCountdown = initializeCountdown;
-    _pauseCountdown = pauseCountdown;
-  }
 
   function _dim() {
     squareFrame.classList.add("dim");
@@ -40,7 +31,7 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     _dim();
     _updateRestartMessage("Well done! Restart?");
     _showRestartButton();
-    _pauseCountdown();
+    pauseCountdown();
   }
 
   function _disableRestart() {
@@ -76,13 +67,13 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     _dim();
     _showspinner();
     generateSqs();
-    _initializeCountdown();
+    initializeCountdown();
     await _getWordsAndFill();
     _unDim();
     _hidespinner();
-    _initializeGameWords();
-    _initializeInteraction();
-    _initializeInput();
+    initializeGameWords();
+    initializeInteraction();
+    initializeInput();
   }
 
   async function restart() {
@@ -90,14 +81,14 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     _dim();
     reset_wordPlacementData();
     _showspinner();
-    _initializeCountdown();
+    initializeCountdown();
     _emptySquareFrame();
     _emptySectionWordList();
     generateSqs();
     await _getWordsAndFill();
     _hidespinner();
-    _initializeInput();
-    _initializeGameWords();
+    initializeInput();
+    initializeGameWords();
     _disableRestart(); 
   }
 
@@ -106,6 +97,5 @@ export function loadingManager(globals, generateSqs, getWordsUpToLength, fill, r
     enableRestart,
     enableGameOver,
     restart,
-    setLoadingManagerCallbacks,
   };
 }

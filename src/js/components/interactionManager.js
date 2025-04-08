@@ -1,5 +1,12 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-export function interactionManager( globals, wordPlacementQueryFns, settingFormStateFns, scopeDependencies, controlDependencies) {
+export function interactionManager( globals, wordPlacementQueryFns, settingFormStateFns, scopeDependencies) {
+  
+  let _enableRestart, _restart;  
+  function setInteractionManagerCallbacks(enableRestart, restart) {
+    _enableRestart = enableRestart;
+    _restart = restart;
+  }
+  
   const { isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = wordPlacementQueryFns;
   const { isSettingFormOpen } = settingFormStateFns;
   
@@ -7,11 +14,6 @@ export function interactionManager( globals, wordPlacementQueryFns, settingFormS
     isWithinHoverScope,
     getSurroundingScope,
   } = scopeDependencies;
-
-  const {
-    restart,
-    enableRestart,
-  } = controlDependencies;
   
   const { appData, selectors, wordPlacementData } = globals;
   const { squareFrame, restartDIV } = selectors;
@@ -81,7 +83,7 @@ export function interactionManager( globals, wordPlacementQueryFns, settingFormS
 
   function _addRestartClickListener() {
     restartDIV.addEventListener("click", () => {
-      restart();
+      _restart();
       _resetAllSquares();
     });
   }
@@ -211,7 +213,7 @@ export function interactionManager( globals, wordPlacementQueryFns, settingFormS
     _gameState.reduceRemainingWordsCount();
     if (_gameState.getRemainingWordsCount() === 0) {
       //squareFrame.classList.add(WORD_DIMMED);
-      enableRestart();
+      _enableRestart();
     }
   }
 
@@ -228,6 +230,7 @@ export function interactionManager( globals, wordPlacementQueryFns, settingFormS
   }
 
   return {
+    setInteractionManagerCallbacks,
     initializeGameWords,
     initializeInteraction,
   };

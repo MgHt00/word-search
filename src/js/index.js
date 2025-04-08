@@ -48,25 +48,10 @@ const filling = fillingManager(
 ); 
 const { fill } = filling;
 
-// Loading Manager
-const loading = loadingManager(
-  globals,
-  generateSqs,
-  getWordsUpToLength,
-  fill,
-  wordPlacementFns.reset_wordPlacementData,
-);
-const { start, enableRestart, enableGameOver, restart, setLoadingManagerCallbacks } = loading;
-
 // Interaction Manager
 const scopeDependencies = {
   getSurroundingScope,
   isWithinHoverScope,
-};
-
-const controlDependencies = {
-  enableRestart,
-  restart,
 };
 
 const interaction = interactionManager(
@@ -74,21 +59,40 @@ const interaction = interactionManager(
   wordPlacementQueryFns,
   settingFormStateFns,
   scopeDependencies,
-  controlDependencies,
 );
 
-const { initializeGameWords, initializeInteraction } = interaction;
+const { setInteractionManagerCallbacks, initializeGameWords, initializeInteraction } = interaction;
 
 // --- Timer Manager ---
-const time = timerManager(globals, appSettingsFns, enableGameOver);
-const { initializeCountdown, pauseCountdown, timeUtils } = time;
+const time = timerManager(globals, appSettingsFns);
+const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, timeUtils } = time;
 
 // --- Input Manager ---
 const input = inputManager(globals, appSettingsFns, settingFormStateFns, timeUtils);
 const { initializeInput } = input;
 
-// --- Set Callbacks for Loading Manager ---
-setLoadingManagerCallbacks({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown, pauseCountdown });
+const gameInitializers = {
+  initializeGameWords, 
+  initializeInteraction, 
+  initializeInput, 
+  initializeCountdown, 
+}
+
+// Loading Manager
+const loading = loadingManager(
+  globals,
+  gameInitializers,
+  generateSqs,
+  getWordsUpToLength,
+  fill,
+  wordPlacementFns.reset_wordPlacementData,
+  pauseCountdown,
+);
+const { start, enableRestart, enableGameOver, restart } = loading;
+
+// --- Set Callbacks for Interaction Manager & Countdown Manager ---
+setInteractionManagerCallbacks(enableRestart, restart);
+setCoundownManagerCallbacks(enableGameOver);
 
 // --- Start the Game ---
 (async function initialize() {
