@@ -1,4 +1,4 @@
-export function timerManager( globals, appSettingsFns ) {
+export function countdownManager( globals, appSettingsFns ) {
   let _enableGameOver;
   function setCoundownManagerCallbacks(enableGameOver) {
     _enableGameOver = enableGameOver;

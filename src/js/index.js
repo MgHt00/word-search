@@ -12,7 +12,7 @@ import { scopeFinder } from "./components/scopeFinder.js";
 import { fillingManager } from "./components/fillingManager.js";
 import { loadingManager } from "./components/loadingManager.js";
 import { interactionManager } from "./components/interactionManager.js";
-import { timerManager } from "./components/timerManager.js";
+import { countdownManager } from "./components/countdownManager.js";
 import { inputManager } from './components/inputManager.js';
 
 // Testing concerns
@@ -63,9 +63,9 @@ const interaction = interactionManager(
 
 const { setInteractionManagerCallbacks, initializeGameWords, initializeInteraction } = interaction;
 
-// --- Timer Manager ---
-const time = timerManager(globals, appSettingsFns);
-const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, timeUtils } = time;
+// --- Countdown Manager ---
+const countdown = countdownManager(globals, appSettingsFns);
+const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, timeUtils } = countdown;
 
 // --- Input Manager ---
 const input = inputManager(globals, appSettingsFns, settingFormStateFns, timeUtils);
