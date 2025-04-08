@@ -16,4 +16,5 @@ export const ELEMENTIDS = {
   RELOAD_BTN: "#btn-reload",
   TIMER_CONTAINER: "#timer-container",
   COUNTDOWN: "#countdown",
+  RESTART_MSG: "#restart-message",
 };

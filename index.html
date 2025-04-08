@@ -63,11 +63,9 @@
 
   <div class="d-flex p-2 justify-content-between flex-row" id="title-row">
     <div><h3 class="title">Word Search</h3></div>
-    <div id="timer-container" class="invisible">
-      <div class="d-flex flex-row align-items-center">
+    <div id="timer-container" class="d-flex pe-3 flex-row align-items-center invisible">
         <div class="pe-2"><i class="bi bi-stopwatch-fill"></i></div>
         <div id="countdown"></div>
-      </div>
     </div>
   </div>
 
@@ -86,7 +84,8 @@
       <span class="invisible">Loading...</span>
     </div>
   </div>
-  <div id="restart-div" class="invisible">
+  <div class="d-flex flex-column align-items-center invisible" id="restart-div">
+    <h4 id="restart-message"></h4>
     <button type="button" class="btn btn-success">Restart Game</button>
   </div>
 

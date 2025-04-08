@@ -49,16 +49,14 @@ const filling = fillingManager(
 const { fill } = filling;
 
 // Loading Manager
-let initializeCallbackObj = {};
 const loading = loadingManager(
   globals,
   generateSqs,
   getWordsUpToLength,
   fill,
   wordPlacementFns.reset_wordPlacementData,
-  initializeCallbackObj,
 );
-const { start, enableRestart, restart, setInitializeCallback } = loading;
+const { start, enableRestart, enableGameOver, restart, setLoadingManagerCallbacks } = loading;
 
 // Interaction Manager
 const scopeDependencies = {
@@ -80,16 +78,19 @@ const interaction = interactionManager(
 );
 
 const { initializeGameWords, initializeInteraction } = interaction;
-setInitializeCallback({ initializeGameWords, initializeInteraction });
 
-const time = timerManager(globals, appSettingsFns);
-const { initializeTimer } = time;
+// --- Timer Manager ---
+const time = timerManager(globals, appSettingsFns, enableGameOver);
+const { initializeCountdown, pauseCountdown, timeUtils } = time;
 
-const input = inputManager(globals, appSettingsFns, settingFormStateFns);
+// --- Input Manager ---
+const input = inputManager(globals, appSettingsFns, settingFormStateFns, timeUtils);
 const { initializeInput } = input;
 
+// --- Set Callbacks for Loading Manager ---
+setLoadingManagerCallbacks({ initializeGameWords, initializeInteraction, initializeInput, initializeCountdown, pauseCountdown });
+
+// --- Start the Game ---
 (async function initialize() {
   start();
-  initializeTimer();
-  initializeInput();
 })()

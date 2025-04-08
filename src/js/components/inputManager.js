@@ -1,38 +1,39 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, appSettingsFns, settingFormStateFns) {
+export function inputManager(globals, appSettingsFns, settingFormStateFns, timeUtils) {
   const { selectors } = globals;
-  const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, timerInput, timerDisplay } = selectors;
-  const { setWordCount, setWordsMaxLength, setTimer, getWordCount, getWordsMaxLength, getTimer } = appSettingsFns;
+  const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
+  const { setWordCount, setWordsMaxLength, setCountdown, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
+  const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = timeUtils;
 
-  function _setWordCount(count) {  
+  function _setWordCountRange(count) {  
     wordCountInput.value = count;
     wordCountDisplay.value = count;
   }
 
-  function _setMaxLength(length) {
+  function _setMaxLengthRange(length) {
     maxLengthInput.value = length;
     maxLengthDisplay.value = length;
   }
 
-  function _setTimer(time) {
-    timerInput.value = time;
-    timerDisplay.value = time;
+  function _setCountdownRange(seconds) {
+    const minutes = convertSecondsToMinutes(seconds);
+    countdownInput.value = minutes;
+    countdownDisplay.value = formatTimeMMSS((seconds));
   }
   
   function _addRangeListeners() {
     wordCountInput.addEventListener("input", () => {
-      console.info(wordCountInput.value);
-      wordCountDisplay.value = wordCountInput.value;
+      _setWordCountRange(wordCountInput.value);
     });
 
     maxLengthInput.addEventListener("input", () => {
-      maxLengthDisplay.value = maxLengthInput.value;
+      _setMaxLengthRange(maxLengthInput.value);
     });
 
-    timerInput.addEventListener("input", () => {
-      timerDisplay.value = timerInput.value;
+    countdownInput.addEventListener("input", () => {
+      _setCountdownRange(convertMinutesToSeconds(countdownInput.value));
     });
   }
 
@@ -84,9 +85,9 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns) {
   }
 
   function initializeInput() {
-    _setWordCount(getWordCount());
-    _setMaxLength(getWordsMaxLength());
-    _setTimer(getTimer());
+    _setWordCountRange(getWordCount());
+    _setMaxLengthRange(getWordsMaxLength());
+    _setCountdownRange(getCountdown());
 
     _addOffcanvasListener();
     _addRangeListeners();

@@ -3,7 +3,7 @@ import { ELEMENTIDS } from "../constants/selectors.js";
 const appData = {
   wordCount : 2, // default: 10 
   wordsMaxLength: 4,
-  timer: 10,
+  countdown: 60, // countdown in seconds
   gridSize: 14,
 }
 
@@ -21,10 +21,11 @@ const selectors = {
   wordCountDisplay: document.querySelector(ELEMENTIDS.WORD_COUNT_DISPLAY),
   maxLengthInput: document.querySelector(ELEMENTIDS.MAX_LENGTH_INPUT),
   maxLengthDisplay: document.querySelector(ELEMENTIDS.MAX_LENGTH_DISPLAY),
-  timerInput: document.querySelector(ELEMENTIDS.TIMER_INPUT),
-  timerDisplay: document.querySelector(ELEMENTIDS.TIMER_DISPLAY),
-  timerContainer: document.querySelector(ELEMENTIDS.TIMER_CONTAINER),
+  countdownInput: document.querySelector(ELEMENTIDS.TIMER_INPUT),
+  countdownDisplay: document.querySelector(ELEMENTIDS.TIMER_DISPLAY),
+  countdownContainer: document.querySelector(ELEMENTIDS.TIMER_CONTAINER),
   countdown: document.querySelector(ELEMENTIDS.COUNTDOWN),
+  restartMessage: document.querySelector(ELEMENTIDS.RESTART_MSG),
 }
 
 const wordPlacementData = {
