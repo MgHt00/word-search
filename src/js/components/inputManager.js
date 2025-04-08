@@ -5,7 +5,7 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, timeU
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
   const { setWordCount, setWordsMaxLength, setCountdown, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
-  const { formatTimeMMSS, convertMinutesToSeconds } = timeUtils;
+  const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = timeUtils;
 
   function _setWordCountRange(count) {  
     wordCountInput.value = count;
@@ -17,23 +17,23 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, timeU
     maxLengthDisplay.value = length;
   }
 
-  function _setCountdownRange(time) {
-    countdownInput.value = time;
-    countdownDisplay.value = time;
+  function _setCountdownRange(seconds) {
+    const minutes = convertSecondsToMinutes(seconds);
+    countdownInput.value = minutes;
+    countdownDisplay.value = formatTimeMMSS((seconds));
   }
   
   function _addRangeListeners() {
     wordCountInput.addEventListener("input", () => {
-      console.info(wordCountInput.value);
-      wordCountDisplay.value = wordCountInput.value;
+      _setWordCountRange(wordCountInput.value);
     });
 
     maxLengthInput.addEventListener("input", () => {
-      maxLengthDisplay.value = maxLengthInput.value;
+      _setMaxLengthRange(maxLengthInput.value);
     });
 
     countdownInput.addEventListener("input", () => {
-      countdownDisplay.value = countdownInput.value;
+      _setCountdownRange(convertMinutesToSeconds(countdownInput.value));
     });
   }
 
@@ -87,7 +87,7 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, timeU
   function initializeInput() {
     _setWordCountRange(getWordCount());
     _setMaxLengthRange(getWordsMaxLength());
-    _setCountdownRange(formatTimeMMSS(getCountdown()));
+    _setCountdownRange(getCountdown());
 
     _addOffcanvasListener();
     _addRangeListeners();

@@ -25,7 +25,7 @@ export function timerManager( globals, appSettingsFns, enableGameOver ) {
     },
 
     convertSecondsToMinutes(seconds) {
-      return seconds * 60;
+      return seconds / 60;
     },
   }
 
