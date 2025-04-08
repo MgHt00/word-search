@@ -11,7 +11,7 @@ export function countdownManager( globals, appSettingsFns ) {
   let remainingTime;
   let countdownInterval;
 
-  const timeUtils = {
+  const countdownUtils = {
     formatTimeMMSS(seconds) { // [sn5]
       const mins = Math.floor(seconds / 60);
       const secs = seconds % 60;
@@ -36,7 +36,7 @@ export function countdownManager( globals, appSettingsFns ) {
 
   function _showCountdown() { countdownContainer.classList.remove("invisible"); }
   function _hideCountdown() { countdownContainer.classList.add("invisible"); }
-  function _updateCountdownDisplay(time) { countdown.textContent = timeUtils.formatTimeMMSS(time); }
+  function _updateCountdownDisplay(time) { countdown.textContent = countdownUtils.formatTimeMMSS(time); }
   
   function _resetCountdown() {
     setCountdown(initialTime);
@@ -72,6 +72,6 @@ export function countdownManager( globals, appSettingsFns ) {
     setCoundownManagerCallbacks,
     initializeCountdown,
     pauseCountdown,
-    timeUtils,
+    countdownUtils,
   };
 }

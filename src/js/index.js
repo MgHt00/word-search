@@ -65,12 +65,13 @@ const { setInteractionManagerCallbacks, initializeGameWords, initializeInteracti
 
 // --- Countdown Manager ---
 const countdown = countdownManager(globals, appSettingsFns);
-const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, timeUtils } = countdown;
+const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, countdownUtils } = countdown;
 
 // --- Input Manager ---
-const input = inputManager(globals, appSettingsFns, settingFormStateFns, timeUtils);
+const input = inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils);
 const { initializeInput } = input;
 
+// Loading Manager
 const gameInitializers = {
   initializeGameWords, 
   initializeInteraction, 
@@ -78,7 +79,6 @@ const gameInitializers = {
   initializeCountdown, 
 }
 
-// Loading Manager
 const loading = loadingManager(
   globals,
   gameInitializers,
