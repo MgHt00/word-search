@@ -24,7 +24,7 @@ const { appSettingsFns, wordPlacementFns, wordPlacementQueryFns, settingFormStat
 
 // Word Manager
 const words = wordManager();
-const { getWordsUpToLength } = words;
+const { getWordsUpToLength, getMinandMaxWordLength } = words;
 
 // Layout Manager
 const layout = layoutManager(globals);
@@ -68,7 +68,7 @@ const countdown = countdownManager(globals, appSettingsFns);
 const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, countdownUtils } = countdown;
 
 // --- Input Manager ---
-const input = inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils);
+const input = inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils, getMinandMaxWordLength);
 const { initializeInput } = input;
 
 // Loading Manager

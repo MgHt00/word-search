@@ -1,18 +1,22 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, appSettingsFns, settingFormStateFns, timeUtils) {
+export function inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils, getMinandMaxWordLength) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
   const { setWordCount, setWordsMaxLength, setCountdown, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
-  const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = timeUtils;
+  const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = countdownUtils;
 
   function _setWordCountRange(count) {  
     wordCountInput.value = count;
     wordCountDisplay.value = count;
   }
 
-  function _setMaxLengthRange(length) {
+  function _setMaxLengthRange(length, { min, max } = {}) {
+    if (min !== null || max !== null) {
+      maxLengthInput.min = min;
+      maxLengthInput.max = max;
+    }   
     maxLengthInput.value = length;
     maxLengthDisplay.value = length;
   }
@@ -86,7 +90,10 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, timeU
 
   function initializeInput() {
     _setWordCountRange(getWordCount());
-    _setMaxLengthRange(getWordsMaxLength());
+    _setMaxLengthRange(getWordsMaxLength()); 
+    // ဒီမှာ min max ရှာတဲ့  getMinandMaxWordLength() ကိုသုံးရမယ်၊ 
+    // သို့သော် အဲ့ဒီ​() က wordArray ကို expect လုပ်နေတယ်။ 
+    // wordArray ကို ထုတ်ပြီးတာနဲ့ global ထဲ သိမ်းရင်ကောင်းမလား ၊ wordManager module ထဲမှာပဲ const နဲ့ သိမ်းရင်ကောင်းမလား ၊ တခြားနည်း ကောင်းမလား ရှာရမယ်။
     _setCountdownRange(getCountdown());
 
     _addOffcanvasListener();

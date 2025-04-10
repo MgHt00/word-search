@@ -1,9 +1,13 @@
 import { WORDS_DATA_PATH } from '../constants/filePaths.js';
+let wordsArrayLocalCopy = []; // Name ok???
 
 export function wordManager() {
   async function loadWords() {
     try {
       const response = await fetch(WORDS_DATA_PATH);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
       return data;
     } catch (error) {
@@ -38,8 +42,18 @@ export function wordManager() {
     return wordsArray;
   }
 
+  function getMinandMaxWordLength(wordsArray) {
+    // check whether wordsArrayLocalCopy is not empty
+    let minLength, maxLength;
+    let keys = Object.keys(wordsArray);
+    minLength = parseInt(keys[0]);
+    maxLength = parseInt(keys[keys.length - 1]);
+    return { minLength, maxLength };
+  }
+
   return {
     loadWords,
     getWordsUpToLength,
+    getMinandMaxWordLength,
   };
 }
