@@ -1,5 +1,5 @@
 export function globalDataManager(globals) {
-  const { settingData, appState, selectors, wordPlacementData } = globals;
+  const { settingData, appData, appState, selectors, wordPlacementData } = globals;
   const { squareIdToChar, startIDAndEndID, placedWordCoordinates } = wordPlacementData;
 
   // --- App Settings Management ---
@@ -51,7 +51,7 @@ export function globalDataManager(globals) {
     },
 
     getJsonData(){
-      return settingData.jsonData;
+      return appData.jsonData;
     },
 
     getMinWordLength() {

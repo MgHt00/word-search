@@ -1,7 +1,6 @@
 import { WORDS_DATA_PATH } from '../constants/filePaths.js';
-export function wordManager(settingData, appSettingsFns) {
-  const { setJsonData, setMinWordLength, setMaxWordLength } = appSettingsFns;
-  const { wordCount, wordsMaxLength } = settingData;
+export function wordManager(appDataFns) {
+  const { setJsonData, getJsonData, setMinWordLength, setMaxWordLength } = appDataFns;
   
   async function loadJSON() {
     const response = await fetch(WORDS_DATA_PATH);
@@ -18,23 +17,7 @@ export function wordManager(settingData, appSettingsFns) {
     return data;
   }
 
-  /*async function getWordsByLength(length) {
-    const wordsData = await loadJSON();
-    if (!wordsData) {
-      return null; 
-    }
-    if (wordsData[length]) {
-      return wordsData[length];
-    } else {
-      return null; 
-    }
-  }*/
-
-  async function getWordsUpToLength(length) {
-    const wordsData = await loadJSON();
-    if (!wordsData) {
-      return null; 
-    }
+  function getWordsUpToLength(wordsData, length) {
     let wordsArray = [];
     for (let i = length; i >= 1; i--) {
       if (wordsData[i]) {
@@ -44,7 +27,7 @@ export function wordManager(settingData, appSettingsFns) {
     return wordsArray;
   }
 
-  function getMinandMaxWordLength(wordsArray) {
+  function _getMinandMaxWordLength(wordsArray) {
     let minLength, maxLength;
     let keys = Object.keys(wordsArray);
     minLength = parseInt(keys[0]);
@@ -64,11 +47,9 @@ export function wordManager(settingData, appSettingsFns) {
       if (!wordsData) throw new Error(`null data`);
       setJsonData(wordsData);
 
-      const { minLength, maxLength } = getMinandMaxWordLength(wordsData);
+      const { minLength, maxLength } = _getMinandMaxWordLength(wordsData);
       setMinWordLength(minLength);
       setMaxWordLength(maxLength);
-
-      getWordsUpToLength(wordsMaxLength);
       
     } catch (error) {
       console.error("Error preparing word data:", error);
@@ -76,9 +57,7 @@ export function wordManager(settingData, appSettingsFns) {
   }
 
   return {
-    loadJSON,
-    getWordsUpToLength,
-    getMinandMaxWordLength,
     prepareWordData,
+    getWordsUpToLength,
   };
 }

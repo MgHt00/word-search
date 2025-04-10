@@ -20,11 +20,11 @@ import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHe
 
 // Global Data Manager
 const dataManager = globalDataManager(globals);
-const { appSettingsFns, wordPlacementFns, wordPlacementQueryFns, settingFormStateFns } = dataManager;
+const { appSettingsFns, appDataFns, wordPlacementFns, wordPlacementQueryFns, settingFormStateFns } = dataManager;
 
 // Word Manager
-const words = wordManager(globals.settingData, appSettingsFns);
-const { getWordsUpToLength, getMinandMaxWordLength } = words;
+const words = wordManager(appDataFns);
+const { prepareWordData, getWordsUpToLength } = words;
 
 // Layout Manager
 const layout = layoutManager(globals);
@@ -68,7 +68,7 @@ const countdown = countdownManager(globals, appSettingsFns);
 const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, countdownUtils } = countdown;
 
 // --- Input Manager ---
-const input = inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils, getMinandMaxWordLength);
+const input = inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils);
 const { initializeInput } = input;
 
 // Loading Manager
@@ -80,9 +80,12 @@ const gameInitializers = {
 }
 
 const loading = loadingManager(
-  globals,
+  globals.selectors,
+  appSettingsFns,
+  appDataFns,
   gameInitializers,
   generateSqs,
+  prepareWordData,
   getWordsUpToLength,
   fill,
   wordPlacementFns.reset_wordPlacementData,
