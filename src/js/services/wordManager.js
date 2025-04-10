@@ -2,22 +2,29 @@ import { WORDS_DATA_PATH } from '../constants/filePaths.js';
 let wordsArrayLocalCopy = []; // Name ok???
 
 export function wordManager() {
-  async function loadWords() {
+  async function loadJSON() {
     try {
       const response = await fetch(WORDS_DATA_PATH);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const contentType = response.headers.get("content-type") || ""; // If the header doesn’t exist, it defaults to an empty string (""), preventing errors when checking.
+      if (!contentType.includes("application/json")) {                // If the server responds with Content-Type: 'application/json; charset=UTF-8' instead of 'application/json', 
+        throw new TypeError(`Expected JSON, got ${type}`);            // ...this allows variations like "application/json; charset=UTF-8" to pass the check.
+      }
+
       const data = await response.json();
       return data;
+      
     } catch (error) {
-      console.error('Error loading words:', error);
+      console.error('Error loading JSON:', error);
       return null; 
     }
   }
 
   async function getWordsByLength(length) {
-    const wordsData = await loadWords();
+    const wordsData = await loadJSON();
     if (!wordsData) {
       return null; 
     }
@@ -29,7 +36,7 @@ export function wordManager() {
   }
 
   async function getWordsUpToLength(length) {
-    const wordsData = await loadWords();
+    const wordsData = await loadJSON();
     if (!wordsData) {
       return null; 
     }
@@ -52,7 +59,7 @@ export function wordManager() {
   }
 
   return {
-    loadWords,
+    loadJSON,
     getWordsUpToLength,
     getMinandMaxWordLength,
   };
