@@ -9,6 +9,8 @@ const settingData = {
 
 const appData = {
   jsonData: [],
+  minWordLength: null,
+  maxWordLength: null,
 }
 
 const appState = {

@@ -23,7 +23,7 @@ const dataManager = globalDataManager(globals);
 const { appSettingsFns, wordPlacementFns, wordPlacementQueryFns, settingFormStateFns } = dataManager;
 
 // Word Manager
-const words = wordManager(appSettingsFns);
+const words = wordManager(globals.settingData, appSettingsFns);
 const { getWordsUpToLength, getMinandMaxWordLength } = words;
 
 // Layout Manager

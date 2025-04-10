@@ -4,9 +4,7 @@ export function globalDataManager(globals) {
 
   // --- App Settings Management ---
   const appSettingsFns = {
-    setWordCount(count) {
-      settingData.wordCount = count;
-    },
+    setWordCount(count) { settingData.wordCount = count; },
 
     setWordsMaxLength(length) {
       settingData.wordsMaxLength = length;
@@ -44,8 +42,24 @@ export function globalDataManager(globals) {
       appData.jsonData = data;
     },
 
+    setMinWordLength() {
+      appData.minWordLength = settingData.minWordLength;
+    },
+
+    setMaxWordLength() {
+      appData.maxWordLength = settingData.maxWordLength;
+    },
+
     getJsonData(){
       return settingData.jsonData;
+    },
+
+    getMinWordLength() {
+      appData.minWordLength = settingData.minWordLength;
+    },
+
+    getMaxWordLength() {
+      appData.maxWordLength = settingData.maxWordLength;
     },
   };
 
@@ -126,6 +140,7 @@ export function globalDataManager(globals) {
 
   return {
     appSettingsFns,
+    appDataFns,
     wordPlacementFns,
     wordPlacementQueryFns,
     settingFormStateFns,

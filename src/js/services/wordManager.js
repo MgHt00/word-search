@@ -1,29 +1,24 @@
 import { WORDS_DATA_PATH } from '../constants/filePaths.js';
-export function wordManager(appSettingsFns) {
-  const { setJsonData } = appSettingsFns;
+export function wordManager(settingData, appSettingsFns) {
+  const { setJsonData, setMinWordLength, setMaxWordLength } = appSettingsFns;
+  const { wordCount, wordsMaxLength } = settingData;
   
   async function loadJSON() {
-    try {
-      const response = await fetch(WORDS_DATA_PATH);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const contentType = response.headers.get("content-type") || ""; // If the header doesn’t exist, it defaults to an empty string (""), preventing errors when checking.
-      if (!contentType.includes("application/json")) {                // If the server responds with Content-Type: 'application/json; charset=UTF-8' instead of 'application/json', 
-        throw new TypeError(`Expected JSON, got ${type}`);            // ...this allows variations like "application/json; charset=UTF-8" to pass the check.
-      }
-
-      const data = await response.json();
-      return data;
-      
-    } catch (error) {
-      console.error('Error loading JSON:', error);
-      return null; 
+    const response = await fetch(WORDS_DATA_PATH);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const contentType = response.headers.get("content-type") || ""; // If the header doesn’t exist, it defaults to an empty string (""), preventing errors when checking.
+    if (!contentType.includes("application/json")) {                // If the server responds with Content-Type: 'application/json; charset=UTF-8' instead of 'application/json', 
+      throw new TypeError(`Expected JSON, got ${type}`);            // ...this allows variations like "application/json; charset=UTF-8" to pass the check.
+    }
+
+    const data = await response.json();
+    return data;
   }
 
-  async function getWordsByLength(length) {
+  /*async function getWordsByLength(length) {
     const wordsData = await loadJSON();
     if (!wordsData) {
       return null; 
@@ -33,7 +28,7 @@ export function wordManager(appSettingsFns) {
     } else {
       return null; 
     }
-  }
+  }*/
 
   async function getWordsUpToLength(length) {
     const wordsData = await loadJSON();
@@ -50,27 +45,40 @@ export function wordManager(appSettingsFns) {
   }
 
   function getMinandMaxWordLength(wordsArray) {
-    // check whether wordsArrayLocalCopy is not empty
     let minLength, maxLength;
     let keys = Object.keys(wordsArray);
     minLength = parseInt(keys[0]);
     maxLength = parseInt(keys[keys.length - 1]);
+
+    if(isNaN(minLength) || isNaN(maxLength)) {
+      console.error("Invalid word length found in keys:", keys);
+      throw new Error(`JSON's min / max length: NaN.`);
+    }
+
     return { minLength, maxLength };
   }
 
-  async function prepareWordData(length) {
-    const wordsData = await loadJSON();
-    if (!wordsData) {
-      console.warn("Failed to load words data.");
-      return;
+  async function prepareWordData() {
+    try {
+      const wordsData = await loadJSON();
+      if (!wordsData) throw new Error(`null data`);
+      setJsonData(wordsData);
+
+      const { minLength, maxLength } = getMinandMaxWordLength(wordsData);
+      setMinWordLength(minLength);
+      setMaxWordLength(maxLength);
+
+      getWordsUpToLength(wordsMaxLength);
+      
+    } catch (error) {
+      console.error("Error preparing word data:", error);
     }
-    setJsonData(wordsData);
-    getWordsUpToLength(length);
   }
 
   return {
     loadJSON,
     getWordsUpToLength,
     getMinandMaxWordLength,
+    prepareWordData,
   };
 }
