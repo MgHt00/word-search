@@ -1,7 +1,7 @@
 import { WORDS_DATA_PATH } from '../constants/filePaths.js';
-let wordsArrayLocalCopy = []; // Name ok???
-
-export function wordManager() {
+export function wordManager(appSettingsFns) {
+  const { setJsonData } = appSettingsFns;
+  
   async function loadJSON() {
     try {
       const response = await fetch(WORDS_DATA_PATH);
@@ -56,6 +56,16 @@ export function wordManager() {
     minLength = parseInt(keys[0]);
     maxLength = parseInt(keys[keys.length - 1]);
     return { minLength, maxLength };
+  }
+
+  async function prepareWordData(length) {
+    const wordsData = await loadJSON();
+    if (!wordsData) {
+      console.warn("Failed to load words data.");
+      return;
+    }
+    setJsonData(wordsData);
+    getWordsUpToLength(length);
   }
 
   return {

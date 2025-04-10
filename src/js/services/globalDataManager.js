@@ -1,41 +1,52 @@
 export function globalDataManager(globals) {
-  const { appData, appState, selectors, wordPlacementData } = globals;
+  const { settingData, appState, selectors, wordPlacementData } = globals;
   const { squareIdToChar, startIDAndEndID, placedWordCoordinates } = wordPlacementData;
 
   // --- App Settings Management ---
   const appSettingsFns = {
     setWordCount(count) {
-      appData.wordCount = count;
+      settingData.wordCount = count;
     },
 
     setWordsMaxLength(length) {
-      appData.wordsMaxLength = length;
+      settingData.wordsMaxLength = length;
     },
 
     setCountdown(time) {
-      appData.countdown = time;
-      console.info("setCountdown() called, Countdown: ", appData.countdown, "seconds");
+      settingData.countdown = time;
+      console.info("setCountdown() called, Countdown: ", settingData.countdown, "seconds");
     },
 
     setGridSize(size) {
-      appData.gridSize = size;
+      settingData.gridSize = size;
     },
 
     getWordCount(){
-      return appData.wordCount;
+      return settingData.wordCount;
     },
 
     getWordsMaxLength(){
-      return appData.wordsMaxLength;
+      return settingData.wordsMaxLength;
     },
 
     getCountdown(){
-      return appData.countdown;
+      return settingData.countdown;
     },
 
     getGridSize(){
-      return appData.gridSize;
-    }
+      return settingData.gridSize;
+    },
+  };
+
+  // --- App Data Management ---
+  const appDataFns = {
+    setJsonData(data) {
+      appData.jsonData = data;
+    },
+
+    getJsonData(){
+      return settingData.jsonData;
+    },
   };
 
   // --- Word Placement Data Management ---

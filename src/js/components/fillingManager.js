@@ -1,7 +1,7 @@
 export function fillingManager(globals, wordPlacementFns, random, hasEnoughSq, compareExistingChar, createUL) {
-  const { appData, selectors, wordPlacementData } = globals;
+  const { settingData, selectors, wordPlacementData } = globals;
   const { addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID } = wordPlacementFns;
-  const { wordsMaxLength, gridSize } = appData;
+  const { wordsMaxLength, gridSize } = settingData;
   const { sectionWordList } = selectors;
 
   const { squareIdToChar, placedWordCoordinates } = wordPlacementData;

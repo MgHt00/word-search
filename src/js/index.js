@@ -23,7 +23,7 @@ const dataManager = globalDataManager(globals);
 const { appSettingsFns, wordPlacementFns, wordPlacementQueryFns, settingFormStateFns } = dataManager;
 
 // Word Manager
-const words = wordManager();
+const words = wordManager(appSettingsFns);
 const { getWordsUpToLength, getMinandMaxWordLength } = words;
 
 // Layout Manager
@@ -31,7 +31,7 @@ const layout = layoutManager(globals);
 const { generateSqs } = layout;
 
 // Scope Finder
-const scope = scopeFinder(globals.appData.gridSize);
+const scope = scopeFinder(globals.settingData.gridSize);
 const { 
   getSurroundingScope, 
   isWithinHoverScope } = scope;

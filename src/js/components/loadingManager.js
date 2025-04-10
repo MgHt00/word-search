@@ -1,8 +1,8 @@
 export function loadingManager(globals, gameInitializers, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, pauseCountdown) { 
-  const { selectors, appData } = globals;
+  const { selectors, settingData } = globals;
   const { initializeGameWords, initializeInteraction, initializeInput, initializeCountdown } = gameInitializers;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList, restartMessage } = selectors;
-  const { wordCount, wordsMaxLength } = appData;
+  const { wordCount, wordsMaxLength } = settingData;
 
   function _dim() {
     squareFrame.classList.add("dim");
