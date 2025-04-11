@@ -5,4 +5,6 @@ export const CSS_CLASS_NAMES = {
   WORD_DIMMED: "dim",
   WORD_MARKED: "marked",
   SQUARE_CLICKED: "clicked",
+  DEBUG_IDENTIFIER: "temp-identifier",
+  MULTI_COLUMN_LIST: "multi-column-list",
 };
