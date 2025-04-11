@@ -42,12 +42,12 @@ export function globalDataManager(globals) {
       appData.jsonData = data;
     },
 
-    setMinWordLength() {
-      appData.minWordLength = settingData.minWordLength;
+    setMinWordLength(length) {
+      appData.minWordLength = length;
     },
 
-    setMaxWordLength() {
-      appData.maxWordLength = settingData.maxWordLength;
+    setMaxWordLength(length) {
+      appData.maxWordLength = length;
     },
 
     getJsonData(){
@@ -55,11 +55,11 @@ export function globalDataManager(globals) {
     },
 
     getMinWordLength() {
-      appData.minWordLength = settingData.minWordLength;
+      return appData.minWordLength;
     },
 
     getMaxWordLength() {
-      appData.maxWordLength = settingData.maxWordLength;
+      return appData.maxWordLength;
     },
   };
 

@@ -13,11 +13,10 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     wordCountDisplay.value = count;
   }
 
-  function _setMaxLengthRange(length, { min, max } = {}) {
-    if (min !== null || max !== null) {
-      console.info({ min, max });
-      maxLengthInput.min = min;
-      maxLengthInput.max = max;
+  function _setMaxLengthRange(length, { JSONminWordLength, JSONmaxWordLength } = {}) {
+    if (JSONminWordLength !== null || JSONmaxWordLength !== null) {
+      maxLengthInput.min = JSONminWordLength;
+      maxLengthInput.max = JSONmaxWordLength;
     }   
     maxLengthInput.value = length;
     maxLengthDisplay.value = length;
@@ -96,8 +95,8 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     const wordsMaxLength = getWordsMaxLength();
     const JSONminWordLength = getMinWordLength();
     const JSONmaxWordLength = getMaxWordLength();
-    console.info({ JSONminWordLength, JSONmaxWordLength });
     _setMaxLengthRange(wordsMaxLength, { JSONminWordLength, JSONmaxWordLength }); 
+    
     _setCountdownRange(getCountdown());
 
     _addOffcanvasListener();
