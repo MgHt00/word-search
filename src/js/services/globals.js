@@ -1,10 +1,16 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-const appData = {
+const settingData = {
   wordCount : 2, // default: 10 
   wordsMaxLength: 4,
   countdown: 60, // countdown in seconds
   gridSize: 14,
+}
+
+const appData = {
+  jsonData: [],
+  minWordLength: null,
+  maxWordLength: null,
 }
 
 const appState = {
@@ -41,6 +47,7 @@ const wordPlacementData = {
 };
 
 export const globals =  {
+  settingData,
   appData,
   appState,
   selectors,

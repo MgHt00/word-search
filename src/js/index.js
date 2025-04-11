@@ -20,18 +20,18 @@ import { testWordList, noOfWordsToDisplay, testRandom } from "../../tests/testHe
 
 // Global Data Manager
 const dataManager = globalDataManager(globals);
-const { appSettingsFns, wordPlacementFns, wordPlacementQueryFns, settingFormStateFns } = dataManager;
+const { appSettingsFns, appDataFns, wordPlacementFns, wordPlacementQueryFns, settingFormStateFns } = dataManager;
 
 // Word Manager
-const words = wordManager();
-const { getWordsUpToLength } = words;
+const words = wordManager(appDataFns);
+const { prepareAppData, getWordsUpToLength } = words;
 
 // Layout Manager
 const layout = layoutManager(globals);
 const { generateSqs } = layout;
 
 // Scope Finder
-const scope = scopeFinder(globals.appData.gridSize);
+const scope = scopeFinder(globals.settingData.gridSize);
 const { 
   getSurroundingScope, 
   isWithinHoverScope } = scope;
@@ -65,12 +65,13 @@ const { setInteractionManagerCallbacks, initializeGameWords, initializeInteracti
 
 // --- Countdown Manager ---
 const countdown = countdownManager(globals, appSettingsFns);
-const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, timeUtils } = countdown;
+const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, countdownUtils } = countdown;
 
 // --- Input Manager ---
-const input = inputManager(globals, appSettingsFns, settingFormStateFns, timeUtils);
+const input = inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils);
 const { initializeInput } = input;
 
+// Loading Manager
 const gameInitializers = {
   initializeGameWords, 
   initializeInteraction, 
@@ -78,9 +79,10 @@ const gameInitializers = {
   initializeCountdown, 
 }
 
-// Loading Manager
 const loading = loadingManager(
-  globals,
+  globals.selectors,
+  appSettingsFns,
+  appDataFns,
   gameInitializers,
   generateSqs,
   getWordsUpToLength,
@@ -96,5 +98,6 @@ setCoundownManagerCallbacks(enableGameOver);
 
 // --- Start the Game ---
 (async function initialize() {
+  await prepareAppData();
   start();
 })()

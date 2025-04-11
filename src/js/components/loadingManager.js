@@ -1,8 +1,8 @@
-export function loadingManager(globals, gameInitializers, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, pauseCountdown) { 
-  const { selectors, appData } = globals;
+export function loadingManager(selectors, appSettingsFns, appDataFns,  gameInitializers, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, pauseCountdown) { 
+  const { getJsonData } = appDataFns;
+  const { getWordCount, getWordsMaxLength } = appSettingsFns;
   const { initializeGameWords, initializeInteraction, initializeInput, initializeCountdown } = gameInitializers;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList, restartMessage } = selectors;
-  const { wordCount, wordsMaxLength } = appData;
 
   function _dim() {
     squareFrame.classList.add("dim");
@@ -52,8 +52,7 @@ export function loadingManager(globals, gameInitializers, generateSqs, getWordsU
   }
 
 
-  async function _getWordsAndFill() {
-    const wordsArray = await getWordsUpToLength(wordsMaxLength);
+  async function _getWordsAndFill(wordsArray, wordCount) {
     if (!wordsArray) {
       console.error("Failed to load words. Cannot proceed.");
       return;
@@ -63,12 +62,23 @@ export function loadingManager(globals, gameInitializers, generateSqs, getWordsU
     //await fill([...testWordList], validatedWordCount); // comment this after testing.
   }
 
+  async function _loadJSONandFill() {
+    //await prepareWordData();
+    
+    const jsonData = getJsonData();
+    const wordsMaxLength = getWordsMaxLength();
+
+    const wordsArray = getWordsUpToLength(jsonData, wordsMaxLength);
+    const wordCount = getWordCount();
+    await _getWordsAndFill(wordsArray, wordCount);
+  }
+
   async function start() {
     _dim();
     _showspinner();
     generateSqs();
+    await _loadJSONandFill();
     initializeCountdown();
-    await _getWordsAndFill();
     _unDim();
     _hidespinner();
     initializeGameWords();
@@ -81,11 +91,11 @@ export function loadingManager(globals, gameInitializers, generateSqs, getWordsU
     _dim();
     reset_wordPlacementData();
     _showspinner();
-    initializeCountdown();
     _emptySquareFrame();
     _emptySectionWordList();
     generateSqs();
-    await _getWordsAndFill();
+    await _loadJSONandFill();
+    initializeCountdown();
     _hidespinner();
     initializeInput();
     initializeGameWords();
