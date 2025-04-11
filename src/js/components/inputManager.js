@@ -73,25 +73,24 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
   }
 
   function _addOffcanvasListener() {
-    const { offcanvasElement, reloadBtn } = _queryOffcanvasElements();
-    
-    if (offcanvasElement) {
-      offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
-        setSettingFormOpen();
-        _syncOffcanvasWithGlobal();
-        _addRangeListeners();
-        _addReloadListener(reloadBtn);
-        console.log("Offcanvas is fully shown.", isSettingFormOpen());
-      });
+    const offcanvasElements = _queryOffcanvasElements();
+    if (!offcanvasElements) return;
 
-      offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
-        setSettingFormClosed();
-        _removeReloadListener(reloadBtn);
-        console.log("Offcanvas is fully hidden.", isSettingFormOpen());
-      });
-    } else {
-      console.error("Offcanvas element not found.");
-    }
+    const { offcanvasElement, reloadBtn } = offcanvasElements;
+
+    offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
+      setSettingFormOpen();
+      _syncOffcanvasWithGlobal();
+      _addRangeListeners();
+      _addReloadListener(reloadBtn);
+      console.log("Offcanvas is fully shown.", isSettingFormOpen());
+    });
+
+    offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
+      setSettingFormClosed();
+      _removeReloadListener(reloadBtn);
+      console.log("Offcanvas is fully hidden.", isSettingFormOpen());
+    });
 
     // REF: Other offcanvas event types: show.bs.offcanvas, hide.bs.offcanvas
   }
