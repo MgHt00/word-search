@@ -50,6 +50,14 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     });
   }
 
+  function _addReloadListener(reloadBtn) {
+    reloadBtn.addEventListener("click", _handleSettingFormSubmit);
+  }
+
+  function _removeReloadListener(reloadBtn) {
+    reloadBtn.removeEventListener("click", _handleSettingFormSubmit);
+  }
+
   function _queryOffcanvasElements() {
     const offcanvasElement = document.querySelector(ELEMENTIDS.OFFCANVAS_ELEMENT);
     const reloadBtn = document.querySelector(ELEMENTIDS.RELOAD_BTN);
@@ -72,13 +80,13 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
         setSettingFormOpen();
         _syncOffcanvasWithGlobal();
         _addRangeListeners();
-        reloadBtn.addEventListener("click", _handleSettingFormSubmit);
+        _addReloadListener(reloadBtn);
         console.log("Offcanvas is fully shown.", isSettingFormOpen());
       });
 
       offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
         setSettingFormClosed();
-        reloadBtn.removeEventListener("click", _handleSettingFormSubmit);
+        _removeReloadListener(reloadBtn);
         console.log("Offcanvas is fully hidden.", isSettingFormOpen());
       });
     } else {
