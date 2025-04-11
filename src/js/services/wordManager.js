@@ -48,6 +48,7 @@ export function wordManager(appDataFns) {
       setJsonData(wordsData);
 
       const { minLength, maxLength } = _getMinandMaxWordLength(wordsData);
+      console.info("prepareAppData:", { minLength, maxLength });
       setMinWordLength(minLength);
       setMaxWordLength(maxLength);
       

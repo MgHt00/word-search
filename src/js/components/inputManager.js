@@ -1,9 +1,10 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils) {
+export function inputManager(globals, appSettingsFns, appDataFns, settingFormStateFns, countdownUtils) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
   const { setWordCount, setWordsMaxLength, setCountdown, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
+  const { getMinWordLength, getMaxWordLength } = appDataFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
   const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = countdownUtils;
 
@@ -14,6 +15,7 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, count
 
   function _setMaxLengthRange(length, { min, max } = {}) {
     if (min !== null || max !== null) {
+      console.info({ min, max });
       maxLengthInput.min = min;
       maxLengthInput.max = max;
     }   
@@ -90,10 +92,12 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, count
 
   function initializeInput() {
     _setWordCountRange(getWordCount());
-    _setMaxLengthRange(getWordsMaxLength()); 
-    // ဒီမှာ min max ရှာတဲ့  getMinandMaxWordLength() ကိုသုံးရမယ်၊ 
-    // သို့သော် အဲ့ဒီ​() က wordArray ကို expect လုပ်နေတယ်။ 
-    // wordArray ကို ထုတ်ပြီးတာနဲ့ global ထဲ သိမ်းရင်ကောင်းမလား ၊ wordManager module ထဲမှာပဲ const နဲ့ သိမ်းရင်ကောင်းမလား ၊ တခြားနည်း ကောင်းမလား ရှာရမယ်။
+
+    const wordsMaxLength = getWordsMaxLength();
+    const JSONminWordLength = getMinWordLength();
+    const JSONmaxWordLength = getMaxWordLength();
+    console.info({ JSONminWordLength, JSONmaxWordLength });
+    _setMaxLengthRange(wordsMaxLength, { JSONminWordLength, JSONmaxWordLength }); 
     _setCountdownRange(getCountdown());
 
     _addOffcanvasListener();

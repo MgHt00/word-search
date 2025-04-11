@@ -68,7 +68,7 @@ const countdown = countdownManager(globals, appSettingsFns);
 const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, countdownUtils } = countdown;
 
 // --- Input Manager ---
-const input = inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils);
+const input = inputManager(globals, appSettingsFns, appDataFns, settingFormStateFns, countdownUtils);
 const { initializeInput } = input;
 
 // Loading Manager
@@ -99,5 +99,6 @@ setCoundownManagerCallbacks(enableGameOver);
 // --- Start the Game ---
 (async function initialize() {
   await prepareAppData();
+  console.info(globals.appData);
   start();
 })()
