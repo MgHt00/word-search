@@ -3,7 +3,7 @@ import { ELEMENTIDS } from "../constants/selectors.js";
 export function inputManager(globals, appSettingsFns, appDataFns, settingFormStateFns, countdownUtils) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
-  const { setWordCount, setWordsMaxLength, setCountdown, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
+  const { setWordCount, setWordsMaxLength, setCountdown, getMinAndMaxWordCount, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
   const { getMinWordLength, getMaxWordLength } = appDataFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
   const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = countdownUtils;
@@ -18,18 +18,25 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     maxLengthDisplay.value = length;
   }
 
-  function _setHTMLMaxLengthAttributes() {
-    maxLengthInput.setAttribute("min", getMinWordLength());
-    maxLengthInput.setAttribute("max", getMaxWordLength());
-  }
-
   function _setCountdownRange(seconds) {
     const minutes = convertSecondsToMinutes(seconds);
     countdownInput.value = minutes;
     countdownDisplay.value = formatTimeMMSS((seconds));
   }
 
+  function _setHTMLMaxLengthAttributes() {
+    maxLengthInput.setAttribute("min", getMinWordLength());
+    maxLengthInput.setAttribute("max", getMaxWordLength());
+  }
+
+  function _setHTMLWordCountAttributes() {
+    const { minWordCount, maxWordCount } = getMinAndMaxWordCount();
+    wordCountInput.setAttribute("min", minWordCount);
+    wordCountInput.setAttribute("max", maxWordCount);
+  }
+
   function _syncOffcanvasWithGlobal() {
+    _setHTMLWordCountAttributes();
     _setHTMLMaxLengthAttributes();
     _setWordCountRange(getWordCount());
     _setMaxLengthRange(getWordsMaxLength()); 

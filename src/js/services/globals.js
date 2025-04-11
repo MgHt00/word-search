@@ -1,7 +1,9 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
 const settingData = {
-  wordCount : 2, // default: 10 
+  minWordCount: 2,
+  maxWordCount: 10,
+  wordCount: 2, // default: 10 
   wordsMaxLength: 4,
   countdown: 60, // countdown in seconds
   gridSize: 14,

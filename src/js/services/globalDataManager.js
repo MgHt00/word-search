@@ -4,7 +4,9 @@ export function globalDataManager(globals) {
 
   // --- App Settings Management ---
   const appSettingsFns = {
-    setWordCount(count) { settingData.wordCount = count; },
+    setWordCount(count) { 
+      settingData.wordCount = count; 
+    },
 
     setWordsMaxLength(length) {
       settingData.wordsMaxLength = length;
@@ -17,6 +19,13 @@ export function globalDataManager(globals) {
 
     setGridSize(size) {
       settingData.gridSize = size;
+    },
+    
+    getMinAndMaxWordCount() {
+      return {
+        minWordCount: settingData.minWordCount,
+        maxWordCount: settingData.maxWordCount,
+      };
     },
 
     getWordCount(){
