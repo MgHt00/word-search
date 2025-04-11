@@ -99,6 +99,5 @@ setCoundownManagerCallbacks(enableGameOver);
 // --- Start the Game ---
 (async function initialize() {
   await prepareAppData();
-  console.info(globals.appData);
   start();
 })()

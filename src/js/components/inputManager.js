@@ -14,9 +14,12 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
   }
 
   function _setMaxLengthRange(length, { JSONminWordLength, JSONmaxWordLength } = {}) {
-    if (JSONminWordLength !== null || JSONmaxWordLength !== null) {
-      maxLengthInput.min = JSONminWordLength;
-      maxLengthInput.max = JSONmaxWordLength;
+    if (JSONminWordLength !== null && JSONmaxWordLength !== null) {
+      console.info({ JSONminWordLength, JSONmaxWordLength });
+      console.info("_setMaxLengthRange Before:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
+      maxLengthInput.setAttribute("min", JSONminWordLength);
+      maxLengthInput.setAttribute("max", JSONmaxWordLength);
+      console.info("_setMaxLengthRange After:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
     }   
     maxLengthInput.value = length;
     maxLengthDisplay.value = length;
@@ -26,6 +29,17 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     const minutes = convertSecondsToMinutes(seconds);
     countdownInput.value = minutes;
     countdownDisplay.value = formatTimeMMSS((seconds));
+  }
+
+  function _setOffCanvasInputElements() {
+    _setWordCountRange(getWordCount());
+
+    const wordsMaxLength = getWordsMaxLength();
+    const JSONminWordLength = getMinWordLength();
+    const JSONmaxWordLength = getMaxWordLength();
+    _setMaxLengthRange(wordsMaxLength, { JSONminWordLength, JSONmaxWordLength }); 
+
+    _setCountdownRange(getCountdown());
   }
   
   function _addRangeListeners() {
@@ -90,15 +104,7 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
   }
 
   function initializeInput() {
-    _setWordCountRange(getWordCount());
-
-    const wordsMaxLength = getWordsMaxLength();
-    const JSONminWordLength = getMinWordLength();
-    const JSONmaxWordLength = getMaxWordLength();
-    _setMaxLengthRange(wordsMaxLength, { JSONminWordLength, JSONmaxWordLength }); 
-    
-    _setCountdownRange(getCountdown());
-
+    _setOffCanvasInputElements();
     _addOffcanvasListener();
     _addRangeListeners();
   }
