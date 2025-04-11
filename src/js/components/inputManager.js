@@ -13,16 +13,16 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     wordCountDisplay.value = count;
   }
 
-  function _setMaxLengthRange(length, { JSONminWordLength, JSONmaxWordLength } = {}) {
-    if (JSONminWordLength !== null && JSONmaxWordLength !== null) {
-      console.info({ JSONminWordLength, JSONmaxWordLength });
-      console.info("_setMaxLengthRange Before:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
-      maxLengthInput.setAttribute("min", JSONminWordLength);
-      maxLengthInput.setAttribute("max", JSONmaxWordLength);
-      console.info("_setMaxLengthRange After:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
-    }   
+  function _setMaxLengthRange(length) {
     maxLengthInput.value = length;
     maxLengthDisplay.value = length;
+  }
+
+  function _setHTMLMaxLengthAttributes() {
+    console.info("_setMaxLengthRange Before:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
+    maxLengthInput.setAttribute("min", getMinWordLength());
+    maxLengthInput.setAttribute("max", getMaxWordLength());
+    console.info("_setMaxLengthRange After:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
   }
 
   function _setCountdownRange(seconds) {
@@ -31,15 +31,11 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     countdownDisplay.value = formatTimeMMSS((seconds));
   }
 
-  function _setOffCanvasInputElements() {
+  function _syncOffcanvasWithGlobal() {
     _setWordCountRange(getWordCount());
-
-    const wordsMaxLength = getWordsMaxLength();
-    const JSONminWordLength = getMinWordLength();
-    const JSONmaxWordLength = getMaxWordLength();
-    _setMaxLengthRange(wordsMaxLength, { JSONminWordLength, JSONmaxWordLength }); 
-
+    _setMaxLengthRange(getWordsMaxLength()); 
     _setCountdownRange(getCountdown());
+    _setHTMLMaxLengthAttributes();
   }
   
   function _addRangeListeners() {
@@ -48,6 +44,7 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     });
 
     maxLengthInput.addEventListener("input", () => {
+      console.info("_EventListener:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
       _setMaxLengthRange(maxLengthInput.value);
     });
 
@@ -74,19 +71,13 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     const { offcanvasElement, reloadBtn } = _queryOffcanvasElements();
     
     if (offcanvasElement) {
-      /*offcanvasElement.addEventListener('show.bs.offcanvas', () => {
-        console.log("Offcanvas is about to be shown.");
-      });*/
-
       offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
         setSettingFormOpen();
+        _syncOffcanvasWithGlobal();
+        _addRangeListeners();
         reloadBtn.addEventListener("click", _handleSettingFormSubmit);
         console.log("Offcanvas is fully shown.", isSettingFormOpen());
       });
-
-      /*offcanvasElement.addEventListener('hide.bs.offcanvas', () => {
-        console.log("Offcanvas is about to be hidden.");
-      });*/
 
       offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
         setSettingFormClosed();
@@ -96,6 +87,8 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     } else {
       console.error("Offcanvas element not found.");
     }
+
+    // REF: Other offcanvas event types: show.bs.offcanvas, hide.bs.offcanvas
   }
 
   function _handleSettingFormSubmit(event) {
@@ -104,9 +97,7 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
   }
 
   function initializeInput() {
-    _setOffCanvasInputElements();
     _addOffcanvasListener();
-    _addRangeListeners();
   }
 
   return {
