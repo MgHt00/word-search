@@ -5,6 +5,7 @@ const settingData = {
   wordsMaxLength: 4,
   countdown: 60, // countdown in seconds
   gridSize: 14,
+  debugMode: true, // default: false
 }
 
 const appData = {

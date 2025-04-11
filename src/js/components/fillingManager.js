@@ -1,10 +1,13 @@
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
 export function fillingManager(globals, wordPlacementFns, random, hasEnoughSq, compareExistingChar, createUL) {
   const { settingData, selectors, wordPlacementData } = globals;
   const { addPlacedWordCoordinates, addSquareIdToChar, storeStartIDAndEndID } = wordPlacementFns;
-  const { wordsMaxLength, gridSize } = settingData;
+  const { wordsMaxLength, gridSize, debugMode } = settingData;
   const { sectionWordList } = selectors;
 
   const { squareIdToChar, placedWordCoordinates } = wordPlacementData;
+
+  const { ALL_SQUARES, DEBUG_IDENTIFIER, MULTI_COLUMN_LIST } = CSS_CLASS_NAMES;
 
   // Data for generateRandomCoordinates()
   const _directionMap = new Map([ 
@@ -19,13 +22,11 @@ export function fillingManager(globals, wordPlacementFns, random, hasEnoughSq, c
     [8, "north-west"],
   ]);
 
-  function _printCharOnScreen(squareID, char) {
+  function _printCharOnScreen(squareID, char, debugMode = false) {
     document.querySelector(`#${squareID}`).textContent = char;
-    document.querySelector(`#${squareID}`).classList.add("temp-identifier"); // remove this when stable
-  }
-
-  function _printCharOnScreenDUMMY(squareID, char) { // remove this function when stable
-    document.querySelector(`#${squareID}`).textContent = char;
+    if (debugMode) {
+      document.querySelector(`#${squareID}`).classList.add(DEBUG_IDENTIFIER);
+    }
   }
 
   function _selectRandomWord(wordsArray) {
@@ -68,13 +69,12 @@ export function fillingManager(globals, wordPlacementFns, random, hasEnoughSq, c
   // Function to fill remaining squares with dummy characters
   function _fillRemainingSquares() {
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const allSquares = document.querySelectorAll('[class|="sq"]');
+    const allSquares = document.querySelectorAll(ALL_SQUARES);
     allSquares.forEach((square) => {
       const squareID = square.id;
       if (!squareIdToChar.has(squareID)) {
         const randomChar = alphabet[random(0, alphabet.length - 1)];
-        //_printCharOnScreen(squareID, randomChar); // use this when stable
-        _printCharOnScreenDUMMY(squareID, randomChar); // remove this when stable
+        _printCharOnScreen(squareID, randomChar); // use this when stable
       }
     });
   }
@@ -116,12 +116,12 @@ export function fillingManager(globals, wordPlacementFns, random, hasEnoughSq, c
           //addClickListener(wordData);
 
           entries.forEach(([squareID, char]) => {
-            _printCharOnScreen(squareID, char);
+            _printCharOnScreen(squareID, char, debugMode);
             addSquareIdToChar(squareID, char);
           });
 
           addPlacedWordCoordinates(selectedWord, currentWordSquareIDs, coordinates);
-          _listAWord(_toLowerCases(selectedWord), sectionWordList, "multi-column-list");
+          _listAWord(_toLowerCases(selectedWord), sectionWordList, MULTI_COLUMN_LIST);
 
           wordsArray.splice(index, 1); // Remove placed word
           wordsRemaining--;
