@@ -19,10 +19,8 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
   }
 
   function _setHTMLMaxLengthAttributes() {
-    console.info("_setMaxLengthRange Before:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
     maxLengthInput.setAttribute("min", getMinWordLength());
     maxLengthInput.setAttribute("max", getMaxWordLength());
-    console.info("_setMaxLengthRange After:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
   }
 
   function _setCountdownRange(seconds) {
@@ -32,10 +30,10 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
   }
 
   function _syncOffcanvasWithGlobal() {
+    _setHTMLMaxLengthAttributes();
     _setWordCountRange(getWordCount());
     _setMaxLengthRange(getWordsMaxLength()); 
     _setCountdownRange(getCountdown());
-    _setHTMLMaxLengthAttributes();
   }
   
   function _addRangeListeners() {
@@ -44,7 +42,6 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     });
 
     maxLengthInput.addEventListener("input", () => {
-      console.info("_EventListener:", maxLengthInput.getAttribute("min"), maxLengthInput.getAttribute("max"));
       _setMaxLengthRange(maxLengthInput.value);
     });
 
