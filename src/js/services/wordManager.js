@@ -41,7 +41,7 @@ export function wordManager(appDataFns) {
     return { minLength, maxLength };
   }
 
-  async function prepareWordData() {
+  async function prepareAppData() { 
     try {
       const wordsData = await loadJSON();
       if (!wordsData) throw new Error(`null data`);
@@ -57,7 +57,7 @@ export function wordManager(appDataFns) {
   }
 
   return {
-    prepareWordData,
+    prepareAppData,
     getWordsUpToLength,
   };
 }

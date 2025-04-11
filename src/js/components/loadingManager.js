@@ -1,4 +1,4 @@
-export function loadingManager(selectors, appSettingsFns, appDataFns,  gameInitializers, generateSqs, prepareWordData, getWordsUpToLength, fill, reset_wordPlacementData, pauseCountdown) { 
+export function loadingManager(selectors, appSettingsFns, appDataFns,  gameInitializers, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, pauseCountdown) { 
   const { getJsonData } = appDataFns;
   const { getWordCount, getWordsMaxLength } = appSettingsFns;
   const { initializeGameWords, initializeInteraction, initializeInput, initializeCountdown } = gameInitializers;
@@ -53,7 +53,6 @@ export function loadingManager(selectors, appSettingsFns, appDataFns,  gameIniti
 
 
   async function _getWordsAndFill(wordsArray, wordCount) {
-    //const wordsArray = [...jsonData];
     if (!wordsArray) {
       console.error("Failed to load words. Cannot proceed.");
       return;
@@ -64,7 +63,7 @@ export function loadingManager(selectors, appSettingsFns, appDataFns,  gameIniti
   }
 
   async function _loadJSONandFill() {
-    await prepareWordData();
+    //await prepareWordData();
     
     const jsonData = getJsonData();
     const wordsMaxLength = getWordsMaxLength();

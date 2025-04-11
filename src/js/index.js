@@ -24,7 +24,7 @@ const { appSettingsFns, appDataFns, wordPlacementFns, wordPlacementQueryFns, set
 
 // Word Manager
 const words = wordManager(appDataFns);
-const { prepareWordData, getWordsUpToLength } = words;
+const { prepareAppData, getWordsUpToLength } = words;
 
 // Layout Manager
 const layout = layoutManager(globals);
@@ -85,7 +85,6 @@ const loading = loadingManager(
   appDataFns,
   gameInitializers,
   generateSqs,
-  prepareWordData,
   getWordsUpToLength,
   fill,
   wordPlacementFns.reset_wordPlacementData,
@@ -99,5 +98,6 @@ setCoundownManagerCallbacks(enableGameOver);
 
 // --- Start the Game ---
 (async function initialize() {
+  await prepareAppData();
   start();
 })()
