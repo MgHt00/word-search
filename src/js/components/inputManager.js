@@ -8,6 +8,11 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
   const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = countdownUtils;
 
+  let _restart;  
+  function setInputManagerCallbacks(restart) {
+    _restart = restart;
+  }
+
   function _setWordCountRange(count) {  
     wordCountInput.value = count;
     wordCountDisplay.value = count;
@@ -66,54 +71,64 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     });
   }
 
-  function _addReloadListener(reloadBtn) {
-    reloadBtn.addEventListener("click", _handleSettingFormSubmit);
+  function _addReloadListener(_reloadBtn) {
+    _reloadBtn.addEventListener("click", _handleSettingFormSubmit);
   }
 
-  function _removeReloadListener(reloadBtn) {
-    reloadBtn.removeEventListener("click", _handleSettingFormSubmit);
+  function _removeReloadListener(_reloadBtn) {
+    _reloadBtn.removeEventListener("click", _handleSettingFormSubmit);
   }
 
   function _queryOffcanvasElements() {
-    const offcanvasElement = document.querySelector(ELEMENTIDS.OFFCANVAS_ELEMENT);
-    const reloadBtn = document.querySelector(ELEMENTIDS.RELOAD_BTN);
+    const _offcanvasElement = document.querySelector(ELEMENTIDS.OFFCANVAS_ELEMENT);
+    const _reloadBtn = document.querySelector(ELEMENTIDS.RELOAD_BTN);
 
-    if (!offcanvasElement) {
+    if (!_offcanvasElement || !_reloadBtn) {
       console.error("Offcanvas elements not found.");
       return null;
-    } else if (!reloadBtn) {
-      console.error("Reload Button not found");
-      return null;
     }
-      return { offcanvasElement, reloadBtn };
+
+    return { _offcanvasElement, _reloadBtn };
   }
 
   function _addOffcanvasListener() {
-    const offcanvasElements = _queryOffcanvasElements();
-    if (!offcanvasElements) return;
+    const { _offcanvasElement, _reloadBtn } = _queryOffcanvasElements();
+    if (!_offcanvasElement || !_reloadBtn) return;
 
-    const { offcanvasElement, reloadBtn } = offcanvasElements;
-
-    offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
+    _offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
       setSettingFormOpen();
       _syncOffcanvasWithGlobal();
       _addRangeListeners();
-      _addReloadListener(reloadBtn);
-      console.log("Offcanvas is fully shown.", isSettingFormOpen());
+      _addReloadListener(_reloadBtn);
+      console.log("Offcanvas is fully shown. Flag:", isSettingFormOpen());
     });
 
-    offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
+    _offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
       setSettingFormClosed();
-      _removeReloadListener(reloadBtn);
-      console.log("Offcanvas is fully hidden.", isSettingFormOpen());
+      _removeReloadListener(_reloadBtn);
+      console.log("Offcanvas is fully hidden. Flag:", isSettingFormOpen());
     });
 
     // REF: Other offcanvas event types: show.bs.offcanvas, hide.bs.offcanvas
   }
 
+  function _closeOffcanvas() {
+    const { _offcanvasElement } = _queryOffcanvasElements();
+    if (!_offcanvasElement) return;
+
+    bootstrap.Offcanvas.getInstance(_offcanvasElement).hide();
+  }
+
   function _handleSettingFormSubmit(event) {
     event.preventDefault(); // Prevent the default form submission behavior
-    console.info("RELOAD BUTTON CLICKED!"); 
+    setWordCount(parseInt(wordCountInput.value, 10));
+    setWordsMaxLength(parseInt(maxLengthInput.value, 10));
+    setCountdown(convertMinutesToSeconds(countdownInput.value));
+    setSettingFormClosed();
+
+    console.info("RELOAD. User's Global Data:", { wordCount: globals.settingData.wordCount, wordsMaxLength: globals.settingData.wordsMaxLength, countdown: globals.settingData.countdown });
+    _closeOffcanvas();
+    _restart();
   }
 
   function initializeInput() {
@@ -122,6 +137,7 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
 
   return {
     initializeInput,
+    setInputManagerCallbacks,
   };
 
 }
