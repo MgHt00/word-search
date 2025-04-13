@@ -28,6 +28,13 @@ export function globalDataManager(globals) {
       };
     },
 
+    getMinAndMaxCounter() {
+      return {
+        minCountdown: settingData.minCountdown,
+        maxCountdown: settingData.maxCountdown,
+      };
+    },
+
     getWordCount(){
       return settingData.wordCount;
     },
@@ -51,25 +58,21 @@ export function globalDataManager(globals) {
       appData.jsonData = data;
     },
 
-    setMinWordLength(length) {
-      appData.minWordLength = length;
-    },
-
-    setMaxWordLength(length) {
-      appData.maxWordLength = length;
+    setMinAndMaxWordLength(min, max) {
+      appData.minWordLength = min;
+      appData.maxWordLength = max;
     },
 
     getJsonData(){
       return appData.jsonData;
     },
 
-    getMinWordLength() {
-      return appData.minWordLength;
-    },
-
-    getMaxWordLength() {
-      return appData.maxWordLength;
-    },
+    getMinAndMaxWordLength() {
+      return {
+        minWordLength: appData.minWordLength,
+        maxWordLength: appData.maxWordLength,
+      }
+    }
   };
 
   // --- Word Placement Data Management ---
