@@ -4,7 +4,9 @@ export function globalDataManager(globals) {
 
   // --- App Settings Management ---
   const appSettingsFns = {
-    setWordCount(count) { settingData.wordCount = count; },
+    setWordCount(count) { 
+      settingData.wordCount = count; 
+    },
 
     setWordsMaxLength(length) {
       settingData.wordsMaxLength = length;
@@ -17,6 +19,20 @@ export function globalDataManager(globals) {
 
     setGridSize(size) {
       settingData.gridSize = size;
+    },
+    
+    getMinAndMaxWordCount() {
+      return {
+        minWordCount: settingData.minWordCount,
+        maxWordCount: settingData.maxWordCount,
+      };
+    },
+
+    getMinAndMaxCounter() {
+      return {
+        minCountdown: settingData.minCountdown,
+        maxCountdown: settingData.maxCountdown,
+      };
     },
 
     getWordCount(){
@@ -42,25 +58,21 @@ export function globalDataManager(globals) {
       appData.jsonData = data;
     },
 
-    setMinWordLength() {
-      appData.minWordLength = settingData.minWordLength;
-    },
-
-    setMaxWordLength() {
-      appData.maxWordLength = settingData.maxWordLength;
+    setMinAndMaxWordLength(min, max) {
+      appData.minWordLength = min;
+      appData.maxWordLength = max;
     },
 
     getJsonData(){
       return appData.jsonData;
     },
 
-    getMinWordLength() {
-      appData.minWordLength = settingData.minWordLength;
-    },
-
-    getMaxWordLength() {
-      appData.maxWordLength = settingData.maxWordLength;
-    },
+    getMinAndMaxWordLength() {
+      return {
+        minWordLength: appData.minWordLength,
+        maxWordLength: appData.maxWordLength,
+      }
+    }
   };
 
   // --- Word Placement Data Management ---

@@ -1,22 +1,24 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, appSettingsFns, settingFormStateFns, countdownUtils) {
+export function inputManager(globals, appSettingsFns, appDataFns, settingFormStateFns, countdownUtils) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
-  const { setWordCount, setWordsMaxLength, setCountdown, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
+  const { setWordCount, setWordsMaxLength, setCountdown, getMinAndMaxWordCount, getWordCount, getMinAndMaxCounter, getWordsMaxLength, getCountdown } = appSettingsFns;
+  const { getMinAndMaxWordLength } = appDataFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
   const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = countdownUtils;
+
+  let _restart;  
+  function setInputManagerCallbacks(restart) {
+    _restart = restart;
+  }
 
   function _setWordCountRange(count) {  
     wordCountInput.value = count;
     wordCountDisplay.value = count;
   }
 
-  function _setMaxLengthRange(length, { min, max } = {}) {
-    if (min !== null || max !== null) {
-      maxLengthInput.min = min;
-      maxLengthInput.max = max;
-    }   
+  function _setMaxLengthRange(length) {
     maxLengthInput.value = length;
     maxLengthDisplay.value = length;
   }
@@ -25,6 +27,34 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, count
     const minutes = convertSecondsToMinutes(seconds);
     countdownInput.value = minutes;
     countdownDisplay.value = formatTimeMMSS((seconds));
+  }
+
+  // --- functions to set HTML attributes of setting form dynamically ---
+  function _setHTMLWordCountAttributes() {
+    const { minWordCount, maxWordCount } = getMinAndMaxWordCount();
+    wordCountInput.setAttribute("min", minWordCount);
+    wordCountInput.setAttribute("max", maxWordCount);
+  }
+
+  function _setHTMLMaxLengthAttributes() {
+    const { minWordLength, maxWordLength } = getMinAndMaxWordLength();
+    maxLengthInput.setAttribute("min", minWordLength);
+    maxLengthInput.setAttribute("max", maxWordLength);
+  }
+
+  function _setHTMLCountdownAttributes() {
+    const { minCountdown, maxCountdown } = getMinAndMaxCounter();
+    countdownInput.setAttribute("min", convertSecondsToMinutes(minCountdown));
+    countdownInput.setAttribute("max", convertSecondsToMinutes(maxCountdown));
+  }
+
+  function _syncOffcanvasWithGlobal() {
+    _setHTMLWordCountAttributes();
+    _setHTMLMaxLengthAttributes();
+    _setHTMLCountdownAttributes();
+    _setWordCountRange(getWordCount());
+    _setMaxLengthRange(getWordsMaxLength()); 
+    _setCountdownRange(getCountdown());
   }
   
   function _addRangeListeners() {
@@ -41,67 +71,73 @@ export function inputManager(globals, appSettingsFns, settingFormStateFns, count
     });
   }
 
-  function _queryOffcanvasElements() {
-    const offcanvasElement = document.querySelector(ELEMENTIDS.OFFCANVAS_ELEMENT);
-    const reloadBtn = document.querySelector(ELEMENTIDS.RELOAD_BTN);
+  function _addReloadListener(_reloadBtn) {
+    _reloadBtn.addEventListener("click", _handleSettingFormSubmit);
+  }
 
-    if (!offcanvasElement) {
+  function _removeReloadListener(_reloadBtn) {
+    _reloadBtn.removeEventListener("click", _handleSettingFormSubmit);
+  }
+
+  function _queryOffcanvasElements() {
+    const _offcanvasElement = document.querySelector(ELEMENTIDS.OFFCANVAS_ELEMENT);
+    const _reloadBtn = document.querySelector(ELEMENTIDS.RELOAD_BTN);
+
+    if (!_offcanvasElement || !_reloadBtn) {
       console.error("Offcanvas elements not found.");
       return null;
-    } else if (!reloadBtn) {
-      console.error("Reload Button not found");
-      return null;
     }
-      return { offcanvasElement, reloadBtn };
+
+    return { _offcanvasElement, _reloadBtn };
   }
 
   function _addOffcanvasListener() {
-    const { offcanvasElement, reloadBtn } = _queryOffcanvasElements();
-    
-    if (offcanvasElement) {
-      /*offcanvasElement.addEventListener('show.bs.offcanvas', () => {
-        console.log("Offcanvas is about to be shown.");
-      });*/
+    const { _offcanvasElement, _reloadBtn } = _queryOffcanvasElements();
+    if (!_offcanvasElement || !_reloadBtn) return;
 
-      offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
-        setSettingFormOpen();
-        reloadBtn.addEventListener("click", _handleSettingFormSubmit);
-        console.log("Offcanvas is fully shown.", isSettingFormOpen());
-      });
+    _offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
+      setSettingFormOpen();
+      _syncOffcanvasWithGlobal();
+      _addRangeListeners();
+      _addReloadListener(_reloadBtn);
+      console.log("Offcanvas is fully shown. Flag:", isSettingFormOpen());
+    });
 
-      /*offcanvasElement.addEventListener('hide.bs.offcanvas', () => {
-        console.log("Offcanvas is about to be hidden.");
-      });*/
+    _offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
+      setSettingFormClosed();
+      _removeReloadListener(_reloadBtn);
+      console.log("Offcanvas is fully hidden. Flag:", isSettingFormOpen());
+    });
 
-      offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
-        setSettingFormClosed();
-        reloadBtn.removeEventListener("click", _handleSettingFormSubmit);
-        console.log("Offcanvas is fully hidden.", isSettingFormOpen());
-      });
-    } else {
-      console.error("Offcanvas element not found.");
-    }
+    // REF: Other offcanvas event types: show.bs.offcanvas, hide.bs.offcanvas
+  }
+
+  function _closeOffcanvas() {
+    const { _offcanvasElement } = _queryOffcanvasElements();
+    if (!_offcanvasElement) return;
+
+    bootstrap.Offcanvas.getInstance(_offcanvasElement).hide();
   }
 
   function _handleSettingFormSubmit(event) {
     event.preventDefault(); // Prevent the default form submission behavior
-    console.info("RELOAD BUTTON CLICKED!"); 
+    setWordCount(parseInt(wordCountInput.value, 10));
+    setWordsMaxLength(parseInt(maxLengthInput.value, 10));
+    setCountdown(convertMinutesToSeconds(countdownInput.value));
+    setSettingFormClosed();
+
+    console.info("RELOAD. User's Global Data:", { wordCount: globals.settingData.wordCount, wordsMaxLength: globals.settingData.wordsMaxLength, countdown: globals.settingData.countdown });
+    _closeOffcanvas();
+    _restart();
   }
 
   function initializeInput() {
-    _setWordCountRange(getWordCount());
-    _setMaxLengthRange(getWordsMaxLength()); 
-    // ဒီမှာ min max ရှာတဲ့  getMinandMaxWordLength() ကိုသုံးရမယ်၊ 
-    // သို့သော် အဲ့ဒီ​() က wordArray ကို expect လုပ်နေတယ်။ 
-    // wordArray ကို ထုတ်ပြီးတာနဲ့ global ထဲ သိမ်းရင်ကောင်းမလား ၊ wordManager module ထဲမှာပဲ const နဲ့ သိမ်းရင်ကောင်းမလား ၊ တခြားနည်း ကောင်းမလား ရှာရမယ်။
-    _setCountdownRange(getCountdown());
-
     _addOffcanvasListener();
-    _addRangeListeners();
   }
 
   return {
     initializeInput,
+    setInputManagerCallbacks,
   };
 
 }

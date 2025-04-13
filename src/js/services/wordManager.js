@@ -1,6 +1,6 @@
 import { WORDS_DATA_PATH } from '../constants/filePaths.js';
 export function wordManager(appDataFns) {
-  const { setJsonData, getJsonData, setMinWordLength, setMaxWordLength } = appDataFns;
+  const { setJsonData, getJsonData, setMinAndMaxWordLength } = appDataFns;
   
   async function loadJSON() {
     const response = await fetch(WORDS_DATA_PATH);
@@ -48,8 +48,9 @@ export function wordManager(appDataFns) {
       setJsonData(wordsData);
 
       const { minLength, maxLength } = _getMinandMaxWordLength(wordsData);
-      setMinWordLength(minLength);
-      setMaxWordLength(maxLength);
+      setMinAndMaxWordLength(minLength, maxLength);
+      //setMinWordLength(minLength);
+      //setMaxWordLength(maxLength);
       
     } catch (error) {
       console.error("Error preparing word data:", error);

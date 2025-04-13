@@ -25,7 +25,7 @@
             <div class="row align-items-center">
               <div class="col-9">
                 <label for="range-word-count" class="form-label">No. of words to search:</label>
-                <input type="range" class="form-range" min="3" max="9" id="range-word-count">
+                <input type="range" class="form-range" min="0" max="0" id="range-word-count">
               </div>
               <div class="col mt-4">
                 <input type="text" readonly class="form-control-plaintext text-center pe-4" id="label-word-count" value="00">
@@ -35,7 +35,7 @@
             <div class="row align-items-center mt-3">
               <div class="col-9">
                 <label for="range-max-length" class="form-label">Words' max length:</label>
-                <input type="range" class="form-range" min="3" max="9" id="range-max-length">
+                <input type="range" class="form-range" min="0" max="0" id="range-max-length">
               </div>
               <div class="col mt-4">
                 <input type="text" readonly class="form-control-plaintext text-center pe-4" id="label-max-length" value="00">
@@ -44,11 +44,11 @@
 
             <div class="row align-items-center mt-3">
               <div class="col-9">
-                <label for="range-timer" class="form-label">Timer:</label>
-                <input type="range" class="form-range" min="0" max="9" id="range-timer">
+                <label for="range-countdown" class="form-label">Timer:</label>
+                <input type="range" class="form-range" min="0" max="9" id="range-countdown">
               </div>
               <div class="col mt-4">
-                <input type="text" readonly class="form-control-plaintext text-center pe-4" id="label-timer" value="00">
+                <input type="text" readonly class="form-control-plaintext text-center pe-4" id="label-countdown" value="00">
               </div>
             </div>
             <div class="row justify-content-center mt-3">
@@ -63,7 +63,7 @@
 
   <div class="d-flex p-2 justify-content-between flex-row" id="title-row">
     <div><h3 class="title">Word Search</h3></div>
-    <div id="timer-container" class="d-flex pe-3 flex-row align-items-center invisible">
+    <div id="countdown-container" class="d-flex pe-3 flex-row align-items-center invisible">
         <div class="pe-2"><i class="bi bi-stopwatch-fill"></i></div>
         <div id="countdown"></div>
     </div>

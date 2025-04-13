@@ -26,11 +26,21 @@ export function countdownManager( globals, appSettingsFns ) {
     },
 
     convertMinutesToSeconds(minutes) {
-      return minutes * 60;
+      const parsedMinutes = parseInt(minutes, 10);
+      if (isNaN(parsedMinutes)) {
+        console.error("Invalid minutes value:", minutes);
+        return 0; 
+      }
+      return parsedMinutes * 60;
     },
 
     convertSecondsToMinutes(seconds) {
-      return seconds / 60;
+      const parsedSeconds = parseInt(seconds, 10);
+      if (isNaN(parsedSeconds)) {
+        console.error("Invalid seconds value:", seconds);
+        return 0; 
+      }
+      return parsedSeconds / 60;
     },
   }
 
