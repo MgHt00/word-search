@@ -1,11 +1,20 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
 const settingData = {
+  // --- no. of words to search ---
   minWordCount: 2,
   maxWordCount: 10,
   wordCount: 2, // default: 10 
+
+  // --- max length of each words ---
   wordsMaxLength: 4,
-  countdown: 60, // countdown in seconds
+
+  // --- counter data in seconds ---
+  countdown: 60, 
+  minCountdown: 0,
+  maxCountdown: 600,
+
+  // --- other setting data ---
   gridSize: 14,
   debugMode: true, // default: false
 }

@@ -3,8 +3,8 @@ import { ELEMENTIDS } from "../constants/selectors.js";
 export function inputManager(globals, appSettingsFns, appDataFns, settingFormStateFns, countdownUtils) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
-  const { setWordCount, setWordsMaxLength, setCountdown, getMinAndMaxWordCount, getWordCount, getWordsMaxLength, getCountdown } = appSettingsFns;
-  const { getMinWordLength, getMaxWordLength } = appDataFns;
+  const { setWordCount, setWordsMaxLength, setCountdown, getMinAndMaxWordCount, getWordCount, getMinAndMaxCounter, getWordsMaxLength, getCountdown } = appSettingsFns;
+  const { getMinAndMaxWordLength } = appDataFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
   const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = countdownUtils;
 
@@ -24,20 +24,29 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     countdownDisplay.value = formatTimeMMSS((seconds));
   }
 
-  function _setHTMLMaxLengthAttributes() {
-    maxLengthInput.setAttribute("min", getMinWordLength());
-    maxLengthInput.setAttribute("max", getMaxWordLength());
-  }
-
+  // --- functions to set HTML attributes of setting form dynamically ---
   function _setHTMLWordCountAttributes() {
     const { minWordCount, maxWordCount } = getMinAndMaxWordCount();
     wordCountInput.setAttribute("min", minWordCount);
     wordCountInput.setAttribute("max", maxWordCount);
   }
 
+  function _setHTMLMaxLengthAttributes() {
+    const { minWordLength, maxWordLength } = getMinAndMaxWordLength();
+    maxLengthInput.setAttribute("min", minWordLength);
+    maxLengthInput.setAttribute("max", maxWordLength);
+  }
+
+  function _setHTMLCountdownAttributes() {
+    const { minCountdown, maxCountdown } = getMinAndMaxCounter();
+    countdownInput.setAttribute("min", convertSecondsToMinutes(minCountdown));
+    countdownInput.setAttribute("max", convertSecondsToMinutes(maxCountdown));
+  }
+
   function _syncOffcanvasWithGlobal() {
     _setHTMLWordCountAttributes();
     _setHTMLMaxLengthAttributes();
+    _setHTMLCountdownAttributes();
     _setWordCountRange(getWordCount());
     _setMaxLengthRange(getWordsMaxLength()); 
     _setCountdownRange(getCountdown());
