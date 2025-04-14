@@ -12,7 +12,7 @@ export function globalDataManager(globals) {
       settingData.wordsMaxLength = length;
     },
 
-    setCountdown(time) {
+    setCountdownTime(time) {
       if (typeof time !== 'number') {
         console.warn(`setCountdown: Expected a number value, received ${typeof time}. Converting to number.`);
         time = Number(time); 
@@ -46,7 +46,7 @@ export function globalDataManager(globals) {
       return settingData.wordsMaxLength;
     },
 
-    getCountdown(){
+    getCountdownTime(){
       return settingData.countdown;
     },
 

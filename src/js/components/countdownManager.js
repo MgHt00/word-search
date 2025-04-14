@@ -5,9 +5,9 @@ export function countdownManager( globals, appSettingsFns ) {
   }
   
   const { countdownContainer, countdown } = globals.selectors;
-  const { setCountdown, getCountdown } = appSettingsFns;
+  const { setCountdownTime, getCountdownTime } = appSettingsFns;
 
-  const initialTime = getCountdown();
+  const initialTime = getCountdownTime();
   let remainingTime;
   let countdownInterval;
 
@@ -49,7 +49,7 @@ export function countdownManager( globals, appSettingsFns ) {
   function _updateCountdownDisplay(time) { countdown.textContent = countdownUtils.formatTimeMMSS(time); }
   
   function _resetCountdown() {
-    setCountdown(initialTime);
+    setCountdownTime(initialTime);
   }
 
   function _startCountdown(time) {
@@ -77,9 +77,9 @@ export function countdownManager( globals, appSettingsFns ) {
   }
 
   function initializeCountdown() {
-    if(getCountdown() !== 0){
+    if(getCountdownTime() !== 0){
       _showCountdown();
-      _startCountdown(getCountdown());
+      _startCountdown(getCountdownTime());
     } 
   }
 
