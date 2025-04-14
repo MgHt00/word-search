@@ -1,4 +1,4 @@
-export function countdownManager( globals, appSettingsFns, settingFormStateFns ) {
+export function countdownManager( globals, appSettingsFns, appStateFns ) {
   let _enableGameOver;
   function setCoundownManagerCallbacks(enableGameOver) {
     _enableGameOver = enableGameOver;
@@ -6,7 +6,7 @@ export function countdownManager( globals, appSettingsFns, settingFormStateFns )
   
   const { countdownContainer, countdown } = globals.selectors;
   const { setCountdownTime, getCountdownTime } = appSettingsFns;
-  const { isCountdownPaused, setCountdownPaused, setCountdownResumed } = settingFormStateFns;
+  const { isCountdownPaused, setCountdownPaused, setCountdownResumed } = appStateFns;
 
   const initialTime = getCountdownTime();
   let remainingTime;

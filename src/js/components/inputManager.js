@@ -1,11 +1,11 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, appSettingsFns, appDataFns, settingFormStateFns, countdownUtils) {
+export function inputManager(globals, appSettingsFns, appDataFns, appStateFns, countdownUtils) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
   const { setWordCount, setWordsMaxLength, setCountdownTime, getMinAndMaxWordCount, getWordCount, getMinAndMaxCounter, getWordsMaxLength, getCountdownTime } = appSettingsFns;
   const { getMinAndMaxWordLength } = appDataFns;
-  const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed, setCountdownPaused, setCountdownResumed } = settingFormStateFns;
+  const { setSettingFormOpen, setSettingFormClosed, setCountdownPaused, setCountdownResumed } = appStateFns;
   const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = countdownUtils;
 
   let _restart;  

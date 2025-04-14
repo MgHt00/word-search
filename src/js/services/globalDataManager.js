@@ -139,7 +139,7 @@ export function globalDataManager(globals) {
   };
 
   // --- Setting Form State Management ---
-  const settingFormStateFns = {
+  const appStateFns = {
     isSettingFormOpen() {
       return appState.isSettingFormOpen;
     },
@@ -170,6 +170,6 @@ export function globalDataManager(globals) {
     appDataFns,
     wordPlacementFns,
     wordPlacementQueryFns,
-    settingFormStateFns,
+    appStateFns,
   };
 }
