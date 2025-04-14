@@ -1,4 +1,4 @@
-export function countdownManager( globals, appSettingsFns ) {
+export function countdownManager( globals, appSettingsFns, appStateFns ) {
   let _enableGameOver;
   function setCoundownManagerCallbacks(enableGameOver) {
     _enableGameOver = enableGameOver;
@@ -6,11 +6,11 @@ export function countdownManager( globals, appSettingsFns ) {
   
   const { countdownContainer, countdown } = globals.selectors;
   const { setCountdownTime, getCountdownTime } = appSettingsFns;
+  const { isCountdownPaused, setCountdownPaused, setCountdownResumed } = appStateFns;
 
   const initialTime = getCountdownTime();
   let remainingTime;
   let countdownInterval;
-  let isPaused = false;
 
   const countdownUtils = {
     formatTimeMMSS(seconds) { // [sn5]
@@ -57,7 +57,7 @@ export function countdownManager( globals, appSettingsFns ) {
     remainingTime = time;
     _updateCountdownDisplay(remainingTime);
     countdownInterval = setInterval(() => {
-      if (!isPaused) {
+      if (!isCountdownPaused()) {
         _updateCountdownDisplay(remainingTime);
         if (remainingTime === 0) {
           _hideCountdown();
@@ -65,8 +65,8 @@ export function countdownManager( globals, appSettingsFns ) {
           _resetCountdown();
           clearInterval(countdownInterval);
       }
-      }
       remainingTime--;
+      }
     }, 1000); 
   }
 
@@ -77,7 +77,7 @@ export function countdownManager( globals, appSettingsFns ) {
   function resetAndHideCountdown() {
     stopCountdown();
     _hideCountdown();
-    isPaused = false;
+    setCountdownResumed();
   }
 
   function initializeCountdown() {
@@ -89,10 +89,10 @@ export function countdownManager( globals, appSettingsFns ) {
 
   function _handleVisibilityChange() {
     if (document.hidden) { // Page is hidden (user switched tabs/windows)
-      isPaused = true;
+      setCountdownPaused();
       stopCountdown();
     } else {
-      isPaused = false;
+      setCountdownResumed();
       _startCountdown(remainingTime); // Restart the countdown from the remaining time
     }
   }

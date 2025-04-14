@@ -26,6 +26,7 @@ const appData = {
 }
 
 const appState = {
+  isCountdownPaused: false,
   isSettingFormOpen: false,
 }
 

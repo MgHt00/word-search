@@ -1,5 +1,5 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-export function interactionManager( globals, wordPlacementQueryFns, settingFormStateFns, scopeDependencies) {
+export function interactionManager( globals, wordPlacementQueryFns, appStateFns, scopeDependencies) {
   
   let _enableRestart, _restart;  
   function setInteractionManagerCallbacks(enableRestart, restart) {
@@ -8,7 +8,7 @@ export function interactionManager( globals, wordPlacementQueryFns, settingFormS
   }
   
   const { isStartSquare, getEndSquaresFromGlobal, getAllPlacedWords, findSelectedWordInGlobal, getSquareIDsOfSelectedWord } = wordPlacementQueryFns;
-  const { isSettingFormOpen } = settingFormStateFns;
+  const { isSettingFormOpen } = appStateFns;
   
   const {
     isWithinHoverScope,

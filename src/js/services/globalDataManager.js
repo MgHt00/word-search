@@ -139,7 +139,7 @@ export function globalDataManager(globals) {
   };
 
   // --- Setting Form State Management ---
-  const settingFormStateFns = {
+  const appStateFns = {
     isSettingFormOpen() {
       return appState.isSettingFormOpen;
     },
@@ -151,6 +151,18 @@ export function globalDataManager(globals) {
     setSettingFormClosed() {
       appState.isSettingFormOpen = false;
     },
+
+    isCountdownPaused() {
+      return appState.isCountdownPaused;
+    },
+
+    setCountdownPaused() {
+      appState.isCountdownPaused = true;
+    },
+
+    setCountdownResumed() {
+      appState.isCountdownPaused = false;
+    },
   };
 
   return {
@@ -158,6 +170,6 @@ export function globalDataManager(globals) {
     appDataFns,
     wordPlacementFns,
     wordPlacementQueryFns,
-    settingFormStateFns,
+    appStateFns,
   };
 }

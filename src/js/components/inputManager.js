@@ -1,11 +1,11 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
-export function inputManager(globals, appSettingsFns, appDataFns, settingFormStateFns, countdownUtils) {
+export function inputManager(globals, appSettingsFns, appDataFns, appStateFns, countdownUtils) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
   const { setWordCount, setWordsMaxLength, setCountdownTime, getMinAndMaxWordCount, getWordCount, getMinAndMaxCounter, getWordsMaxLength, getCountdownTime } = appSettingsFns;
   const { getMinAndMaxWordLength } = appDataFns;
-  const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
+  const { setSettingFormOpen, setSettingFormClosed, setCountdownPaused, setCountdownResumed } = appStateFns;
   const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = countdownUtils;
 
   let _restart;  
@@ -98,16 +98,18 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
 
     _offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
       setSettingFormOpen();
+      setCountdownPaused();
       _syncOffcanvasWithGlobal();
       _addRangeListeners();
       _addReloadListener(_reloadBtn);
-      console.log("Offcanvas is fully shown. Flag:", isSettingFormOpen());
+      //console.log("Offcanvas is fully shown. Flag:", isSettingFormOpen());
     });
 
     _offcanvasElement.addEventListener('hidden.bs.offcanvas', () => {
       setSettingFormClosed();
+      setCountdownResumed();
       _removeReloadListener(_reloadBtn);
-      console.log("Offcanvas is fully hidden. Flag:", isSettingFormOpen());
+      //console.log("Offcanvas is fully hidden. Flag:", isSettingFormOpen());
     });
 
     // REF: Other offcanvas event types: show.bs.offcanvas, hide.bs.offcanvas
@@ -122,13 +124,18 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
 
   function _handleSettingFormSubmit(event) {
     event.preventDefault(); // Prevent the default form submission behavior
+    
     setWordCount(parseInt(wordCountInput.value, 10));
     setWordsMaxLength(parseInt(maxLengthInput.value, 10));
     setCountdownTime(convertMinutesToSeconds(countdownInput.value));
+    
     setSettingFormClosed();
+    setCountdownResumed();
 
-    console.info("RELOAD. User's Global Data:", { wordCount: globals.settingData.wordCount, wordsMaxLength: globals.settingData.wordsMaxLength, countdownMode: globals.settingData.countdownMode, countdown: globals.settingData.countdown });
     _closeOffcanvas();
+    
+    console.info("RELOAD. User's Global Data:", { wordCount: globals.settingData.wordCount, wordsMaxLength: globals.settingData.wordsMaxLength, countdownMode: globals.settingData.countdownMode, countdown: globals.settingData.countdown });
+
     _restart();
   }
 
