@@ -26,7 +26,8 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
   function _setCountdownRange(seconds) {
     const minutes = convertSecondsToMinutes(seconds);
     countdownInput.value = minutes;
-    countdownDisplay.value = formatTimeMMSS((seconds));
+    if (minutes !== 0 ) countdownDisplay.value = formatTimeMMSS((seconds));
+    else countdownDisplay.value = "Off";    
   }
 
   // --- functions to set HTML attributes of setting form dynamically ---
