@@ -1,7 +1,7 @@
-export function loadingManager(selectors, appSettingsFns, appDataFns,  gameInitializers, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, pauseCountdown) { 
+export function loadingManager(selectors, appSettingsFns, appDataFns,  gameInitializers, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, stopCountdown) { 
   const { getJsonData } = appDataFns;
   const { getWordCount, getWordsMaxLength } = appSettingsFns;
-  const { initializeGameWords, initializeInteraction, initializeInput, initializeCountdown } = gameInitializers;
+  const { initializeGameWords, initializeInteraction, initializeInput, initializeCountdown, resetAndHideCountdown } = gameInitializers;
   const { overlay, loadingDIV, restartDIV, squareFrame, sectionWordList, restartMessage } = selectors;
 
   function _dim() {
@@ -31,7 +31,7 @@ export function loadingManager(selectors, appSettingsFns, appDataFns,  gameIniti
     _dim();
     _updateRestartMessage("Well done! Restart?");
     _showRestartButton();
-    pauseCountdown();
+    stopCountdown();
   }
 
   function _disableRestart() {
@@ -95,6 +95,7 @@ export function loadingManager(selectors, appSettingsFns, appDataFns,  gameIniti
     _emptySectionWordList();
     generateSqs();
     await _loadJSONandFill();
+    resetAndHideCountdown();
     initializeCountdown();
     _hidespinner();
     initializeInput();

@@ -3,7 +3,7 @@ import { ELEMENTIDS } from "../constants/selectors.js";
 export function inputManager(globals, appSettingsFns, appDataFns, settingFormStateFns, countdownUtils) {
   const { selectors } = globals;
   const { wordCountInput, wordCountDisplay, maxLengthInput, maxLengthDisplay, countdownInput, countdownDisplay } = selectors;
-  const { setWordCount, setWordsMaxLength, setCountdown, getMinAndMaxWordCount, getWordCount, getMinAndMaxCounter, getWordsMaxLength, getCountdown } = appSettingsFns;
+  const { setWordCount, setWordsMaxLength, setCountdownTime, getMinAndMaxWordCount, getWordCount, getMinAndMaxCounter, getWordsMaxLength, getCountdownTime } = appSettingsFns;
   const { getMinAndMaxWordLength } = appDataFns;
   const { isSettingFormOpen, setSettingFormOpen, setSettingFormClosed } = settingFormStateFns;
   const { formatTimeMMSS, convertMinutesToSeconds, convertSecondsToMinutes } = countdownUtils;
@@ -54,7 +54,7 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     _setHTMLCountdownAttributes();
     _setWordCountRange(getWordCount());
     _setMaxLengthRange(getWordsMaxLength()); 
-    _setCountdownRange(getCountdown());
+    _setCountdownRange(getCountdownTime());
   }
   
   function _addRangeListeners() {
@@ -123,10 +123,10 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     event.preventDefault(); // Prevent the default form submission behavior
     setWordCount(parseInt(wordCountInput.value, 10));
     setWordsMaxLength(parseInt(maxLengthInput.value, 10));
-    setCountdown(convertMinutesToSeconds(countdownInput.value));
+    setCountdownTime(convertMinutesToSeconds(countdownInput.value));
     setSettingFormClosed();
 
-    console.info("RELOAD. User's Global Data:", { wordCount: globals.settingData.wordCount, wordsMaxLength: globals.settingData.wordsMaxLength, countdown: globals.settingData.countdown });
+    console.info("RELOAD. User's Global Data:", { wordCount: globals.settingData.wordCount, wordsMaxLength: globals.settingData.wordsMaxLength, countdownMode: globals.settingData.countdownMode, countdown: globals.settingData.countdown });
     _closeOffcanvas();
     _restart();
   }

@@ -5,11 +5,12 @@ export function countdownManager( globals, appSettingsFns ) {
   }
   
   const { countdownContainer, countdown } = globals.selectors;
-  const { setCountdown, getCountdown } = appSettingsFns;
+  const { setCountdownTime, getCountdownTime } = appSettingsFns;
 
-  const initialTime = getCountdown();
+  const initialTime = getCountdownTime();
   let remainingTime;
   let countdownInterval;
+  let isPaused = false;
 
   const countdownUtils = {
     formatTimeMMSS(seconds) { // [sn5]
@@ -49,39 +50,61 @@ export function countdownManager( globals, appSettingsFns ) {
   function _updateCountdownDisplay(time) { countdown.textContent = countdownUtils.formatTimeMMSS(time); }
   
   function _resetCountdown() {
-    setCountdown(initialTime);
+    setCountdownTime(initialTime);
   }
 
   function _startCountdown(time) {
     remainingTime = time;
-    _showCountdown();
     _updateCountdownDisplay(remainingTime);
     countdownInterval = setInterval(() => {
-      _updateCountdownDisplay(remainingTime);
-      if (remainingTime <= 0) {
-        _hideCountdown();
-        _enableGameOver();
-        _resetCountdown();
-        clearInterval(countdownInterval);
+      if (!isPaused) {
+        _updateCountdownDisplay(remainingTime);
+        if (remainingTime === 0) {
+          _hideCountdown();
+          _enableGameOver();
+          _resetCountdown();
+          clearInterval(countdownInterval);
+      }
       }
       remainingTime--;
     }, 1000); 
   }
 
-  function pauseCountdown() {
+  function stopCountdown() {
     clearInterval(countdownInterval);
   }
 
+  function resetAndHideCountdown() {
+    stopCountdown();
+    _hideCountdown();
+    isPaused = false;
+  }
+
   function initializeCountdown() {
-    if(getCountdown() > 0){
-      _startCountdown(getCountdown());
+    if(getCountdownTime() !== 0){
+      _showCountdown();
+      _startCountdown(getCountdownTime());
+    } 
+  }
+
+  function _handleVisibilityChange() {
+    if (document.hidden) { // Page is hidden (user switched tabs/windows)
+      isPaused = true;
+      stopCountdown();
+    } else {
+      isPaused = false;
+      _startCountdown(remainingTime); // Restart the countdown from the remaining time
     }
   }
+
+  // --- Pause/Resume ---
+  document.addEventListener("visibilitychange", _handleVisibilityChange);
 
   return {
     setCoundownManagerCallbacks,
     initializeCountdown,
-    pauseCountdown,
+    stopCountdown,
+    resetAndHideCountdown,
     countdownUtils,
   };
 }
