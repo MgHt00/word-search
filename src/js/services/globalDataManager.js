@@ -151,6 +151,18 @@ export function globalDataManager(globals) {
     setSettingFormClosed() {
       appState.isSettingFormOpen = false;
     },
+
+    isCountdownPaused() {
+      return appState.isCountdownPaused;
+    },
+
+    setCountdownPaused() {
+      appState.isCountdownPaused = true;
+    },
+
+    setCountdownResumed() {
+      appState.isCountdownPaused = false;
+    },
   };
 
   return {

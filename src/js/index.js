@@ -64,7 +64,7 @@ const interaction = interactionManager(
 const { setInteractionManagerCallbacks, initializeGameWords, initializeInteraction } = interaction;
 
 // --- Countdown Manager ---
-const countdown = countdownManager(globals, appSettingsFns);
+const countdown = countdownManager(globals, appSettingsFns, settingFormStateFns);
 const { setCoundownManagerCallbacks, initializeCountdown, stopCountdown, resetAndHideCountdown, countdownUtils } = countdown;
 
 // --- Input Manager ---
