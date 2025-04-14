@@ -65,8 +65,8 @@ export function countdownManager( globals, appSettingsFns, settingFormStateFns )
           _resetCountdown();
           clearInterval(countdownInterval);
       }
-      }
       remainingTime--;
+      }
     }, 1000); 
   }
 
