@@ -1,4 +1,4 @@
-export function loadingManager(selectors, appSettingsFns, appDataFns,  gameInitializers, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, pauseCountdown) { 
+export function loadingManager(selectors, appSettingsFns, appDataFns,  gameInitializers, generateSqs, getWordsUpToLength, fill, reset_wordPlacementData, stopCountdown) { 
   const { getJsonData } = appDataFns;
   const { getWordCount, getWordsMaxLength } = appSettingsFns;
   const { initializeGameWords, initializeInteraction, initializeInput, initializeCountdown, resetAndHideCountdown } = gameInitializers;
@@ -31,7 +31,7 @@ export function loadingManager(selectors, appSettingsFns, appDataFns,  gameIniti
     _dim();
     _updateRestartMessage("Well done! Restart?");
     _showRestartButton();
-    pauseCountdown();
+    stopCountdown();
   }
 
   function _disableRestart() {

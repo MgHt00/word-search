@@ -5,7 +5,7 @@ export function countdownManager( globals, appSettingsFns ) {
   }
   
   const { countdownContainer, countdown } = globals.selectors;
-  const { setCountdownFlag, setCountdown, getCountdownFlag, getCountdown } = appSettingsFns;
+  const { setCountdown, getCountdown } = appSettingsFns;
 
   const initialTime = getCountdown();
   let remainingTime;
@@ -54,11 +54,10 @@ export function countdownManager( globals, appSettingsFns ) {
 
   function _startCountdown(time) {
     remainingTime = time;
-    //_showCountdown();
     _updateCountdownDisplay(remainingTime);
     countdownInterval = setInterval(() => {
       _updateCountdownDisplay(remainingTime);
-      if (remainingTime <= 0) {
+      if (remainingTime === 0) {
         _hideCountdown();
         _enableGameOver();
         _resetCountdown();
@@ -68,19 +67,17 @@ export function countdownManager( globals, appSettingsFns ) {
     }, 1000); 
   }
 
-  function pauseCountdown() {
+  function stopCountdown() {
     clearInterval(countdownInterval);
   }
 
   function resetAndHideCountdown() {
-    pauseCountdown();
+    stopCountdown();
     _hideCountdown();
   }
 
   function initializeCountdown() {
-    console.info("initializeCountdown:", { countdownMode: getCountdownFlag(), countdown: getCountdown() }); 
-    if(getCountdown() !== 0 && getCountdownFlag()){
-      console.info("BINGO");
+    if(getCountdown() !== 0){
       _showCountdown();
       _startCountdown(getCountdown());
     } 
@@ -89,7 +86,7 @@ export function countdownManager( globals, appSettingsFns ) {
   return {
     setCoundownManagerCallbacks,
     initializeCountdown,
-    pauseCountdown,
+    stopCountdown,
     resetAndHideCountdown,
     countdownUtils,
   };

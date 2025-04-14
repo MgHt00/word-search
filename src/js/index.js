@@ -65,7 +65,7 @@ const { setInteractionManagerCallbacks, initializeGameWords, initializeInteracti
 
 // --- Countdown Manager ---
 const countdown = countdownManager(globals, appSettingsFns);
-const { setCoundownManagerCallbacks, initializeCountdown, pauseCountdown, resetAndHideCountdown, countdownUtils } = countdown;
+const { setCoundownManagerCallbacks, initializeCountdown, stopCountdown, resetAndHideCountdown, countdownUtils } = countdown;
 
 // --- Input Manager ---
 const input = inputManager(globals, appSettingsFns, appDataFns, settingFormStateFns, countdownUtils);
@@ -89,7 +89,7 @@ const loading = loadingManager(
   getWordsUpToLength,
   fill,
   wordPlacementFns.reset_wordPlacementData,
-  pauseCountdown,
+  stopCountdown,
 );
 const { start, enableRestart, enableGameOver, restart } = loading;
 

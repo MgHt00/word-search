@@ -12,28 +12,12 @@ export function globalDataManager(globals) {
       settingData.wordsMaxLength = length;
     },
 
-    setCountdownFlag(flag) {
-      if (typeof flag !== 'boolean') {
-        console.warn(`setCountdownFlag: Expected a boolean value, received ${typeof flag}. Converting to boolean.`);
-        flag = Boolean(flag); 
-      }
-      settingData.countdownMode = flag;
-    },
-
     setCountdown(time) {
       if (typeof time !== 'number') {
         console.warn(`setCountdown: Expected a number value, received ${typeof time}. Converting to number.`);
         time = Number(time); 
       }
-
-      if (time === 0) {
-        settingData.countdownMode = false;
-      } else {
-        settingData.countdownMode = true;
-      }
-      
       settingData.countdown = time;
-      console.info("setCountdown() called, Countdown: ", { countdownMode: settingData.countdownMode, countdown: settingData.countdown });
     },
 
     setGridSize(size) {
@@ -60,10 +44,6 @@ export function globalDataManager(globals) {
 
     getWordsMaxLength(){
       return settingData.wordsMaxLength;
-    },
-
-    getCountdownFlag(){
-      return settingData.countdownMode;
     },
 
     getCountdown(){
