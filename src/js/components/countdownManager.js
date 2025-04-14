@@ -10,6 +10,7 @@ export function countdownManager( globals, appSettingsFns ) {
   const initialTime = getCountdownTime();
   let remainingTime;
   let countdownInterval;
+  let isPaused = false;
 
   const countdownUtils = {
     formatTimeMMSS(seconds) { // [sn5]
@@ -56,12 +57,14 @@ export function countdownManager( globals, appSettingsFns ) {
     remainingTime = time;
     _updateCountdownDisplay(remainingTime);
     countdownInterval = setInterval(() => {
-      _updateCountdownDisplay(remainingTime);
-      if (remainingTime === 0) {
-        _hideCountdown();
-        _enableGameOver();
-        _resetCountdown();
-        clearInterval(countdownInterval);
+      if (!isPaused) {
+        _updateCountdownDisplay(remainingTime);
+        if (remainingTime === 0) {
+          _hideCountdown();
+          _enableGameOver();
+          _resetCountdown();
+          clearInterval(countdownInterval);
+      }
       }
       remainingTime--;
     }, 1000); 
@@ -74,6 +77,7 @@ export function countdownManager( globals, appSettingsFns ) {
   function resetAndHideCountdown() {
     stopCountdown();
     _hideCountdown();
+    isPaused = false;
   }
 
   function initializeCountdown() {
@@ -82,6 +86,19 @@ export function countdownManager( globals, appSettingsFns ) {
       _startCountdown(getCountdownTime());
     } 
   }
+
+  function _handleVisibilityChange() {
+    if (document.hidden) { // Page is hidden (user switched tabs/windows)
+      isPaused = true;
+      stopCountdown();
+    } else {
+      isPaused = false;
+      _startCountdown(remainingTime); // Restart the countdown from the remaining time
+    }
+  }
+
+  // --- Pause/Resume ---
+  document.addEventListener("visibilitychange", _handleVisibilityChange);
 
   return {
     setCoundownManagerCallbacks,
