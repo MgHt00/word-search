@@ -10,6 +10,7 @@ const settingData = {
   wordsMaxLength: 4,
 
   // --- counter data in seconds ---
+  countdownMode: true,
   countdown: 60, 
   minCountdown: 0,
   maxCountdown: 600,

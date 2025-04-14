@@ -126,7 +126,7 @@ export function inputManager(globals, appSettingsFns, appDataFns, settingFormSta
     setCountdown(convertMinutesToSeconds(countdownInput.value));
     setSettingFormClosed();
 
-    console.info("RELOAD. User's Global Data:", { wordCount: globals.settingData.wordCount, wordsMaxLength: globals.settingData.wordsMaxLength, countdown: globals.settingData.countdown });
+    console.info("RELOAD. User's Global Data:", { wordCount: globals.settingData.wordCount, wordsMaxLength: globals.settingData.wordsMaxLength, countdownMode: globals.settingData.countdownMode, countdown: globals.settingData.countdown });
     _closeOffcanvas();
     _restart();
   }
