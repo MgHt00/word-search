@@ -15,6 +15,7 @@ A web-based word search puzzle game built with JavaScript. This project allows u
 -   [License](#license)
 -   [Screenshots](#screenshots)
 -   [Demo](#demo)
+-   [Acknowledgements](#acknowledgements)
 
 ## Features
 
@@ -164,11 +165,24 @@ This project is licensed under the MIT License.
 
 ## Screenshots
 
-<!-- Add screenshots of your game here -->
-<!-- Example: -->
-<!-- !Screenshot 1 -->
-<!-- !Screenshot 2 -->
+## Screenshots
+
+Here are some screenshots of the game:
+
+### Main Game Screen
+![Main Game Screen](screenshots/main-game.png)
+
+### Settings Menu
+![Settings Menu](screenshots/settings-menu.png)
+
+### Game Over
+![Game Over](screenshots/game-over.png)
+
 
 ## Demo
 
 https://mght00.github.io/word-search/
+
+## Acknowledgements
+
+This project benefited greatly from the assistance of AI tools. I would like to extend my thanks to both ChatGPT and Gemini for their creative suggestions, problem-solving capabilities, and code refinement. Their contributions were instrumental in making this project what it is today.
