@@ -1,34 +1,49 @@
 import { ELEMENTIDS } from "../constants/selectors.js";
 
 const settingData = {
-  // --- no. of words to search ---
-  minWordCount: 2,
-  maxWordCount: 10,
-  wordCount: 2, // default: 10 
+  // --- Number of words to search for in the grid ---
+  wordCount: 6, // The default number of words to be placed in the grid.
+  minWordCount: 2,  // The minimum allowed number of words. (Used for input validation/range)
+  maxWordCount: 10, // The maximum allowed number of words. (Used for input validation/range)
 
-  // --- max length of each words ---
-  wordsMaxLength: 4,
+  // --- Maximum length of each word ---
+  wordsMaxLength: 6, // The maximum number of characters a word can have.
 
-  // --- counter data in seconds ---
-  countdown: 60, 
-  minCountdown: 0,
-  maxCountdown: 600,
+  // --- Countdown timer settings (in seconds) ---
+  countdown: 0, // The initial countdown time in seconds (0 means no countdown).
+  minCountdown: 0, // The minimum allowed countdown time in seconds.
+  maxCountdown: 600, // The maximum allowed countdown time in seconds.
 
-  // --- other setting data ---
-  gridSize: 14,
-  debugMode: true, // default: false
-}
+  // --- Other game settings ---
+  gridSize: 14, // The size of the grid (e.g., 14x14).
+  debugMode: false, // Enables debug mode (e.g., showing word placement details). (default: false)
+};
 
 const appData = {
-  jsonData: [],
-  minWordLength: null,
-  maxWordLength: null,
-}
+  // --- Raw JSON data loaded from the words data file ---
+  jsonData: [], // Stores the loaded word data (e.g., an array of words).
+  minWordLength: null, // The minimum word length found in the JSON data.
+  maxWordLength: null, // The maximum word length found in the JSON data.
+};
 
 const appState = {
-  isCountdownPaused: false,
-  isSettingFormOpen: false,
-}
+  // --- Flags to track the state of the countdown timer ---
+  isCountdownPaused: false, // Indicates whether the countdown timer is currently paused.
+  // --- Flag to track the state of the settings form ---
+  isSettingFormOpen: false, // Indicates whether the settings form is currently open.
+};
+
+const wordPlacementData = {
+  squareIdToChar: new Map(), 
+  // Map<string(squareID), string(char)> // Maps square numbers to characters.
+  
+  placedWordCoordinates: new Map(), 
+  // Map<string(word), object{string[](placementData), string(direction)}>
+  
+  startIDAndEndID: [], 
+  // startIDAndEndID: [{"sq-1-1" : "sq-1-2"}, {"sq-1-1" : "sq-1-5"}];
+  // key: startID, value: endID
+};
 
 const selectors = {
   overlay: document.querySelector(ELEMENTIDS.OVERLAY),
@@ -45,18 +60,6 @@ const selectors = {
   countdownContainer: document.querySelector(ELEMENTIDS.COUNTDOWN_CONTAINER),
   countdown: document.querySelector(ELEMENTIDS.COUNTDOWN),
   restartMessage: document.querySelector(ELEMENTIDS.RESTART_MSG),
-}
-
-const wordPlacementData = {
-  squareIdToChar: new Map(), 
-  // Map<string(squareID), string(char)> // Maps square numbers to characters.
-  
-  placedWordCoordinates: new Map(), 
-  // Map<string(word), object{string[](placementData), string(direction)}>
-  
-  startIDAndEndID: [], 
-  // startIDAndEndID: [{"sq-1-1" : "sq-1-2"}, {"sq-1-1" : "sq-1-5"}];
-  // key: startID, value: endID
 };
 
 export const globals =  {
