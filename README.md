@@ -165,8 +165,6 @@ This project is licensed under the MIT License.
 
 ## Screenshots
 
-## Screenshots
-
 Here are some screenshots of the game:
 
 ### Main Game Screen
