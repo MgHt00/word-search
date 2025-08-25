@@ -2,3 +2,4 @@
 *bug*.js
 *_temp*.js
 *.DS*
+.vscode/*
